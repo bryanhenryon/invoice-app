@@ -1,3 +1,11 @@
-const App = () => <div>Hello there</div>;
+import GlobalStyle from './assets/style/GlobalStyle.js';
+
+const App = () => {
+  return (
+    <>
+      <GlobalStyle />
+    </>
+  );
+};
 
 export default App;
