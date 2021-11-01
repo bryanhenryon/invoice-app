@@ -23,6 +23,12 @@ const GlobalStyle = createGlobalStyle`
     list-style: none;
   }
 
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
   h1, h2, h3, h4 {
     font-weight: bold;
   }
