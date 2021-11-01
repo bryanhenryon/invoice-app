@@ -17,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-size: 1.6rem;
     font-family: 'Spartan', sans-serif;
+  
   }
 
   ul {
