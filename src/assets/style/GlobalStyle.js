@@ -12,12 +12,13 @@ const GlobalStyle = createGlobalStyle`
   html {
     font-size: 62.5%;
     box-sizing: border-box;
+
   }
 
   body {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-family: 'Spartan', sans-serif;
-  
+    min-width:320px;
   }
 
   ul {
@@ -56,6 +57,18 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.2rem;
     line-height: 1.5rem;
     letter-spacing: -0.025rem;
+  }
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  input, select, textarea, button{
+    font-family:inherit;
   }
 `;
 

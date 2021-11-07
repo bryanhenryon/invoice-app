@@ -1,11 +1,21 @@
 import { colors } from './variables';
 
 export const lightTheme = {
-  body: colors.bgLight,
-  sidebar: '#373b53;',
+  viewsContainerBackground: colors.bgLight,
+  sidebarBackground: '#373b53;',
+  baseTextColor: colors.dark,
+  inputLabelColor: colors.paleViolet,
+  inputBackgroundColor: colors.white,
+  inputBorderColor: '#dfe3fa',
+  activeInputBorderColor: '#7c5dfa',
 };
 
 export const darkTheme = {
-  body: colors.bgDark,
-  sidebar: colors.lightDark,
+  viewsContainerBackground: colors.bgDark,
+  sidebarBackground: colors.lightDark,
+  baseTextColor: colors.white,
+  inputLabelColor: colors.white,
+  inputBackgroundColor: colors.lightDark,
+  inputBorderColor: colors.lighterDark,
+  activeInputBorderColor: colors.lighterDark,
 };

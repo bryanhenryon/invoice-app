@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
-import GlobalStyle from './assets/style/GlobalStyle.js';
-import Sidebar from './components/Sidebar';
-import { breakpoints } from './assets/style/variables';
 import { ThemeProvider } from 'styled-components';
+
+import GlobalStyle from './assets/style/GlobalStyle.js';
+import { breakpoints } from './assets/style/variables';
 import { lightTheme, darkTheme } from './assets/style/theme';
+
+import Sidebar from './components/Sidebar';
+import Login from './components/Login';
 
 const App = () => {
   const [theme, setTheme] = useState('light');
@@ -38,7 +42,13 @@ const App = () => {
         <GlobalStyle />
         <Container isAppLoaded={isAppLoaded}>
           <Sidebar theme={theme} toggleTheme={toggleTheme} />
-          <Views />
+          <Views>
+            <Router>
+              <Switch>
+                <Route path='/' component={Login} />
+              </Switch>
+            </Router>
+          </Views>
         </Container>
       </ThemeProvider>
     </>
@@ -49,8 +59,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: ${({ theme }) => theme.body};
-  transition: all 0.5s ease;
+  background: ${({ theme }) => theme.viewsContainerBackground};
+  transition: background-color 0.5s ease;
 
   ${({ isAppLoaded }) =>
     !isAppLoaded &&
@@ -66,7 +76,7 @@ const Container = styled.div`
   }
 `;
 
-const Views = styled.main`
+const Views = styled.div`
   flex-grow: 2;
 `;
 
