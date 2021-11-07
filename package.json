@@ -1,5 +1,5 @@
 {
-  "name": "Générateur de factures",
+  "name": "Gestionnaire de factures",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
