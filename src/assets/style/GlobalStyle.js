@@ -1,4 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
+import { breakpoints } from "./variables";
 
 const GlobalStyle = createGlobalStyle`
   *,
@@ -36,9 +37,14 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1 {
-    font-size: 3.2rem;
+    font-size:2rem;
     line-height: 3.6rem;
     letter-spacing: -0.1rem;
+    
+    @media ${breakpoints.sm} {
+      font-size: 3.2rem;
+    
+  }
   }
 
    h2 {

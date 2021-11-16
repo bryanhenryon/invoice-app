@@ -10,6 +10,7 @@ import { lightTheme, darkTheme } from "./assets/style/theme";
 import Sidebar from "./components/Sidebar";
 import Login from "./views/Login";
 import Register from "./views/Register";
+import Invoices from "./views/Invoices";
 
 const App = () => {
   const [theme, setTheme] = useState("light");
@@ -48,6 +49,7 @@ const App = () => {
               <Switch>
                 <Route path='/' exact component={Login} />
                 <Route path='/inscription' component={Register} />
+                <Route path='/factures' component={Invoices} />
               </Switch>
             </Router>
           </Views>
@@ -80,6 +82,11 @@ const Container = styled.div`
 
 const Views = styled.div`
   flex-grow: 2;
+  padding: 3.2rem 2.4rem;
+
+  @media ${breakpoints.sm} {
+    padding: 5.6rem 4.8rem;
+  }
 `;
 
 export default App;

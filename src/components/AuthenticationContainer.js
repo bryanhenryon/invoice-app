@@ -26,7 +26,6 @@ const Container = styled.div`
 const Subcontainer = styled.div`
   width: 100%;
   max-width: 365px;
-  padding: 3.2rem 2.4rem;
 `;
 
 export default AuthenticationContainer;
