@@ -5,11 +5,11 @@ import { Transition } from "react-transition-group";
 
 import { colors } from "../assets/style/variables";
 
-import AuthenticationContainer from "./AuthenticationContainer";
-import FormTitle from "./FormTitle";
-import FormInput from "./FormInput";
-import ButtonCenterContainer from "./ButtonCenterContainer";
-import Button from "./Button";
+import AuthenticationContainer from "../components/AuthenticationContainer";
+import FormTitle from "../components/FormTitle";
+import FormInput from "../components/FormInput";
+import ButtonCenterContainer from "../components/ButtonCenterContainer";
+import Button from "../components/Button";
 
 export const Register = () => {
   const history = useHistory();

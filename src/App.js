@@ -8,8 +8,8 @@ import { breakpoints } from "./assets/style/variables";
 import { lightTheme, darkTheme } from "./assets/style/theme";
 
 import Sidebar from "./components/Sidebar";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import Login from "./views/Login";
+import Register from "./views/Register";
 
 const App = () => {
   const [theme, setTheme] = useState("light");
