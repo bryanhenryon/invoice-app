@@ -11,7 +11,7 @@ import FormInput from "./FormInput";
 import ButtonCenterContainer from "./ButtonCenterContainer";
 import Button from "./Button";
 
-export const Login = () => {
+export const Register = () => {
   const history = useHistory();
   const [mounted, setMounted] = useState(false);
 
@@ -28,7 +28,7 @@ export const Login = () => {
     <Transition in={mounted} timeout={250}>
       {(state) => (
         <AuthenticationContainer state={state}>
-          <FormTitle>Connexion</FormTitle>
+          <FormTitle>Création de compte</FormTitle>
           <form onSubmit={handleSubmit}>
             <FormInput
               placeholder='john.doe@gmail.com'
@@ -44,46 +44,33 @@ export const Login = () => {
               id='password'
               label='Mot de passe'
             />
+            <FormInput
+              placeholder='•••••••••'
+              required={true}
+              type='password'
+              id='confirm-password'
+              label='Confirmation du mot de passe'
+            />
             <ButtonCenterContainer>
-              <Button>Se connecter</Button>
+              <Button>S'enregistrer</Button>
             </ButtonCenterContainer>
           </form>
-
-          <NewUser>
-            Nouvel utilisateur ?{" "}
-            <CreateNewAccount to='/inscription'>
-              Créer un compte
-            </CreateNewAccount>
-          </NewUser>
-
-          <ForgottenPasswordContainer>
-            <ForgottenPassword to='/reinitialisation'>
-              Mot de passe oublié
-            </ForgottenPassword>
-          </ForgottenPasswordContainer>
+          <AlreadyHaveAccount>
+            Déjà un compte ? <Login to='/'>Se connecter</Login>
+          </AlreadyHaveAccount>
         </AuthenticationContainer>
       )}
     </Transition>
   );
 };
 
-const NewUser = styled.div`
+export default Register;
+
+const AlreadyHaveAccount = styled.div`
   text-align: center;
-  margin-bottom: 3rem;
   color: ${(props) => props.theme.baseTextColor};
 `;
 
-const CreateNewAccount = styled(Link)`
+const Login = styled(Link)`
   color: ${colors.paleViolet};
 `;
-
-const ForgottenPasswordContainer = styled.div`
-  text-align: center;
-`;
-
-const ForgottenPassword = styled(Link)`
-  display: inline-block;
-  color: ${colors.paleViolet};
-`;
-
-export default Login;

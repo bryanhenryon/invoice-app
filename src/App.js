@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import styled from 'styled-components';
-import { ThemeProvider } from 'styled-components';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import styled from "styled-components";
+import { ThemeProvider } from "styled-components";
 
-import GlobalStyle from './assets/style/GlobalStyle.js';
-import { breakpoints } from './assets/style/variables';
-import { lightTheme, darkTheme } from './assets/style/theme';
+import GlobalStyle from "./assets/style/GlobalStyle.js";
+import { breakpoints } from "./assets/style/variables";
+import { lightTheme, darkTheme } from "./assets/style/theme";
 
-import Sidebar from './components/Sidebar';
-import Login from './components/Login';
+import Sidebar from "./components/Sidebar";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 const App = () => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState("light");
   const [isAppLoaded, setIsAppLoaded] = useState(false);
 
   useEffect(() => {
-    const localTheme = window.localStorage.getItem('theme');
+    const localTheme = window.localStorage.getItem("theme");
     localTheme && setTheme(localTheme);
 
     /* I set a "isAppLoaded" state to "false" initially so the transitions don't trigger immediately on landing, 
@@ -27,25 +28,26 @@ const App = () => {
   }, []);
 
   const toggleTheme = () => {
-    if (theme === 'light') {
-      window.localStorage.setItem('theme', 'dark');
-      setTheme('dark');
+    if (theme === "light") {
+      window.localStorage.setItem("theme", "dark");
+      setTheme("dark");
     } else {
-      window.localStorage.setItem('theme', 'light');
-      setTheme('light');
+      window.localStorage.setItem("theme", "light");
+      setTheme("light");
     }
   };
 
   return (
     <>
-      <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+      <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
         <GlobalStyle />
         <Container isAppLoaded={isAppLoaded}>
           <Sidebar theme={theme} toggleTheme={toggleTheme} />
           <Views>
             <Router>
               <Switch>
-                <Route path='/' component={Login} />
+                <Route path='/' exact component={Login} />
+                <Route path='/inscription' component={Register} />
               </Switch>
             </Router>
           </Views>
