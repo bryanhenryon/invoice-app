@@ -18,6 +18,7 @@ export const Logo = () => (
 );
 
 const LogoContainer = styled.div`
+  display: inline-block;
   position: relative;
   background: ${colors.violet};
   border-radius: 0 2rem 2rem 0;

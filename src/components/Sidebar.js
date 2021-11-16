@@ -4,12 +4,16 @@ import { breakpoints } from "../assets/style/variables";
 
 import Logo from "./Logo";
 import SwitchThemeButton from "./SwitchThemeButton";
+import LogoutButton from "./LogoutButton";
 
 export const Sidebar = ({ theme, toggleTheme }) => {
   return (
     <Container>
-      <Logo />
+      <LogoContainer>
+        <Logo />
+      </LogoContainer>
       <SwitchThemeButton theme={theme} toggleTheme={toggleTheme} />
+      <LogoutButton />
     </Container>
   );
 };
@@ -21,7 +25,6 @@ Sidebar.propTypes = {
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
   background: ${({ theme }) => theme.sidebarBackground};
 
   @media ${breakpoints.md} {
@@ -29,6 +32,10 @@ const Container = styled.div`
     border-radius: 0 2rem 2rem 0;
     overflow: hidden;
   }
+`;
+
+const LogoContainer = styled.div`
+  flex-grow: 2;
 `;
 
 export default Sidebar;
