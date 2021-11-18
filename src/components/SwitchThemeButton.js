@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 import { ReactComponent as SunIcon } from "../assets/svg/icon-sun.svg";
 import { ReactComponent as MoonIcon } from "../assets/svg/icon-moon.svg";
@@ -8,6 +9,11 @@ export const SwitchThemeButton = ({ theme, toggleTheme }) => (
     {theme === "light" ? <StyledMoonIcon /> : <StyledSunIcon />}
   </StyledSwitchThemeButton>
 );
+
+SwitchThemeButton.propTypes = {
+  theme: PropTypes.string.isRequired,
+  toggleTheme: PropTypes.func.isRequired,
+};
 
 const StyledMoonIcon = styled(MoonIcon)`
   fill: #7e88c3;

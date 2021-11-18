@@ -67,10 +67,6 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 
   input, select, textarea, button{

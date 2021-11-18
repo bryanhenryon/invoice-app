@@ -8,7 +8,6 @@ import { colors } from "../assets/style/variables";
 import AuthenticationContainer from "../components/AuthenticationContainer";
 import FormTitle from "../components/FormTitle";
 import FormInput from "../components/FormInput";
-import ButtonCenterContainer from "../components/ButtonCenterContainer";
 import Button from "../components/Button";
 
 export const Register = () => {
@@ -51,9 +50,9 @@ export const Register = () => {
               id='confirm-password'
               label='Confirmation du mot de passe'
             />
-            <ButtonCenterContainer>
+            <CenterButtonContainer>
               <Button>S'enregistrer</Button>
-            </ButtonCenterContainer>
+            </CenterButtonContainer>
           </form>
           <AlreadyHaveAccount>
             Déjà un compte ? <Login to='/'>Se connecter</Login>
@@ -66,6 +65,11 @@ export const Register = () => {
 
 export default Register;
 
+const CenterButtonContainer = styled.div`
+  text-align: center;
+  margin-bottom: 2.9rem;
+`;
+
 const AlreadyHaveAccount = styled.div`
   text-align: center;
   color: ${(props) => props.theme.baseTextColor};
@@ -73,4 +77,8 @@ const AlreadyHaveAccount = styled.div`
 
 const Login = styled(Link)`
   color: ${colors.paleViolet};
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;

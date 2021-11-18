@@ -8,7 +8,6 @@ import { colors } from "../assets/style/variables";
 import AuthenticationContainer from "../components/AuthenticationContainer";
 import FormTitle from "../components/FormTitle";
 import FormInput from "../components/FormInput";
-import ButtonCenterContainer from "../components/ButtonCenterContainer";
 import Button from "../components/Button";
 
 export const Login = () => {
@@ -44,9 +43,9 @@ export const Login = () => {
               id='password'
               label='Mot de passe'
             />
-            <ButtonCenterContainer>
+            <CenterButtonContainer>
               <Button>Se connecter</Button>
-            </ButtonCenterContainer>
+            </CenterButtonContainer>
           </form>
 
           <NewUser>
@@ -67,6 +66,11 @@ export const Login = () => {
   );
 };
 
+const CenterButtonContainer = styled.div`
+  text-align: center;
+  margin-bottom: 2.9rem;
+`;
+
 const NewUser = styled.div`
   text-align: center;
   margin-bottom: 3rem;
@@ -75,6 +79,10 @@ const NewUser = styled.div`
 
 const CreateNewAccount = styled(Link)`
   color: ${colors.paleViolet};
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const ForgottenPasswordContainer = styled.div`
@@ -84,6 +92,10 @@ const ForgottenPasswordContainer = styled.div`
 const ForgottenPassword = styled(Link)`
   display: inline-block;
   color: ${colors.paleViolet};
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export default Login;

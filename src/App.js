@@ -64,7 +64,7 @@ const Container = styled.div`
   flex-direction: column;
   min-height: 100vh;
   background: ${({ theme }) => theme.viewsContainerBackground};
-  transition: background-color 0.5s ease;
+  transition: background-color 0.3s;
 
   ${({ isAppLoaded }) =>
     !isAppLoaded &&
@@ -75,7 +75,7 @@ const Container = styled.div`
     transition: none;
   `}
 
-  @media ${breakpoints.md} {
+  @media ${breakpoints.lg} {
     flex-direction: row;
   }
 `;
@@ -86,6 +86,10 @@ const Views = styled.div`
 
   @media ${breakpoints.sm} {
     padding: 5.6rem 4.8rem;
+  }
+
+  @media ${breakpoints.md} {
+    padding: 7.2rem 4.8rem;
   }
 `;
 

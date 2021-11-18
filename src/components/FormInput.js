@@ -1,15 +1,9 @@
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 import { colors } from "../assets/style/variables";
 
-export const FormInput = ({
-  label,
-  id,
-  placeholder,
-  type,
-  required,
-  autocomplete,
-}) => {
+export const FormInput = ({ label, id, placeholder, type, required }) => {
   return (
     <>
       <Label htmlFor={id}>{label}</Label>
@@ -21,6 +15,14 @@ export const FormInput = ({
       />
     </>
   );
+};
+
+FormInput.propTypes = {
+  label: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  required: PropTypes.string,
 };
 
 const Label = styled.label`

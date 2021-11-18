@@ -27,7 +27,7 @@ const Container = styled.div`
   display: flex;
   background: ${({ theme }) => theme.sidebarBackground};
 
-  @media ${breakpoints.md} {
+  @media ${breakpoints.lg} {
     flex-direction: column;
     border-radius: 0 2rem 2rem 0;
     overflow: hidden;

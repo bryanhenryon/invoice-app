@@ -19,7 +19,11 @@ const Button = styled.button`
     fill: ${colors.white};
   }
 
-  @media ${breakpoints.md} {
+  &:active {
+    transform: translateY(1px);
+  }
+
+  @media ${breakpoints.lg} {
     border-left: none;
     border-top: 1px solid rgba(133, 139, 178, 0.2);
   }
