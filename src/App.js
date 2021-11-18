@@ -48,8 +48,8 @@ const App = () => {
             <Router>
               <Switch>
                 <Route path='/' exact component={Login} />
-                <Route path='/inscription' component={Register} />
-                <Route path='/factures' component={Invoices} />
+                <Route path='/inscription' exact component={Register} />
+                <Route path='/factures' exact component={Invoices} />
               </Switch>
             </Router>
           </Views>

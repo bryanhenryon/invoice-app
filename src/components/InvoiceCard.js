@@ -7,7 +7,7 @@ import { colors } from "../assets/style/variables";
 import InvoiceStatusBadge from "./InvoiceStatusBadge";
 
 export const InvoiceCard = ({ invoice }) => (
-  <Card to={`/facture/${invoice.id}`}>
+  <Card to={`/factures/${invoice.id}`}>
     <TopContainer>
       <InvoiceID>
         <NumberSign>#</NumberSign>

@@ -21,6 +21,7 @@ const StyledButton = styled.button`
   ${({ hasIcon }) => hasIcon && `padding: 0.8rem 0.8rem;`}
   color: ${colors.white};
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  white-space: nowrap;
 
   &:hover {
     background: ${colors.lightViolet};

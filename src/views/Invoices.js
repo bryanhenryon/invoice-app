@@ -9,9 +9,10 @@ import { ReactComponent as ChevronDownIcon } from "../assets/svg/icon-chevron-do
 import Button from "../components/Button";
 import InvoiceCard from "../components/InvoiceCard";
 import InvoiceCardLarge from "../components/InvoiceCardLarge";
+import NoInvoice from "../components/NoInvoice";
 
 export const Invoices = () => {
-  const [invoices, setInvoices] = useState(data);
+  const [invoices, setInvoices] = useState([]);
 
   const [isSmallViewport, setIsSmallViewport] = useState(
     window.innerWidth < 576
@@ -43,7 +44,7 @@ export const Invoices = () => {
 
   return (
     <StyledInvoices>
-      <Top>
+      <Top invoices={invoices}>
         <TitleContainer>
           <Title>Factures</Title>
           <TotalInvoices>{totalInvoicesText()}</TotalInvoices>
@@ -64,15 +65,19 @@ export const Invoices = () => {
         </Button>
       </Top>
 
-      <InvoicesList>
-        {invoices.map((invoice) =>
-          isMediumViewport ? (
-            <InvoiceCard key={invoice.id} invoice={invoice} />
-          ) : (
-            <InvoiceCardLarge key={invoice.id} invoice={invoice} />
-          )
-        )}
-      </InvoicesList>
+      {invoices.length ? (
+        <InvoicesList>
+          {invoices.map((invoice) =>
+            isMediumViewport ? (
+              <InvoiceCard key={invoice.id} invoice={invoice} />
+            ) : (
+              <InvoiceCardLarge key={invoice.id} invoice={invoice} />
+            )
+          )}
+        </InvoicesList>
+      ) : (
+        <NoInvoice isSmallViewport={isSmallViewport} />
+      )}
     </StyledInvoices>
   );
 };
@@ -82,19 +87,27 @@ const TitleContainer = styled.div`
 `;
 
 const StyledInvoices = styled.main`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 730px;
   margin: 0 auto;
+  height: 100%;
 `;
 
 const Top = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 3.2rem;
 
-  @media ${breakpoints.lg} {
-    margin-bottom: 6.5rem;
-  }
+  ${({ invoices }) =>
+    invoices.length &&
+    `
+    margin-bottom: 3.2rem;
+    
+    @media ${breakpoints.lg} {
+      margin-bottom: 6.5rem;
+    }
+  `}
 `;
 
 const Title = styled.h1`
@@ -115,7 +128,7 @@ const TotalInvoices = styled.p`
 const StatusFilterButton = styled.button`
   font-weight: 700;
   font-size: 1.2rem;
-  margin-right: 1.8rem;
+  margin: 0 1rem;
   color: ${(props) => props.theme.baseTextColor};
 
   @media ${breakpoints.md} {

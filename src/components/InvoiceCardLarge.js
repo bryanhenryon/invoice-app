@@ -13,7 +13,7 @@ import {
 import InvoiceStatusBadge from "./InvoiceStatusBadge";
 
 export const InvoiceCardLarge = ({ invoice }) => (
-  <CardExtended to={`/facture/${invoice.id}`}>
+  <CardExtended to={`/factures/${invoice.id}`}>
     <InvoiceIDExtended>
       <NumberSign>#</NumberSign>
       {invoice.id}
