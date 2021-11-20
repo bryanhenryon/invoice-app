@@ -13,6 +13,10 @@ export const lightTheme = {
   draftStatusBadgeBulletPoint: "#373B53",
   draftStatusBadgeBackground: "rgba(55, 59, 83, 0.06)",
   draftStatusBadgeColor: "#373B53",
+  
+  statusFilterDropdownBackground: colors.white,
+  statusFilterDropdownBoxShadow: "0px 10px 20px rgba(72, 84, 159, 0.25)",
+  statusFilterCheckboxBackground: colors.lightPaleViolet,
 };
 
 export const darkTheme = {
@@ -28,4 +32,7 @@ export const darkTheme = {
   draftStatusBadgeBulletPoint: colors.lightPaleViolet,
   draftStatusBadgeBackground: "rgba(223, 227, 250, 0.06)",
   draftStatusBadgeColor: colors.lightPaleViolet,
+  statusFilterDropdownBackground: colors.lighterDark,
+  statusFilterDropdownBoxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+  statusFilterCheckboxBackground: colors.lightDark,
 };

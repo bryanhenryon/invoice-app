@@ -5,14 +5,14 @@ import { colors, breakpoints } from "../assets/style/variables";
 import data from "../data.json";
 
 import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
-import { ReactComponent as ChevronDownIcon } from "../assets/svg/icon-chevron-down.svg";
 import Button from "../components/Button";
+import StatusFilter from "../components/StatusFilter";
 import InvoiceCard from "../components/InvoiceCard";
 import InvoiceCardLarge from "../components/InvoiceCardLarge";
 import NoInvoice from "../components/NoInvoice";
 
 export const Invoices = () => {
-  const [invoices, setInvoices] = useState([]);
+  const [invoices, setInvoices] = useState(data);
 
   const [isSmallViewport, setIsSmallViewport] = useState(
     window.innerWidth < 576
@@ -50,10 +50,7 @@ export const Invoices = () => {
           <TotalInvoices>{totalInvoicesText()}</TotalInvoices>
         </TitleContainer>
 
-        <StatusFilterButton>
-          {isSmallViewport ? "Filtrer" : "Filtrer par status"}
-          <StyledChevronDownIcon />
-        </StatusFilterButton>
+        <StatusFilter isSmallViewport={isSmallViewport} />
 
         <Button hasIcon>
           <PlusIconContainer>
@@ -123,25 +120,6 @@ const TotalInvoices = styled.p`
   color: ${(props) => props.theme.baseGreyTextColor};
   font-weight: 500;
   font-size: 1.2rem;
-`;
-
-const StatusFilterButton = styled.button`
-  font-weight: 700;
-  font-size: 1.2rem;
-  margin: 0 1rem;
-  color: ${(props) => props.theme.baseTextColor};
-
-  @media ${breakpoints.md} {
-    margin-right: 4rem;
-  }
-`;
-
-const StyledChevronDownIcon = styled(ChevronDownIcon)`
-  margin-left: 1.2rem;
-
-  @media ${breakpoints.md} {
-    margin-left: 1.6rem;
-  }
 `;
 
 const PlusIconContainer = styled.span`
