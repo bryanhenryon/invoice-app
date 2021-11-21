@@ -35,6 +35,7 @@ export const Login = () => {
               type='email'
               id='email'
               label='Adresse email'
+              spellcheck='false'
             />
             <FormInput
               placeholder='•••••••••'
@@ -42,6 +43,7 @@ export const Login = () => {
               type='password'
               id='password'
               label='Mot de passe'
+              spellcheck='false'
             />
             <CenterButtonContainer>
               <Button>Se connecter</Button>

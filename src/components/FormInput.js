@@ -3,7 +3,14 @@ import PropTypes from "prop-types";
 
 import { colors } from "../assets/style/variables";
 
-export const FormInput = ({ label, id, placeholder, type, required }) => {
+export const FormInput = ({
+  label,
+  id,
+  placeholder,
+  type,
+  required,
+  spellcheck,
+}) => {
   return (
     <>
       <Label htmlFor={id}>{label}</Label>
@@ -12,6 +19,7 @@ export const FormInput = ({ label, id, placeholder, type, required }) => {
         placeholder={placeholder}
         type={type}
         required={required}
+        spellCheck={spellcheck}
       />
     </>
   );

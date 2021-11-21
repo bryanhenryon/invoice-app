@@ -119,6 +119,7 @@ const StatusFilterDropdown = styled.div`
   position: absolute;
   top: 45px;
   left: -10%;
+  z-index: 1;
   min-width: 19.2rem;
   padding: 1.4rem;
   background: ${({ theme }) => theme.statusFilterDropdownBackground};

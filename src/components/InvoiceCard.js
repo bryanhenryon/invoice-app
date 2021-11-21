@@ -32,7 +32,6 @@ InvoiceCard.propTypes = {
 };
 
 export const Card = styled(Link)`
-  transition: background-color 0.3s;
   display: block;
   background: ${({ theme }) => theme.invoiceCard};
   border-radius: 8px;

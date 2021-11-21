@@ -13,7 +13,7 @@ export const lightTheme = {
   draftStatusBadgeBulletPoint: "#373B53",
   draftStatusBadgeBackground: "rgba(55, 59, 83, 0.06)",
   draftStatusBadgeColor: "#373B53",
-  
+
   statusFilterDropdownBackground: colors.white,
   statusFilterDropdownBoxShadow: "0px 10px 20px rgba(72, 84, 159, 0.25)",
   statusFilterCheckboxBackground: colors.lightPaleViolet,

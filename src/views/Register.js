@@ -35,6 +35,7 @@ export const Register = () => {
               type='email'
               id='email'
               label='Adresse email'
+              spellcheck='false'
             />
             <FormInput
               placeholder='•••••••••'
@@ -42,6 +43,7 @@ export const Register = () => {
               type='password'
               id='password'
               label='Mot de passe'
+              spellcheck='false'
             />
             <FormInput
               placeholder='•••••••••'
@@ -49,6 +51,7 @@ export const Register = () => {
               type='password'
               id='confirm-password'
               label='Confirmation du mot de passe'
+              spellcheck='false'
             />
             <CenterButtonContainer>
               <Button>S'enregistrer</Button>

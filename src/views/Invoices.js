@@ -7,6 +7,7 @@ import data from "../data.json";
 import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
 import Button from "../components/Button";
 import StatusFilter from "../components/StatusFilter";
+import Searchbar from "../components/Searchbar";
 import InvoiceCard from "../components/InvoiceCard";
 import InvoiceCardLarge from "../components/InvoiceCardLarge";
 import NoInvoice from "../components/NoInvoice";
@@ -64,6 +65,7 @@ export const Invoices = () => {
 
       {invoices.length ? (
         <InvoicesList>
+          <Searchbar />
           {invoices.map((invoice) =>
             isMediumViewport ? (
               <InvoiceCard key={invoice.id} invoice={invoice} />
