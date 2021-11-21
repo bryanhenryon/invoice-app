@@ -11,6 +11,7 @@ import Sidebar from "./components/Sidebar";
 import Login from "./views/Login";
 import Register from "./views/Register";
 import Invoices from "./views/Invoices";
+import Footer from "./components/Footer";
 
 const App = () => {
   const [theme, setTheme] = useState("light");
@@ -45,13 +46,16 @@ const App = () => {
         <Container isAppLoaded={isAppLoaded}>
           <Sidebar theme={theme} toggleTheme={toggleTheme} />
           <Views>
-            <Router>
-              <Switch>
-                <Route path='/' exact component={Login} />
-                <Route path='/inscription' exact component={Register} />
-                <Route path='/factures' exact component={Invoices} />
-              </Switch>
-            </Router>
+            <Content>
+              <Router>
+                <Switch>
+                  <Route path='/' exact component={Login} />
+                  <Route path='/inscription' exact component={Register} />
+                  <Route path='/factures' exact component={Invoices} />
+                </Switch>
+              </Router>
+            </Content>
+            <Footer />
           </Views>
         </Container>
       </ThemeProvider>
@@ -81,16 +85,25 @@ const Container = styled.div`
 `;
 
 const Views = styled.div`
+  display: flex;
+  flex-direction: column;
   flex-grow: 2;
+  gap: 4rem;
   padding: 3.2rem 2.4rem;
 
   @media ${breakpoints.sm} {
     padding: 5.6rem 4.8rem;
+    gap: 7.5rem;
   }
 
   @media ${breakpoints.md} {
     padding: 7.2rem 4.8rem;
   }
+`;
+
+const Content = styled.div`
+  height: 100%;
+  flex-grow: 2;
 `;
 
 export default App;
