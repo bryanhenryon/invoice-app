@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { colors, breakpoints } from "../assets/style/variables";
+import { colors } from "../assets/style/variables";
 
 const currentYear = new Date().getFullYear();
 

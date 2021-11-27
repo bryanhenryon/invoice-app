@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 import { colors, breakpoints } from "../assets/style/variables";
@@ -12,23 +12,8 @@ import InvoiceCard from "../components/InvoiceCard";
 import InvoiceCardLarge from "../components/InvoiceCardLarge";
 import NoInvoice from "../components/NoInvoice";
 
-export const Invoices = () => {
+export const Invoices = ({ isSmallViewport, isMediumViewport }) => {
   const [invoices, setInvoices] = useState(data);
-
-  const [isSmallViewport, setIsSmallViewport] = useState(
-    window.innerWidth < 576
-  );
-
-  const [isMediumViewport, setIsMediumViewport] = useState(
-    window.innerWidth < 576
-  );
-
-  useEffect(() => {
-    window.addEventListener("resize", () => {
-      setIsSmallViewport(window.innerWidth < 576);
-      setIsMediumViewport(window.innerWidth < 768);
-    });
-  }, []);
 
   const totalInvoicesText = () => {
     switch (invoices.length) {
@@ -44,7 +29,7 @@ export const Invoices = () => {
   };
 
   return (
-    <StyledInvoices>
+    <Container>
       <Top invoices={invoices}>
         <TitleContainer>
           <Title>Factures</Title>
@@ -53,7 +38,7 @@ export const Invoices = () => {
 
         <StatusFilter isSmallViewport={isSmallViewport} />
 
-        <Button hasIcon>
+        <Button hasIcon hasBoxShadow>
           <PlusIconContainer>
             <PlusIcon />
           </PlusIconContainer>
@@ -77,21 +62,14 @@ export const Invoices = () => {
       ) : (
         <NoInvoice isSmallViewport={isSmallViewport} />
       )}
-    </StyledInvoices>
+    </Container>
   );
 };
 
+const Container = styled.div``;
+
 const TitleContainer = styled.div`
   flex-grow: 2;
-`;
-
-const StyledInvoices = styled.main`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 730px;
-  margin: 0 auto;
-  height: 100%;
 `;
 
 const Top = styled.div`

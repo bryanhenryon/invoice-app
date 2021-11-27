@@ -29,6 +29,11 @@ export const lightTheme = {
   statusFilterDropdownBackground: colors.white,
   statusFilterDropdownBoxShadow: "0px 10px 20px rgba(72, 84, 159, 0.25)",
   statusFilterCheckboxBackground: colors.lightPaleViolet,
+
+  // Light variant button
+  buttonVariantLightBackground: "#F9FAFE",
+  buttonVariantLightBackgroundHover: colors.lightPaleViolet,
+  buttonVariantLightColor: colors.paleViolet,
 };
 
 export const darkTheme = {
@@ -60,4 +65,9 @@ export const darkTheme = {
   statusFilterDropdownBackground: colors.lighterDark,
   statusFilterDropdownBoxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
   statusFilterCheckboxBackground: colors.lightDark,
+
+  // Light variant button
+  buttonVariantLightBackground: colors.lighterDark,
+  buttonVariantLightBackgroundHover: colors.white,
+  buttonVariantLightColor: colors.lightPaleViolet,
 };

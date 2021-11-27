@@ -11,11 +11,25 @@ import Sidebar from "./components/Sidebar";
 import Login from "./views/Login";
 import Register from "./views/Register";
 import Invoices from "./views/Invoices";
+import Invoice from "./views/Invoice";
 import Footer from "./components/Footer";
 
 const App = () => {
   const [theme, setTheme] = useState("light");
   const [isAppLoaded, setIsAppLoaded] = useState(false);
+  const [isSmallViewport, setIsSmallViewport] = useState(
+    window.innerWidth < 576
+  );
+  const [isMediumViewport, setIsMediumViewport] = useState(
+    window.innerWidth < 768
+  );
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setIsSmallViewport(window.innerWidth < 576);
+      setIsMediumViewport(window.innerWidth < 768);
+    });
+  }, []);
 
   useEffect(() => {
     const localTheme = window.localStorage.getItem("theme");
@@ -51,7 +65,17 @@ const App = () => {
                 <Switch>
                   <Route path='/' exact component={Login} />
                   <Route path='/inscription' exact component={Register} />
-                  <Route path='/factures' exact component={Invoices} />
+                  <InvoicesContainer>
+                    <Route path='/factures' exact>
+                      <Invoices
+                        isSmallViewport={isSmallViewport}
+                        isMediumViewport={isMediumViewport}
+                      />
+                    </Route>
+                    <Route path='/factures/:id' exact>
+                      <Invoice isMediumViewport={isMediumViewport} />
+                    </Route>
+                  </InvoicesContainer>
                 </Switch>
               </Router>
             </Content>
@@ -104,6 +128,15 @@ const Views = styled.div`
 const Content = styled.div`
   height: 100%;
   flex-grow: 2;
+`;
+
+const InvoicesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 730px;
+  margin: 0 auto;
+  height: 100%;
 `;
 
 export default App;

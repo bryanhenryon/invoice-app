@@ -46,7 +46,7 @@ export const Login = () => {
               spellcheck='false'
             />
             <CenterButtonContainer>
-              <Button>Se connecter</Button>
+              <Button hasBoxShadow>Se connecter</Button>
             </CenterButtonContainer>
           </form>
 

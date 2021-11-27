@@ -54,7 +54,7 @@ export const Register = () => {
               spellcheck='false'
             />
             <CenterButtonContainer>
-              <Button>S'enregistrer</Button>
+              <Button hasBoxShadow>S'enregistrer</Button>
             </CenterButtonContainer>
           </form>
           <AlreadyHaveAccount>
