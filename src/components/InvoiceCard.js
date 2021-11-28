@@ -5,14 +5,12 @@ import { Link } from "react-router-dom";
 import { colors } from "../assets/style/variables";
 
 import InvoiceStatusBadge from "./InvoiceStatusBadge";
+import InvoiceId from "./InvoiceId";
 
 export const InvoiceCard = ({ invoice }) => (
   <Card to={`/factures/${invoice.id}`}>
     <TopContainer>
-      <InvoiceID>
-        <NumberSign>#</NumberSign>
-        {invoice.id}
-      </InvoiceID>
+      <InvoiceId id={invoice.id} />
 
       <ClientName>{invoice.clientName}</ClientName>
     </TopContainer>
@@ -52,16 +50,6 @@ const BottomContainer = styled.div`
 
 const TopContainer = styled(BottomContainer)`
   margin-bottom: 2.4rem;
-`;
-
-export const NumberSign = styled.span`
-  color: ${colors.paleViolet};
-`;
-
-export const InvoiceID = styled.div`
-  color: ${({ theme }) => theme.baseTextColor};
-  font-size: 1.2rem;
-  font-weight: 700;
 `;
 
 export const PaymentDue = styled.div`

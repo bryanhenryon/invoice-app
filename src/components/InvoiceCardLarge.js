@@ -2,22 +2,13 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 import { ReactComponent as ChevronRightIcon } from "../assets/svg/icon-chevron-right.svg";
-import {
-  Card,
-  NumberSign,
-  InvoiceID,
-  PaymentDue,
-  ClientName,
-  Total,
-} from "../components/InvoiceCard";
+import { Card, PaymentDue, ClientName, Total } from "../components/InvoiceCard";
+import InvoiceId from "./InvoiceId";
 import InvoiceStatusBadge from "./InvoiceStatusBadge";
 
 export const InvoiceCardLarge = ({ invoice }) => (
   <CardExtended to={`/factures/${invoice.id}`}>
-    <InvoiceIDExtended>
-      <NumberSign>#</NumberSign>
-      {invoice.id}
-    </InvoiceIDExtended>
+    <InvoiceIdExtended id={invoice.id} />
     <PaymentDueExtended>Due {invoice.paymentDue}</PaymentDueExtended>
     <ClientNameExtended>{invoice.clientName}</ClientNameExtended>
     <TotalExtended>{invoice.total}€</TotalExtended>
@@ -36,7 +27,7 @@ const CardExtended = styled(Card)`
   align-items: center;
 `;
 
-const InvoiceIDExtended = styled(InvoiceID)`
+const InvoiceIdExtended = styled(InvoiceId)`
   margin-right: 1rem;
 `;
 
