@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import styled, { css } from "styled-components";
+import { Switch, Route, useLocation } from "react-router-dom";
+import styled from "styled-components";
 import { ThemeProvider } from "styled-components";
 
 import GlobalStyle from "./assets/style/GlobalStyle.js";
@@ -15,6 +15,7 @@ import Invoice from "./views/Invoice";
 import Footer from "./components/Footer";
 
 const App = () => {
+  let location = useLocation();
   const [theme, setTheme] = useState("light");
   const [isAppLoaded, setIsAppLoaded] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
@@ -24,6 +25,10 @@ const App = () => {
   const [isMediumViewport, setIsMediumViewport] = useState(
     window.innerWidth < 768
   );
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   useEffect(() => {
     let currPosition = window.scrollY;
@@ -78,23 +83,21 @@ const App = () => {
           />
           <Views>
             <Content>
-              <Router>
-                <Switch>
-                  <Route path='/' exact component={Login} />
-                  <Route path='/inscription' exact component={Register} />
-                  <InvoicesContainer>
-                    <Route path='/factures' exact>
-                      <Invoices
-                        isSmallViewport={isSmallViewport}
-                        isMediumViewport={isMediumViewport}
-                      />
-                    </Route>
-                    <Route path='/factures/:id' exact>
-                      <Invoice isMediumViewport={isMediumViewport} />
-                    </Route>
-                  </InvoicesContainer>
-                </Switch>
-              </Router>
+              <Switch>
+                <Route path='/' exact component={Login} />
+                <Route path='/inscription' exact component={Register} />
+                <InvoicesContainer>
+                  <Route path='/factures' exact>
+                    <Invoices
+                      isSmallViewport={isSmallViewport}
+                      isMediumViewport={isMediumViewport}
+                    />
+                  </Route>
+                  <Route path='/factures/:id' exact>
+                    <Invoice isMediumViewport={isMediumViewport} />
+                  </Route>
+                </InvoicesContainer>
+              </Switch>
             </Content>
             <Footer />
           </Views>
