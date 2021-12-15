@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const FormTitle = ({ children }) => {
   return <Title>{children}</Title>;
@@ -7,7 +7,7 @@ export const FormTitle = ({ children }) => {
 const Title = styled.h2`
   margin-bottom: 3rem;
   text-align: center;
-  color: ${(props) => props.theme.baseTextColor};
+  color: ${(props) => props.theme.blackToWhite};
 `;
 
 export default FormTitle;

@@ -27,7 +27,7 @@ const InputContainer = styled.div`
 const SearchInput = styled.input`
   transition: 100ms ease-in;
   background: ${(props) => props.theme.inputBackgroundColor};
-  color: ${(props) => props.theme.baseTextColor};
+  color: ${(props) => props.theme.blackToWhite};
   padding: 1.2rem 3.5rem 1rem 1.2rem;
   border-radius: 0.4rem;
   width: 100%;

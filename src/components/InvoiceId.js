@@ -3,25 +3,25 @@ import PropTypes from "prop-types";
 
 import { colors } from "../assets/style/variables";
 
-export const InvoiceId = ({ id }) => (
-  <Wrapper>
-    <NumberSign>#</NumberSign>
+export const InvoiceId = ({ id, className, fontSize, fontWeight }) => (
+  <Id className={className} fontSize={fontSize} fontWeight={fontWeight}>
     {id}
-  </Wrapper>
+  </Id>
 );
 
 InvoiceId.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-const NumberSign = styled.span`
-  color: ${colors.paleViolet};
-`;
+const Id = styled.div`
+  font-size: ${({ fontSize }) => fontSize};
+  font-weight: ${({ fontWeight }) => fontWeight};
+  color: ${({ theme }) => theme.blackToWhite};
 
-const Wrapper = styled.div`
-  color: ${({ theme }) => theme.baseTextColor};
-  font-size: 1.2rem;
-  font-weight: 700;
+  &::before {
+    content: "#";
+    color: ${colors.grey};
+  }
 `;
 
 export default InvoiceId;

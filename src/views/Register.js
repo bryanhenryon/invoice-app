@@ -75,7 +75,7 @@ const CenterButtonContainer = styled.div`
 
 const AlreadyHaveAccount = styled.div`
   text-align: center;
-  color: ${(props) => props.theme.baseTextColor};
+  color: ${(props) => props.theme.blackToWhite};
 `;
 
 const Login = styled(Link)`

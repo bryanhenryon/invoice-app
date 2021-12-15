@@ -2,8 +2,11 @@ import { colors } from "./variables";
 
 export const lightTheme = {
   // Global
-  baseTextColor: colors.dark,
-  baseGreyTextColor: colors.grey,
+  blackToWhite: colors.dark,
+  greyToWhite: colors.grey,
+  paleVioletToWhite: colors.paleViolet,
+  paleVioletToGrey: colors.paleViolet,
+  paleVioletToLightPaleViolet: colors.paleViolet,
 
   // Views
   viewsContainerBackground: colors.bgLight,
@@ -34,12 +37,21 @@ export const lightTheme = {
   buttonVariantLightBackground: "#F9FAFE",
   buttonVariantLightBackgroundHover: colors.lightPaleViolet,
   buttonVariantLightColor: colors.paleViolet,
+
+  // Invoice items background
+  invoiceItemsBackground: "#f9fafe",
+
+  // Invoice grand total
+  invoiceGrandTotalBackground: "#373b53",
 };
 
 export const darkTheme = {
   // Global
-  baseTextColor: colors.white,
-  baseGreyTextColor: colors.white,
+  blackToWhite: colors.white,
+  greyToWhite: colors.white,
+  paleVioletToWhite: colors.white,
+  paleVioletToGrey: colors.grey,
+  paleVioletToLightPaleViolet: colors.lightPaleViolet,
 
   // Views
   viewsContainerBackground: colors.bgDark,
@@ -70,4 +82,10 @@ export const darkTheme = {
   buttonVariantLightBackground: colors.lighterDark,
   buttonVariantLightBackgroundHover: colors.white,
   buttonVariantLightColor: colors.lightPaleViolet,
+
+  // Invoice items background
+  invoiceItemsBackground: colors.lighterDark,
+
+  // Invoice grand total
+  invoiceGrandTotalBackground: colors.dark,
 };

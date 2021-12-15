@@ -43,8 +43,7 @@ const GlobalStyle = createGlobalStyle`
     
     @media ${breakpoints.sm} {
       font-size: 3.2rem;
-    
-  }
+    }
   }
 
    h2 {

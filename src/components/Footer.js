@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { colors } from "../assets/style/variables";
+import { colors, breakpoints } from "../assets/style/variables";
 
 const currentYear = new Date().getFullYear();
 
@@ -19,10 +19,15 @@ export const Footer = () => (
 
 const StyledFooter = styled.footer`
   text-align: center;
+  font-size: 1.4rem;
+
+  @media ${breakpoints.sm} {
+    font-size: 1.6rem;
+  }
 `;
 
 const CopyrightText = styled.span`
-  color: ${({ theme }) => theme.baseTextColor};
+  color: ${({ theme }) => theme.blackToWhite};
 `;
 
 const PortfolioLink = styled.a`

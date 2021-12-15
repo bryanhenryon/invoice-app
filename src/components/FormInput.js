@@ -41,7 +41,7 @@ const Label = styled.label`
 
 const Input = styled.input`
   background: ${(props) => props.theme.inputBackgroundColor};
-  color: ${(props) => props.theme.baseTextColor};
+  color: ${(props) => props.theme.blackToWhite};
   width: 100%;
   margin-bottom: 3rem;
   padding: 1.6rem 2rem;

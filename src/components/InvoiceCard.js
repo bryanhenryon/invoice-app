@@ -10,7 +10,7 @@ import InvoiceId from "./InvoiceId";
 export const InvoiceCard = ({ invoice }) => (
   <Card to={`/factures/${invoice.id}`}>
     <TopContainer>
-      <InvoiceId id={invoice.id} />
+      <InvoiceId id={invoice.id} fontWeight='bold' />
 
       <ClientName>{invoice.clientName}</ClientName>
     </TopContainer>
@@ -54,20 +54,20 @@ const TopContainer = styled(BottomContainer)`
 
 export const PaymentDue = styled.div`
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.baseGreyTextColor};
+  color: ${({ theme }) => theme.greyToWhite};
   margin-bottom: 0.8rem;
 `;
 
 export const ClientName = styled.div`
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.baseGreyTextColor};
+  color: ${({ theme }) => theme.greyToWhite};
   text-align: right;
 `;
 
 export const Total = styled.div`
   font-size: 1.6rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.baseTextColor};
+  color: ${({ theme }) => theme.blackToWhite};
 `;
 
 export default InvoiceCard;

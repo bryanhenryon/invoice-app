@@ -3,12 +3,21 @@ import PropTypes from "prop-types";
 
 import { colors } from "../assets/style/variables";
 
-export const Button = ({ children, hasIcon, hasBoxShadow, variant }) => {
+export const Button = ({
+  className,
+  children,
+  hasIcon,
+  hasBoxShadow,
+  variant,
+  fullWidth,
+}) => {
   return (
     <StyledButton
+      className={className}
       hasBoxShadow={hasBoxShadow}
       variant={variant}
       hasIcon={hasIcon}
+      fullWidth={fullWidth}
     >
       {children}
     </StyledButton>
@@ -19,6 +28,7 @@ Button.propTypes = {
   variant: PropTypes.string,
   hasIcon: PropTypes.bool,
   hasBoxShadow: PropTypes.bool,
+  fullWidth: PropTypes.bool,
 };
 
 const StyledButton = styled.button`
@@ -30,6 +40,7 @@ const StyledButton = styled.button`
   background: ${colors.violet};
   color: ${colors.white};
   white-space: nowrap;
+  width: ${({ fullWidth }) => fullWidth && "100%"};
   ${({ variant }) =>
     variant === "red" &&
     `

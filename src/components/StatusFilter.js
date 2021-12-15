@@ -112,7 +112,7 @@ const StatusFilterButton = styled.button`
   font-weight: 700;
   font-size: 1.2rem;
   padding: 1rem;
-  color: ${(props) => props.theme.baseTextColor};
+  color: ${(props) => props.theme.blackToWhite};
 `;
 
 const StatusFilterDropdown = styled.div`
@@ -145,7 +145,7 @@ const CheckIconExtended = styled(CheckIcon)`
 `;
 
 const Label = styled.label`
-  color: ${({ theme }) => theme.baseTextColor};
+  color: ${({ theme }) => theme.blackToWhite};
   display: flex;
   align-items: center;
   font-size: 1.2rem;

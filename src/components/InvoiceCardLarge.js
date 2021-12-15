@@ -8,7 +8,7 @@ import InvoiceStatusBadge from "./InvoiceStatusBadge";
 
 export const InvoiceCardLarge = ({ invoice }) => (
   <CardExtended to={`/factures/${invoice.id}`}>
-    <InvoiceIdExtended id={invoice.id} />
+    <InvoiceIdExtended id={invoice.id} fontWeight='bold' />
     <PaymentDueExtended>Due {invoice.paymentDue}</PaymentDueExtended>
     <ClientNameExtended>{invoice.clientName}</ClientNameExtended>
     <TotalExtended>{invoice.total}€</TotalExtended>

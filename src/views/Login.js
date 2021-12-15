@@ -76,7 +76,7 @@ const CenterButtonContainer = styled.div`
 const NewUser = styled.div`
   text-align: center;
   margin-bottom: 3rem;
-  color: ${(props) => props.theme.baseTextColor};
+  color: ${(props) => props.theme.blackToWhite};
 `;
 
 const CreateNewAccount = styled(Link)`

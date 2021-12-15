@@ -89,7 +89,7 @@ const Top = styled.div`
 
 const Title = styled.h1`
   margin-bottom: 0.4rem;
-  color: ${(props) => props.theme.baseTextColor};
+  color: ${(props) => props.theme.blackToWhite};
 
   @media ${breakpoints.md} {
     margin-bottom: 1.4rem;
@@ -97,7 +97,7 @@ const Title = styled.h1`
 `;
 
 const TotalInvoices = styled.p`
-  color: ${(props) => props.theme.baseGreyTextColor};
+  color: ${(props) => props.theme.greyToWhite};
   font-weight: 500;
   font-size: 1.2rem;
 `;

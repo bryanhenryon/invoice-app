@@ -24,7 +24,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.baseTextColor};
+  color: ${({ theme }) => theme.blackToWhite};
   height: 100%;
   margin: 8rem 0;
 `;
@@ -44,7 +44,7 @@ const Title = styled.h2`
 `;
 
 const Text = styled.p`
-  color: ${({ theme }) => theme.baseGreyTextColor};
+  color: ${({ theme }) => theme.greyToWhite};
   line-height: 1.6;
 `;
 export default NoInvoice;

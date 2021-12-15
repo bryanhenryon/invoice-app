@@ -91,7 +91,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: ${({ theme }) => theme.viewsContainerBackground};
+  background-color: ${({ theme }) => theme.viewsContainerBackground};
   transition: background-color 0.3s;
 
   ${({ isAppLoaded }) =>
