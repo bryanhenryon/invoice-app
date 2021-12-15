@@ -6,9 +6,9 @@ import Logo from "./Logo";
 import SwitchThemeButton from "./SwitchThemeButton";
 import LogoutButton from "./LogoutButton";
 
-export const Sidebar = ({ theme, toggleTheme }) => {
+export const Sidebar = ({ theme, className, toggleTheme }) => {
   return (
-    <Container>
+    <Container className={className}>
       <LogoContainer>
         <Logo />
       </LogoContainer>

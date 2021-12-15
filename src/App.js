@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ThemeProvider } from "styled-components";
 
 import GlobalStyle from "./assets/style/GlobalStyle.js";
@@ -17,12 +17,25 @@ import Footer from "./components/Footer";
 const App = () => {
   const [theme, setTheme] = useState("light");
   const [isAppLoaded, setIsAppLoaded] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
   const [isSmallViewport, setIsSmallViewport] = useState(
     window.innerWidth < 576
   );
   const [isMediumViewport, setIsMediumViewport] = useState(
     window.innerWidth < 768
   );
+
+  useEffect(() => {
+    let currPosition = window.scrollY;
+
+    window.addEventListener("scroll", () => {
+      window.scrollY > currPosition && window.scrollY > 100
+        ? setShowNavbar(false)
+        : setShowNavbar(true);
+
+      currPosition = window.scrollY;
+    });
+  }, []);
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -58,7 +71,11 @@ const App = () => {
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
         <GlobalStyle />
         <Container isAppLoaded={isAppLoaded}>
-          <Sidebar theme={theme} toggleTheme={toggleTheme} />
+          <SidebarExtended
+            show={showNavbar}
+            theme={theme}
+            toggleTheme={toggleTheme}
+          />
           <Views>
             <Content>
               <Router>
@@ -105,6 +122,18 @@ const Container = styled.div`
 
   @media ${breakpoints.lg} {
     flex-direction: row;
+  }
+`;
+
+const SidebarExtended = styled(Sidebar)`
+  transition: transform 200ms;
+  transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-100%)")};
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  @media ${breakpoints.lg} {
+    position: static;
   }
 `;
 
