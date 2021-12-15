@@ -136,7 +136,9 @@ const SidebarExtended = styled(Sidebar)`
   z-index: 100;
 
   @media ${breakpoints.lg} {
+    transition: none;
     position: static;
+    transform: translateY(0);
   }
 `;
 
