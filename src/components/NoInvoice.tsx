@@ -1,9 +1,12 @@
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
 import { ReactComponent as IllustrationEmpty } from "../assets/svg/illustration-empty.svg";
 
-export const NoInvoice = ({ isSmallViewport }) => (
+interface Props {
+  isSmallViewport: boolean;
+}
+
+const NoInvoice: React.FC<Props> = ({ isSmallViewport }) => (
   <Container>
     <Content>
       <IllustrationEmptyExtended />
@@ -15,10 +18,6 @@ export const NoInvoice = ({ isSmallViewport }) => (
     </Content>
   </Container>
 );
-
-NoInvoice.propTypes = {
-  isSmallViewport: PropTypes.bool.isRequired,
-};
 
 const Container = styled.div`
   display: flex;
@@ -47,4 +46,5 @@ const Text = styled.p`
   color: ${({ theme }) => theme.greyToWhite};
   line-height: 1.6;
 `;
+
 export default NoInvoice;

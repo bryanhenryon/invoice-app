@@ -1,23 +1,33 @@
 import { useState, useEffect } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
-import invoices from "../data.json";
 
 import { ReactComponent as ChevronLeftIcon } from "../assets/svg/icon-chevron-left.svg";
 import { colors, breakpoints } from "../assets/style/variables";
+
+import { Invoice as InvoiceInterface } from "../models/Invoice";
 
 import InvoiceId from "../components/InvoiceId";
 import StatusBadge from "../components/InvoiceStatusBadge";
 import InvoiceActionButtons from "../components/InvoiceActionButtons";
 
-export const Invoice = ({ isMediumViewport }) => {
-  const { id } = useParams();
-  const history = useHistory();
-  const [invoice, setInvoice] = useState({});
+import invoices from "../data.json";
 
-  const invoiceGrandTotal = invoice.items
-    ?.map((item) => item.price * item.quantity)
-    .reduce((prev, curr) => prev + curr)
+interface Props {
+  isMediumViewport: boolean;
+}
+
+const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
+  const { id } = useParams<{ id: string }>();
+  const history = useHistory();
+  const [invoice, setInvoice] = useState<InvoiceInterface | null>(null);
+
+  /**
+   * Total price of all the services
+   */
+  const invoiceGrandTotal = invoice?.items
+    .map((item) => item.price * item.quantity)
+    .reduce((prev: number, curr: number) => prev + curr)
     .toFixed(2);
 
   useEffect(() => {
@@ -37,7 +47,7 @@ export const Invoice = ({ isMediumViewport }) => {
       <Top>
         <Status isMediumViewport={isMediumViewport}>
           <StatusText>Status</StatusText>
-          <StatusBadge status={invoice.status} />
+          <StatusBadge status={invoice?.status} />
         </Status>
         {!isMediumViewport && <InvoiceActionButtons />}
       </Top>
@@ -45,18 +55,18 @@ export const Invoice = ({ isMediumViewport }) => {
       <InvoiceInfos>
         <Container2>
           <InvoiceIdAndDescription>
-            <InvoiceIdExtended
-              id={invoice.id}
-              fontSize='2.4rem'
-              fontWeight='bold'
-            />
-            <InvoiceDescription>{invoice.description}</InvoiceDescription>
+            <InvoiceIdExtended id={invoice?.id} fontWeight='bold' />
+            <InvoiceDescription>{invoice?.description}</InvoiceDescription>
           </InvoiceIdAndDescription>
           <Container3>
-            {invoice.senderAddress &&
+            {invoice?.senderAddress &&
               Object.keys(invoice.senderAddress).map((index) => (
                 <SenderAddress key={index}>
-                  {invoice.senderAddress[index]}
+                  {
+                    invoice.senderAddress[
+                      index as keyof typeof invoice.clientAddress
+                    ]
+                  }
                 </SenderAddress>
               ))}
           </Container3>
@@ -66,21 +76,25 @@ export const Invoice = ({ isMediumViewport }) => {
           <Container5>
             <InvoiceDateContainer>
               <Label>Date de facturation</Label>
-              <InvoiceDate>{invoice.createdAt}</InvoiceDate>
+              <InvoiceDate>{invoice?.createdAt}</InvoiceDate>
             </InvoiceDateContainer>
             <PaymentDueContainer>
               <Label>Paiement dû</Label>
-              <PaymentDue>{invoice.paymentDue}</PaymentDue>
+              <PaymentDue>{invoice?.paymentDue}</PaymentDue>
             </PaymentDueContainer>
           </Container5>
 
           <Container6>
             <BillTo>Facturé à</BillTo>
-            <ClientName>{invoice.clientName}</ClientName>
-            {invoice.clientAddress &&
+            <ClientName>{invoice?.clientName}</ClientName>
+            {invoice?.clientAddress &&
               Object.keys(invoice.clientAddress).map((index) => (
                 <ClientAddress key={index}>
-                  {invoice.clientAddress[index]}
+                  {
+                    invoice.clientAddress[
+                      index as keyof typeof invoice.clientAddress
+                    ]
+                  }
                 </ClientAddress>
               ))}
           </Container6>
@@ -88,7 +102,7 @@ export const Invoice = ({ isMediumViewport }) => {
           {!isMediumViewport && (
             <SentTo>
               <Label>Envoyé à</Label>
-              <ClientEmailAddress>{invoice.clientEmail}</ClientEmailAddress>
+              <ClientEmailAddress>{invoice?.clientEmail}</ClientEmailAddress>
             </SentTo>
           )}
         </Container4>
@@ -96,7 +110,7 @@ export const Invoice = ({ isMediumViewport }) => {
         {isMediumViewport && (
           <SentTo>
             <Label>Envoyé à</Label>
-            <ClientEmailAddress>{invoice.clientEmail}</ClientEmailAddress>
+            <ClientEmailAddress>{invoice?.clientEmail}</ClientEmailAddress>
           </SentTo>
         )}
 
@@ -111,10 +125,10 @@ export const Invoice = ({ isMediumViewport }) => {
               </ItemValuesDescriptions>
             )}
 
-            {invoice.items &&
-              invoice.items.map((item) =>
+            {invoice?.items &&
+              invoice?.items.map((item, index) =>
                 isMediumViewport ? (
-                  <ItemContainer>
+                  <ItemContainer key={index}>
                     <div>
                       <ItemName>{item.name}</ItemName>
                       <ItemPriceAndQuantity>
@@ -128,7 +142,7 @@ export const Invoice = ({ isMediumViewport }) => {
                     </ItemTotalPrice>
                   </ItemContainer>
                 ) : (
-                  <ItemContainerDesktop>
+                  <ItemContainerDesktop key={index}>
                     <ItemName>{item.name}</ItemName>
                     <ItemQuantityDesktop>{item.quantity}</ItemQuantityDesktop>
                     <ItemPriceDesktop>
@@ -157,8 +171,6 @@ export const Invoice = ({ isMediumViewport }) => {
     </Container>
   );
 };
-
-export default Invoice;
 
 const Container = styled.div``;
 
@@ -200,7 +212,11 @@ const Top = styled.div`
   }
 `;
 
-const Status = styled.div`
+interface StatusProps {
+  isMediumViewport: boolean;
+}
+
+const Status = styled.div<StatusProps>`
   display: flex;
   align-items: center;
   flex-grow: 2;
@@ -303,6 +319,11 @@ const InvoiceIdAndDescription = styled.div`
 
 const InvoiceIdExtended = styled(InvoiceId)`
   margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+
+  @media ${breakpoints.sm} {
+    font-size: 1.6rem;
+  }
 `;
 
 const InvoiceDescription = styled.div`
@@ -494,3 +515,5 @@ const Bottom = styled.div`
   border: 2px solid transparent;
   transition: background-color 100ms ease-in;
 `;
+
+export default Invoice;

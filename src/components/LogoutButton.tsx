@@ -4,7 +4,7 @@ import { colors, breakpoints } from "../assets/style/variables";
 
 import { ReactComponent as LogoutIcon } from "../assets/svg/shut-down.svg";
 
-export const LogoutButton = () => (
+const LogoutButton: React.FC = () => (
   <Button>
     <LogoutIcon />
   </Button>

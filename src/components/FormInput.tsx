@@ -1,9 +1,17 @@
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
 import { colors } from "../assets/style/variables";
 
-export const FormInput = ({
+interface Props {
+  label: string;
+  id: string;
+  placeholder: string;
+  type: string;
+  required: boolean;
+  spellcheck: boolean;
+}
+
+const FormInput: React.FC<Props> = ({
   label,
   id,
   placeholder,
@@ -25,32 +33,24 @@ export const FormInput = ({
   );
 };
 
-FormInput.propTypes = {
-  label: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  type: PropTypes.string.isRequired,
-  required: PropTypes.string,
-};
-
 const Label = styled.label`
   display: block;
   margin-bottom: 1rem;
-  color: ${(props) => props.theme.inputLabelColor};
+  color: ${({ theme }) => theme.inputLabelColor};
 `;
 
 const Input = styled.input`
-  background: ${(props) => props.theme.inputBackgroundColor};
-  color: ${(props) => props.theme.blackToWhite};
+  background: ${({ theme }) => theme.inputBackgroundColor};
+  color: ${({ theme }) => theme.blackToWhite};
   width: 100%;
   margin-bottom: 3rem;
   padding: 1.6rem 2rem;
   border-radius: 0.4rem;
-  border: 1px solid ${(props) => props.theme.inputBorderColor};
+  border: 1px solid ${({ theme }) => theme.inputBorderColor};
   outline: none;
 
   &:focus {
-    border-color: ${(props) => props.theme.activeInputBorderColor};
+    border-color: ${({ theme }) => theme.activeInputBorderColor};
   }
 
   &::placeholder {

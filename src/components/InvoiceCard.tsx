@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 import { colors } from "../assets/style/variables";
@@ -7,10 +6,16 @@ import { colors } from "../assets/style/variables";
 import InvoiceStatusBadge from "./InvoiceStatusBadge";
 import InvoiceId from "./InvoiceId";
 
-export const InvoiceCard = ({ invoice }) => (
+import { Invoice as InvoiceInterface } from "../models/Invoice";
+
+interface Props {
+  invoice: InvoiceInterface;
+}
+
+const InvoiceCard: React.FC<Props> = ({ invoice }) => (
   <Card to={`/factures/${invoice.id}`}>
     <TopContainer>
-      <InvoiceId id={invoice.id} fontWeight='bold' />
+      <InvoiceIdExtended id={invoice.id} fontWeight='bold' />
 
       <ClientName>{invoice.clientName}</ClientName>
     </TopContainer>
@@ -24,10 +29,6 @@ export const InvoiceCard = ({ invoice }) => (
     </BottomContainer>
   </Card>
 );
-
-InvoiceCard.propTypes = {
-  invoice: PropTypes.object.isRequired,
-};
 
 export const Card = styled(Link)`
   display: block;
@@ -50,6 +51,10 @@ const BottomContainer = styled.div`
 
 const TopContainer = styled(BottomContainer)`
   margin-bottom: 2.4rem;
+`;
+
+const InvoiceIdExtended = styled(InvoiceId)`
+  font-size: 1.2rem;
 `;
 
 export const PaymentDue = styled.div`

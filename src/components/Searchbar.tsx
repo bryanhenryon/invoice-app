@@ -4,7 +4,7 @@ import { colors, breakpoints } from "../assets/style/variables";
 
 import { ReactComponent as SearchIcon } from "../assets/svg/icon-search.svg";
 
-export const Searchbar = () => (
+const Searchbar: React.FC = () => (
   <InputContainer>
     <SearchInput
       type='text'
@@ -26,12 +26,12 @@ const InputContainer = styled.div`
 
 const SearchInput = styled.input`
   transition: 100ms ease-in;
-  background: ${(props) => props.theme.inputBackgroundColor};
-  color: ${(props) => props.theme.blackToWhite};
+  background: ${({ theme }) => theme.inputBackgroundColor};
+  color: ${({ theme }) => theme.blackToWhite};
   padding: 1.2rem 3.5rem 1rem 1.2rem;
   border-radius: 0.4rem;
   width: 100%;
-  border: 1px solid ${(props) => props.theme.inputBorderColor};
+  border: 1px solid ${({ theme }) => theme.inputBorderColor};
   outline: none;
 
   &::placeholder {

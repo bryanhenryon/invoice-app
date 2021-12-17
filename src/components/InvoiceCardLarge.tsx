@@ -1,12 +1,18 @@
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
 import { ReactComponent as ChevronRightIcon } from "../assets/svg/icon-chevron-right.svg";
+
 import { Card, PaymentDue, ClientName, Total } from "../components/InvoiceCard";
 import InvoiceId from "./InvoiceId";
 import InvoiceStatusBadge from "./InvoiceStatusBadge";
 
-export const InvoiceCardLarge = ({ invoice }) => (
+import { Invoice as InvoiceInterface } from "../models/Invoice";
+
+interface Props {
+  invoice: InvoiceInterface;
+}
+
+const InvoiceCardLarge: React.FC<Props> = ({ invoice }) => (
   <CardExtended to={`/factures/${invoice.id}`}>
     <InvoiceIdExtended id={invoice.id} fontWeight='bold' />
     <PaymentDueExtended>Due {invoice.paymentDue}</PaymentDueExtended>
@@ -17,10 +23,6 @@ export const InvoiceCardLarge = ({ invoice }) => (
   </CardExtended>
 );
 
-InvoiceCardLarge.propTypes = {
-  invoice: PropTypes.object.isRequired,
-};
-
 const CardExtended = styled(Card)`
   display: grid;
   grid-template-columns: 1fr max-content 2fr 1fr max-content min-content;
@@ -29,6 +31,7 @@ const CardExtended = styled(Card)`
 
 const InvoiceIdExtended = styled(InvoiceId)`
   margin-right: 1rem;
+  font-size: 1.2rem;
 `;
 
 const PaymentDueExtended = styled(PaymentDue)`

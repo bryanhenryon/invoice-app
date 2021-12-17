@@ -1,19 +1,22 @@
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
-export const InvoiceStatusBadge = ({ className, status }) => (
+interface Props {
+  className?: string;
+  status: string | undefined;
+}
+
+const InvoiceStatusBadge: React.FC<Props> = ({ className, status }) => (
   <Status className={className} status={status}>
     <BulletPoint status={status} />
     {status}
   </Status>
 );
 
-InvoiceStatusBadge.propTypes = {
-  status: PropTypes.string.isRequired,
-  className: PropTypes.string,
-};
+interface BulletPointProps {
+  status: string | undefined;
+}
 
-const BulletPoint = styled.div`
+const BulletPoint = styled.div<BulletPointProps>`
   height: 0.8rem;
   width: 0.8rem;
   border-radius: 50%;
@@ -26,7 +29,11 @@ const BulletPoint = styled.div`
       : theme.draftStatusBadgeBulletPoint};
 `;
 
-const Status = styled.div`
+interface StatusProps {
+  status: string | undefined;
+}
+
+const Status = styled.div<StatusProps>`
   display: flex;
   justify-content: center;
   align-items: center;

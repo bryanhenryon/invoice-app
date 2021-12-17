@@ -4,7 +4,7 @@ import { colors, breakpoints } from "../assets/style/variables";
 
 const currentYear = new Date().getFullYear();
 
-export const Footer = () => (
+export const Footer: React.FC = () => (
   <StyledFooter>
     <CopyrightText>© {currentYear} Bryan Henryon — </CopyrightText>
     <PortfolioLink

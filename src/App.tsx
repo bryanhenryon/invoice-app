@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
-import styled from "styled-components";
-import { ThemeProvider } from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 
-import GlobalStyle from "./assets/style/GlobalStyle.js";
+import GlobalStyle from "./assets/style/GlobalStyle";
 import { breakpoints } from "./assets/style/variables";
 import { lightTheme, darkTheme } from "./assets/style/theme";
 
 import Sidebar from "./components/Sidebar";
+import Footer from "./components/Footer";
+
 import Login from "./views/Login";
 import Register from "./views/Register";
 import Invoices from "./views/Invoices";
 import Invoice from "./views/Invoice";
-import Footer from "./components/Footer";
 
-const App = () => {
-  let location = useLocation();
+const App: React.FC = () => {
+  const location = useLocation();
+
   const [theme, setTheme] = useState("light");
-  const [isAppLoaded, setIsAppLoaded] = useState(false);
+  const [enableTransitions, setEnableTransitions] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [isSmallViewport, setIsSmallViewport] = useState(
     window.innerWidth < 576
@@ -26,10 +27,16 @@ const App = () => {
     window.innerWidth < 768
   );
 
+  /**
+   * Scroll to the top on every page change
+   */
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
+  /**
+   * Hide the sticky navbar when scrolling down on mobile, and show it again when scrolling up
+   */
   useEffect(() => {
     let currPosition = window.scrollY;
 
@@ -42,6 +49,9 @@ const App = () => {
     });
   }, []);
 
+  /**
+   * Update viewport related states on window resize
+   */
   useEffect(() => {
     window.addEventListener("resize", () => {
       setIsSmallViewport(window.innerWidth < 576);
@@ -49,15 +59,22 @@ const App = () => {
     });
   }, []);
 
+  /**
+   * Apply the user's choosen theme on page load from the local storage
+   */
   useEffect(() => {
     const localTheme = window.localStorage.getItem("theme");
     localTheme && setTheme(localTheme);
+  }, []);
 
-    /* I set a "isAppLoaded" state to "false" initially so the transitions don't trigger immediately on landing, 
-    then I set it to "true" once the app is rendered. Problem is, useEffect mutates the state before it's rendered. 
-    I didn't find any proper solution yet so I use this hack for now. */
+  /**
+   * Set a "enableTransitions" state to "false" initially so the transitions don't trigger immediately on landing,
+   * then set it to "true" once the app is rendered. Problem is, useEffect mutates the state before it's rendered.
+   * I didn't find any proper solution yet so I use this hack for now
+   */
+  useEffect(() => {
     setTimeout(() => {
-      setIsAppLoaded(true);
+      setEnableTransitions(true);
     }, 100);
   }, []);
 
@@ -75,7 +92,7 @@ const App = () => {
     <>
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
         <GlobalStyle />
-        <Container isAppLoaded={isAppLoaded}>
+        <Container enableTransitions={enableTransitions}>
           <SidebarExtended
             show={showNavbar}
             theme={theme}
@@ -107,15 +124,19 @@ const App = () => {
   );
 };
 
-const Container = styled.div`
+interface ContainerProps {
+  enableTransitions: boolean;
+}
+
+const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.viewsContainerBackground};
   transition: background-color 0.3s;
 
-  ${({ isAppLoaded }) =>
-    !isAppLoaded &&
+  ${({ enableTransitions }) =>
+    !enableTransitions &&
     `
     -webkit-transition: none;
     -moz-transition: none;
@@ -128,7 +149,11 @@ const Container = styled.div`
   }
 `;
 
-const SidebarExtended = styled(Sidebar)`
+interface SidebarExtendedProps {
+  show: boolean;
+}
+
+const SidebarExtended = styled(Sidebar)<SidebarExtendedProps>`
   transition: transform 200ms;
   transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-100%)")};
   position: sticky;

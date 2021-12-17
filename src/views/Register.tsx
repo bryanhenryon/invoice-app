@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
 import { Transition } from "react-transition-group";
@@ -10,7 +10,7 @@ import FormTitle from "../components/FormTitle";
 import FormInput from "../components/FormInput";
 import Button from "../components/Button";
 
-export const Login = () => {
+const Register = () => {
   const history = useHistory();
   const [mounted, setMounted] = useState(false);
 
@@ -18,7 +18,7 @@ export const Login = () => {
     setMounted(true);
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     history.push("/factures");
   };
@@ -27,41 +27,39 @@ export const Login = () => {
     <Transition in={mounted} timeout={250}>
       {(state) => (
         <AuthenticationContainer state={state}>
-          <FormTitle>Connexion</FormTitle>
+          <FormTitle>Création de compte</FormTitle>
           <form onSubmit={handleSubmit}>
             <FormInput
               placeholder='john.doe@gmail.com'
-              required={true}
+              required
               type='email'
               id='email'
               label='Adresse email'
-              spellcheck='false'
+              spellcheck={false}
             />
             <FormInput
               placeholder='•••••••••'
-              required={true}
+              required
               type='password'
               id='password'
               label='Mot de passe'
-              spellcheck='false'
+              spellcheck={false}
+            />
+            <FormInput
+              placeholder='•••••••••'
+              required
+              type='password'
+              id='confirm-password'
+              label='Confirmation du mot de passe'
+              spellcheck={false}
             />
             <CenterButtonContainer>
-              <Button hasBoxShadow>Se connecter</Button>
+              <Button hasBoxShadow>S'enregistrer</Button>
             </CenterButtonContainer>
           </form>
-
-          <NewUser>
-            Nouvel utilisateur ?{" "}
-            <CreateNewAccount to='/inscription'>
-              Créer un compte
-            </CreateNewAccount>
-          </NewUser>
-
-          <ForgottenPasswordContainer>
-            <ForgottenPassword to='/reinitialisation'>
-              Mot de passe oublié
-            </ForgottenPassword>
-          </ForgottenPasswordContainer>
+          <AlreadyHaveAccount>
+            Déjà un compte ? <Login to='/'>Se connecter</Login>
+          </AlreadyHaveAccount>
         </AuthenticationContainer>
       )}
     </Transition>
@@ -73,13 +71,12 @@ const CenterButtonContainer = styled.div`
   margin-bottom: 2.9rem;
 `;
 
-const NewUser = styled.div`
+const AlreadyHaveAccount = styled.div`
   text-align: center;
-  margin-bottom: 3rem;
   color: ${(props) => props.theme.blackToWhite};
 `;
 
-const CreateNewAccount = styled(Link)`
+const Login = styled(Link)`
   color: ${colors.paleViolet};
 
   &:hover {
@@ -87,17 +84,4 @@ const CreateNewAccount = styled(Link)`
   }
 `;
 
-const ForgottenPasswordContainer = styled.div`
-  text-align: center;
-`;
-
-const ForgottenPassword = styled(Link)`
-  display: inline-block;
-  color: ${colors.paleViolet};
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-export default Login;
+export default Register;

@@ -1,12 +1,17 @@
 import styled from "styled-components";
-import PropTypes from "prop-types";
 import { breakpoints } from "../assets/style/variables";
 
 import Logo from "./Logo";
 import SwitchThemeButton from "./SwitchThemeButton";
 import LogoutButton from "./LogoutButton";
 
-export const Sidebar = ({ theme, className, toggleTheme }) => {
+interface Props {
+  theme: string;
+  className?: string;
+  toggleTheme: () => void;
+}
+
+const Sidebar: React.FC<Props> = ({ theme, className, toggleTheme }) => {
   return (
     <Container className={className}>
       <LogoContainer>
@@ -16,11 +21,6 @@ export const Sidebar = ({ theme, className, toggleTheme }) => {
       <LogoutButton />
     </Container>
   );
-};
-
-Sidebar.propTypes = {
-  toggleTheme: PropTypes.func.isRequired,
-  theme: PropTypes.string.isRequired,
 };
 
 const Container = styled.div`

@@ -1,10 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { colors, breakpoints } from "../assets/style/variables";
-import data from "../data.json";
-
 import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
+import { colors, breakpoints } from "../assets/style/variables";
+
 import Button from "../components/Button";
 import StatusFilter from "../components/StatusFilter";
 import Searchbar from "../components/Searchbar";
@@ -12,7 +11,14 @@ import InvoiceCard from "../components/InvoiceCard";
 import InvoiceCardLarge from "../components/InvoiceCardLarge";
 import NoInvoice from "../components/NoInvoice";
 
-export const Invoices = ({ isSmallViewport, isMediumViewport }) => {
+import data from "../data.json";
+
+interface Props {
+  isSmallViewport: boolean;
+  isMediumViewport: boolean;
+}
+
+const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
   const [invoices, setInvoices] = useState(data);
 
   const totalInvoicesText = () => {
@@ -72,7 +78,11 @@ const TitleContainer = styled.div`
   flex-grow: 2;
 `;
 
-const Top = styled.div`
+interface TopProps {
+  invoices: {}[];
+}
+
+const Top = styled.div<TopProps>`
   display: flex;
   align-items: center;
 

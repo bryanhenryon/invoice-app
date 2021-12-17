@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
+import { ReactComponent as LogoIcon } from "../assets/svg/logo.svg";
 import { colors } from "../assets/style/variables";
 
-import { ReactComponent as LogoIcon } from "../assets/svg/logo.svg";
-export const Logo = () => (
+const Logo: React.FC = () => (
   <LogoContainer>
     <StyledLogo>
       <LogoIcon />

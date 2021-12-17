@@ -1,9 +1,17 @@
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
 import { colors } from "../assets/style/variables";
 
-export const Button = ({
+interface Props {
+  className?: string;
+  children: React.ReactNode;
+  hasIcon?: boolean;
+  hasBoxShadow?: boolean;
+  variant?: string;
+  fullWidth?: boolean;
+}
+
+const Button: React.FC<Props> = ({
   className,
   children,
   hasIcon,
@@ -24,14 +32,14 @@ export const Button = ({
   );
 };
 
-Button.propTypes = {
-  variant: PropTypes.string,
-  hasIcon: PropTypes.bool,
-  hasBoxShadow: PropTypes.bool,
-  fullWidth: PropTypes.bool,
-};
+interface StyledButtonProps {
+  hasBoxShadow: boolean | undefined;
+  variant: string | undefined;
+  hasIcon: boolean | undefined;
+  fullWidth: boolean | undefined;
+}
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<StyledButtonProps>`
   font-size: 1.2rem;
   transition: background-color 0.2s ease;
   font-weight: 600;

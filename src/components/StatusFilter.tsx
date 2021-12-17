@@ -1,15 +1,17 @@
-import { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
-import PropTypes from "prop-types";
+import React, { useState, useRef, useEffect } from "react";
 import { Transition } from "react-transition-group";
-
-import { colors, breakpoints } from "../assets/style/variables";
+import styled from "styled-components";
 
 import { ReactComponent as ChevronDownIcon } from "../assets/svg/icon-chevron-down.svg";
 import { ReactComponent as CheckIcon } from "../assets/svg/icon-check.svg";
+import { colors, breakpoints } from "../assets/style/variables";
 
-export const StatusFilter = ({ isSmallViewport }) => {
-  const dropdown = useRef();
+interface Props {
+  isSmallViewport: boolean;
+}
+
+const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
+  const dropdown = useRef<HTMLDivElement>(null);
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [checkboxesStatus, setCheckboxesStatus] = useState([
@@ -37,14 +39,19 @@ export const StatusFilter = ({ isSmallViewport }) => {
     };
   });
 
-  const handleOutsideClick = (e) => {
-    if (dropdown.current && !dropdown.current.contains(e.target)) {
+  const handleOutsideClick = (e: Event) => {
+    if (
+      dropdown.current &&
+      !dropdown.current.contains(e.target as HTMLDivElement)
+    ) {
       setShowDropdown(false);
     }
   };
 
-  const changeCheckboxStatus = (id) => {
+  const changeCheckboxStatus = (id: number) => {
     const checkbox = checkboxesStatus.find((checkbox) => checkbox.id === id);
+
+    if (!checkbox) throw new Error("Undefined checkbox");
 
     checkbox.checked = !checkbox.checked;
     setCheckboxesStatus([...checkboxesStatus]);
@@ -77,7 +84,7 @@ export const StatusFilter = ({ isSmallViewport }) => {
           <StatusFilterDropdown
             style={{
               ...defaultStyle,
-              ...transitionStyles[state],
+              ...transitionStyles[state as keyof typeof transitionStyles],
             }}
           >
             {checkboxesStatus.map(({ id, text, checked }) => (
@@ -93,10 +100,6 @@ export const StatusFilter = ({ isSmallViewport }) => {
       </Transition>
     </Container>
   );
-};
-
-StatusFilter.propTypes = {
-  isSmallViewport: PropTypes.bool.isRequired,
 };
 
 const Container = styled.div`
@@ -127,7 +130,11 @@ const StatusFilterDropdown = styled.div`
   border-radius: 8px;
 `;
 
-const FakeCheckbox = styled.span`
+interface FakeCheckboxProps {
+  checked: boolean;
+}
+
+const FakeCheckbox = styled.span<FakeCheckboxProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -140,7 +147,11 @@ const FakeCheckbox = styled.span`
   margin-right: 1.3rem;
 `;
 
-const CheckIconExtended = styled(CheckIcon)`
+interface CheckIconExtendedProps {
+  checked: boolean;
+}
+
+const CheckIconExtended = styled(CheckIcon)<CheckIconExtendedProps>`
   display: ${({ checked }) => (checked ? "block" : "none")};
 `;
 
@@ -160,7 +171,13 @@ const Label = styled.label`
   }
 `;
 
-const ChevronDownIconExtended = styled(ChevronDownIcon)`
+interface ChevronDownIconExtendedProps {
+  showDropdown: boolean;
+}
+
+const ChevronDownIconExtended = styled(
+  ChevronDownIcon
+)<ChevronDownIconExtendedProps>`
   margin-left: 1.2rem;
   transition: transform 300ms;
 
