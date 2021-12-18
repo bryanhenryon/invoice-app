@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { ReactComponent as ChevronLeftIcon } from "../assets/svg/icon-chevron-left.svg";
 import { colors, breakpoints } from "../assets/style/variables";
@@ -20,7 +21,9 @@ interface Props {
 const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
-  const [invoice, setInvoice] = useState<InvoiceInterface | null>(null);
+  const [invoice, setInvoice] = useState<InvoiceInterface | null | undefined>(
+    null
+  );
 
   /**
    * Total price of all the services
@@ -38,137 +41,148 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
   }, [id, history]);
 
   return (
-    <Container>
-      <GoBackButton to='/factures'>
-        <ChevronLeftIconExtended />
-        <GoBackButtonLabel>Retour</GoBackButtonLabel>
-      </GoBackButton>
+    <motion.div
+      initial={{ x: 100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{
+        duration: 0.8,
+        type: "spring",
+      }}
+    >
+      <Container>
+        <GoBackButton
+          to={{ pathname: "/factures", state: { fromInvoice: true } }}
+        >
+          <ChevronLeftIconExtended />
+          <GoBackButtonLabel>Retour</GoBackButtonLabel>
+        </GoBackButton>
 
-      <Top>
-        <Status isMediumViewport={isMediumViewport}>
-          <StatusText>Status</StatusText>
-          <StatusBadge status={invoice?.status} />
-        </Status>
-        {!isMediumViewport && <InvoiceActionButtons />}
-      </Top>
+        <Top>
+          <Status isMediumViewport={isMediumViewport}>
+            <StatusText>Status</StatusText>
+            <StatusBadge status={invoice?.status} />
+          </Status>
+          {!isMediumViewport && <InvoiceActionButtons />}
+        </Top>
 
-      <InvoiceInfos>
-        <Container2>
-          <InvoiceIdAndDescription>
-            <InvoiceIdExtended id={invoice?.id} fontWeight='bold' />
-            <InvoiceDescription>{invoice?.description}</InvoiceDescription>
-          </InvoiceIdAndDescription>
-          <Container3>
-            {invoice?.senderAddress &&
-              Object.keys(invoice.senderAddress).map((index) => (
-                <SenderAddress key={index}>
-                  {
-                    invoice.senderAddress[
-                      index as keyof typeof invoice.clientAddress
-                    ]
-                  }
-                </SenderAddress>
-              ))}
-          </Container3>
-        </Container2>
+        <InvoiceInfos>
+          <Container2>
+            <InvoiceIdAndDescription>
+              <InvoiceIdExtended id={invoice?.id} fontWeight='bold' />
+              <InvoiceDescription>{invoice?.description}</InvoiceDescription>
+            </InvoiceIdAndDescription>
+            <Container3>
+              {invoice?.senderAddress &&
+                Object.keys(invoice.senderAddress).map((index) => (
+                  <SenderAddress key={index}>
+                    {
+                      invoice.senderAddress[
+                        index as keyof typeof invoice.clientAddress
+                      ]
+                    }
+                  </SenderAddress>
+                ))}
+            </Container3>
+          </Container2>
 
-        <Container4>
-          <Container5>
-            <InvoiceDateContainer>
-              <Label>Date de facturation</Label>
-              <InvoiceDate>{invoice?.createdAt}</InvoiceDate>
-            </InvoiceDateContainer>
-            <PaymentDueContainer>
-              <Label>Paiement dû</Label>
-              <PaymentDue>{invoice?.paymentDue}</PaymentDue>
-            </PaymentDueContainer>
-          </Container5>
+          <Container4>
+            <Container5>
+              <InvoiceDateContainer>
+                <Label>Date de facturation</Label>
+                <InvoiceDate>{invoice?.createdAt}</InvoiceDate>
+              </InvoiceDateContainer>
+              <PaymentDueContainer>
+                <Label>Paiement dû</Label>
+                <PaymentDue>{invoice?.paymentDue}</PaymentDue>
+              </PaymentDueContainer>
+            </Container5>
 
-          <Container6>
-            <BillTo>Facturé à</BillTo>
-            <ClientName>{invoice?.clientName}</ClientName>
-            {invoice?.clientAddress &&
-              Object.keys(invoice.clientAddress).map((index) => (
-                <ClientAddress key={index}>
-                  {
-                    invoice.clientAddress[
-                      index as keyof typeof invoice.clientAddress
-                    ]
-                  }
-                </ClientAddress>
-              ))}
-          </Container6>
+            <Container6>
+              <BillTo>Facturé à</BillTo>
+              <ClientName>{invoice?.clientName}</ClientName>
+              {invoice?.clientAddress &&
+                Object.keys(invoice.clientAddress).map((index) => (
+                  <ClientAddress key={index}>
+                    {
+                      invoice.clientAddress[
+                        index as keyof typeof invoice.clientAddress
+                      ]
+                    }
+                  </ClientAddress>
+                ))}
+            </Container6>
 
-          {!isMediumViewport && (
+            {!isMediumViewport && (
+              <SentTo>
+                <Label>Envoyé à</Label>
+                <ClientEmailAddress>{invoice?.clientEmail}</ClientEmailAddress>
+              </SentTo>
+            )}
+          </Container4>
+
+          {isMediumViewport && (
             <SentTo>
               <Label>Envoyé à</Label>
               <ClientEmailAddress>{invoice?.clientEmail}</ClientEmailAddress>
             </SentTo>
           )}
-        </Container4>
+
+          <OrderSummary>
+            <Items>
+              {!isMediumViewport && (
+                <ItemValuesDescriptions>
+                  <ItemNameLabel>Prestation</ItemNameLabel>
+                  <ItemQuantityLabel>Quantité</ItemQuantityLabel>
+                  <ItemPriceLabel>Prix</ItemPriceLabel>
+                  <ItemTotalLabel>Total</ItemTotalLabel>
+                </ItemValuesDescriptions>
+              )}
+
+              {invoice?.items &&
+                invoice?.items.map((item, index) =>
+                  isMediumViewport ? (
+                    <ItemContainer key={index}>
+                      <div>
+                        <ItemName>{item.name}</ItemName>
+                        <ItemPriceAndQuantity>
+                          <ItemQuantity>{item.quantity}</ItemQuantity>
+                          <MultiplySymbol>x</MultiplySymbol>
+                          <ItemPrice>{item.price.toFixed(2)}€</ItemPrice>
+                        </ItemPriceAndQuantity>
+                      </div>
+                      <ItemTotalPrice>
+                        {(item.price * item.quantity).toFixed(2)}€
+                      </ItemTotalPrice>
+                    </ItemContainer>
+                  ) : (
+                    <ItemContainerDesktop key={index}>
+                      <ItemName>{item.name}</ItemName>
+                      <ItemQuantityDesktop>{item.quantity}</ItemQuantityDesktop>
+                      <ItemPriceDesktop>
+                        {item.price.toFixed(2)}€
+                      </ItemPriceDesktop>
+                      <ItemTotalPrice>
+                        {(item.price * item.quantity).toFixed(2)}€
+                      </ItemTotalPrice>
+                    </ItemContainerDesktop>
+                  )
+                )}
+            </Items>
+
+            <GrandTotal>
+              <GrandTotalText>Grand Total</GrandTotalText>
+              <GrandTotalValue>{invoiceGrandTotal}€</GrandTotalValue>
+            </GrandTotal>
+          </OrderSummary>
+        </InvoiceInfos>
 
         {isMediumViewport && (
-          <SentTo>
-            <Label>Envoyé à</Label>
-            <ClientEmailAddress>{invoice?.clientEmail}</ClientEmailAddress>
-          </SentTo>
+          <Bottom>
+            <InvoiceActionButtons isMediumViewport={isMediumViewport} />
+          </Bottom>
         )}
-
-        <OrderSummary>
-          <Items>
-            {!isMediumViewport && (
-              <ItemValuesDescriptions>
-                <ItemNameLabel>Prestation</ItemNameLabel>
-                <ItemQuantityLabel>Quantité</ItemQuantityLabel>
-                <ItemPriceLabel>Prix</ItemPriceLabel>
-                <ItemTotalLabel>Total</ItemTotalLabel>
-              </ItemValuesDescriptions>
-            )}
-
-            {invoice?.items &&
-              invoice?.items.map((item, index) =>
-                isMediumViewport ? (
-                  <ItemContainer key={index}>
-                    <div>
-                      <ItemName>{item.name}</ItemName>
-                      <ItemPriceAndQuantity>
-                        <ItemQuantity>{item.quantity}</ItemQuantity>
-                        <MultiplySymbol>x</MultiplySymbol>
-                        <ItemPrice>{item.price.toFixed(2)}€</ItemPrice>
-                      </ItemPriceAndQuantity>
-                    </div>
-                    <ItemTotalPrice>
-                      {(item.price * item.quantity).toFixed(2)}€
-                    </ItemTotalPrice>
-                  </ItemContainer>
-                ) : (
-                  <ItemContainerDesktop key={index}>
-                    <ItemName>{item.name}</ItemName>
-                    <ItemQuantityDesktop>{item.quantity}</ItemQuantityDesktop>
-                    <ItemPriceDesktop>
-                      {item.price.toFixed(2)}€
-                    </ItemPriceDesktop>
-                    <ItemTotalPrice>
-                      {(item.price * item.quantity).toFixed(2)}€
-                    </ItemTotalPrice>
-                  </ItemContainerDesktop>
-                )
-              )}
-          </Items>
-
-          <GrandTotal>
-            <GrandTotalText>Grand Total</GrandTotalText>
-            <GrandTotalValue>{invoiceGrandTotal}€</GrandTotalValue>
-          </GrandTotal>
-        </OrderSummary>
-      </InvoiceInfos>
-
-      {isMediumViewport && (
-        <Bottom>
-          <InvoiceActionButtons isMediumViewport={isMediumViewport} />
-        </Bottom>
-      )}
-    </Container>
+      </Container>
+    </motion.div>
   );
 };
 

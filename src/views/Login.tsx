@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
-import { Transition } from "react-transition-group";
 
 import { colors } from "../assets/style/variables";
 
@@ -12,11 +10,6 @@ import Button from "../components/Button";
 
 const Login = () => {
   const history = useHistory();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,47 +17,41 @@ const Login = () => {
   };
 
   return (
-    <Transition in={mounted} timeout={250}>
-      {(state) => (
-        <AuthenticationContainer state={state}>
-          <FormTitle>Connexion</FormTitle>
-          <form onSubmit={handleSubmit}>
-            <FormInput
-              placeholder='john.doe@gmail.com'
-              required={true}
-              type='email'
-              id='email'
-              label='Adresse email'
-              spellcheck={false}
-            />
-            <FormInput
-              placeholder='•••••••••'
-              required={true}
-              type='password'
-              id='password'
-              label='Mot de passe'
-              spellcheck={false}
-            />
-            <CenterButtonContainer>
-              <Button hasBoxShadow>Se connecter</Button>
-            </CenterButtonContainer>
-          </form>
+    <AuthenticationContainer>
+      <FormTitle>Connexion</FormTitle>
+      <form onSubmit={handleSubmit}>
+        <FormInput
+          placeholder='john.doe@gmail.com'
+          required={true}
+          type='email'
+          id='email'
+          label='Adresse email'
+          spellcheck={false}
+        />
+        <FormInput
+          placeholder='•••••••••'
+          required={true}
+          type='password'
+          id='password'
+          label='Mot de passe'
+          spellcheck={false}
+        />
+        <CenterButtonContainer>
+          <Button hasBoxShadow>Se connecter</Button>
+        </CenterButtonContainer>
+      </form>
 
-          <NewUser>
-            Nouvel utilisateur ?
-            <CreateNewAccount to='/inscription'>
-              Créer un compte
-            </CreateNewAccount>
-          </NewUser>
+      <NewUser>
+        Nouvel utilisateur ?{" "}
+        <CreateNewAccount to='/inscription'>Créer un compte</CreateNewAccount>
+      </NewUser>
 
-          <ForgottenPasswordContainer>
-            <ForgottenPassword to='/reinitialisation'>
-              Mot de passe oublié
-            </ForgottenPassword>
-          </ForgottenPasswordContainer>
-        </AuthenticationContainer>
-      )}
-    </Transition>
+      <ForgottenPasswordContainer>
+        <ForgottenPassword to='/reinitialisation'>
+          Mot de passe oublié
+        </ForgottenPassword>
+      </ForgottenPasswordContainer>
+    </AuthenticationContainer>
   );
 };
 

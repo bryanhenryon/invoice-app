@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Transition } from "react-transition-group";
 import styled from "styled-components";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { ReactComponent as ChevronDownIcon } from "../assets/svg/icon-chevron-down.svg";
 import { ReactComponent as CheckIcon } from "../assets/svg/icon-check.svg";
@@ -57,35 +57,19 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
     setCheckboxesStatus([...checkboxesStatus]);
   };
 
-  /**
-   * Transition style
-   */
-  const duration = 150;
-
-  const defaultStyle = {
-    transition: `transform ${duration}ms`,
-    transform: "scale(0)",
-  };
-
-  const transitionStyles = {
-    entering: { transform: "scale(1)" },
-    entered: { transform: "scale(1)" },
-  };
-
   return (
     <Container ref={dropdown}>
       <StatusFilterButton onClick={() => setShowDropdown(!showDropdown)}>
         {isSmallViewport ? "Filtrer" : "Filtrer par status"}
         <ChevronDownIconExtended showDropdown={showDropdown} />
       </StatusFilterButton>
-
-      <Transition in={showDropdown} timeout={duration}>
-        {(state) => (
+      <AnimatePresence>
+        {showDropdown && (
           <StatusFilterDropdown
-            style={{
-              ...defaultStyle,
-              ...transitionStyles[state as keyof typeof transitionStyles],
-            }}
+            as={motion.div}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
           >
             {checkboxesStatus.map(({ id, text, checked }) => (
               <Label key={id} onClick={() => changeCheckboxStatus(id)}>
@@ -97,7 +81,7 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
             ))}
           </StatusFilterDropdown>
         )}
-      </Transition>
+      </AnimatePresence>
     </Container>
   );
 };

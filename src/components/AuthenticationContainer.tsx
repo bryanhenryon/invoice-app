@@ -1,29 +1,26 @@
-import { TransitionStatus } from "react-transition-group";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 interface Props {
   children: React.ReactNode;
-  state: TransitionStatus;
 }
 
-const AuthenticationContainer: React.FC<Props> = ({ children, state }) => (
-  <Container state={state}>
+const AuthenticationContainer: React.FC<Props> = ({ children }) => (
+  <Container
+    as={motion.div}
+    initial={{ scale: 0.9, opacity: 0 }}
+    animate={{ scale: 1, opacity: 1 }}
+    transition={{ duration: 0.3 }}
+  >
     <Subcontainer>{children}</Subcontainer>
   </Container>
 );
 
-interface ContainerProps {
-  state: TransitionStatus;
-}
-
-const Container = styled.div<ContainerProps>`
+const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-  opacity: ${({ state }) =>
-    state === "entering" || state === "entered" ? 1 : 0};
-  transition: opacity 250ms ease-out;
 `;
 
 const Subcontainer = styled.div`

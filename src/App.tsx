@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Switch, Route, useLocation } from "react-router-dom";
+import { Route, useLocation, Switch } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
+import { AnimatePresence } from "framer-motion";
 
 import GlobalStyle from "./assets/style/GlobalStyle";
 import { breakpoints } from "./assets/style/variables";
@@ -98,23 +99,32 @@ const App: React.FC = () => {
             theme={theme}
             toggleTheme={toggleTheme}
           />
+
           <Views>
             <Content>
-              <Switch>
-                <Route path='/' exact component={Login} />
-                <Route path='/inscription' exact component={Register} />
-                <InvoicesContainer>
-                  <Route path='/factures' exact>
-                    <Invoices
-                      isSmallViewport={isSmallViewport}
-                      isMediumViewport={isMediumViewport}
-                    />
-                  </Route>
-                  <Route path='/factures/:id' exact>
-                    <Invoice isMediumViewport={isMediumViewport} />
-                  </Route>
-                </InvoicesContainer>
-              </Switch>
+              <AnimatePresence exitBeforeEnter initial={false}>
+                <Switch location={location} key={location.pathname}>
+                  <Route path='/' exact component={Login} />
+                  <Route path='/inscription' exact component={Register} />
+
+                  <InvoicesContainer>
+                    <Route path='/factures' exact>
+                      <InvoicesWrapper>
+                        <Invoices
+                          isSmallViewport={isSmallViewport}
+                          isMediumViewport={isMediumViewport}
+                        />
+                      </InvoicesWrapper>
+                    </Route>
+
+                    <Route path='/factures/:id' exact>
+                      <InvoiceWrapper>
+                        <Invoice isMediumViewport={isMediumViewport} />
+                      </InvoiceWrapper>
+                    </Route>
+                  </InvoicesContainer>
+                </Switch>
+              </AnimatePresence>
             </Content>
             <Footer />
           </Views>
@@ -154,7 +164,7 @@ interface SidebarExtendedProps {
 }
 
 const SidebarExtended = styled(Sidebar)<SidebarExtendedProps>`
-  transition: transform 200ms;
+  transition: transform 300ms;
   transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-100%)")};
   position: sticky;
   top: 0;
@@ -196,6 +206,16 @@ const InvoicesContainer = styled.div`
   max-width: 730px;
   margin: 0 auto;
   height: 100%;
+`;
+
+const InvoiceWrapper = styled.div`
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 300ms cubic-bezier(0.22, 1, 0.36, 1);
+`;
+
+const InvoicesWrapper = styled.div`
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 300ms cubic-bezier(0.22, 1, 0.36, 1);
 `;
 
 export default App;

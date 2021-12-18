@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
-import { Transition } from "react-transition-group";
 
 import { colors } from "../assets/style/variables";
 
@@ -12,11 +10,6 @@ import Button from "../components/Button";
 
 const Register = () => {
   const history = useHistory();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,45 +17,41 @@ const Register = () => {
   };
 
   return (
-    <Transition in={mounted} timeout={250}>
-      {(state) => (
-        <AuthenticationContainer state={state}>
-          <FormTitle>Création de compte</FormTitle>
-          <form onSubmit={handleSubmit}>
-            <FormInput
-              placeholder='john.doe@gmail.com'
-              required
-              type='email'
-              id='email'
-              label='Adresse email'
-              spellcheck={false}
-            />
-            <FormInput
-              placeholder='•••••••••'
-              required
-              type='password'
-              id='password'
-              label='Mot de passe'
-              spellcheck={false}
-            />
-            <FormInput
-              placeholder='•••••••••'
-              required
-              type='password'
-              id='confirm-password'
-              label='Confirmation du mot de passe'
-              spellcheck={false}
-            />
-            <CenterButtonContainer>
-              <Button hasBoxShadow>S'enregistrer</Button>
-            </CenterButtonContainer>
-          </form>
-          <AlreadyHaveAccount>
-            Déjà un compte ? <Login to='/'>Se connecter</Login>
-          </AlreadyHaveAccount>
-        </AuthenticationContainer>
-      )}
-    </Transition>
+    <AuthenticationContainer>
+      <FormTitle>Création de compte</FormTitle>
+      <form onSubmit={handleSubmit}>
+        <FormInput
+          placeholder='john.doe@gmail.com'
+          required
+          type='email'
+          id='email'
+          label='Adresse email'
+          spellcheck={false}
+        />
+        <FormInput
+          placeholder='•••••••••'
+          required
+          type='password'
+          id='password'
+          label='Mot de passe'
+          spellcheck={false}
+        />
+        <FormInput
+          placeholder='•••••••••'
+          required
+          type='password'
+          id='confirm-password'
+          label='Confirmation du mot de passe'
+          spellcheck={false}
+        />
+        <CenterButtonContainer>
+          <Button hasBoxShadow>S'enregistrer</Button>
+        </CenterButtonContainer>
+      </form>
+      <AlreadyHaveAccount>
+        Déjà un compte ? <Login to='/'>Se connecter</Login>
+      </AlreadyHaveAccount>
+    </AuthenticationContainer>
   );
 };
 

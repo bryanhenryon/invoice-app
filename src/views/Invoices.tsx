@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
 import { colors, breakpoints } from "../assets/style/variables";
@@ -12,6 +13,11 @@ import InvoiceCardLarge from "../components/InvoiceCardLarge";
 import NoInvoice from "../components/NoInvoice";
 
 import data from "../data.json";
+import { useLocation } from "react-router-dom";
+
+interface LocationState {
+  fromInvoice: boolean;
+}
 
 interface Props {
   isSmallViewport: boolean;
@@ -19,6 +25,13 @@ interface Props {
 }
 
 const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
+  const location = useLocation<LocationState>();
+
+  /**
+   * Check if the last visited page is Invoice or not in order to trigger the correct animation on render
+   */
+  const isFromInvoicePage = location?.state?.fromInvoice;
+
   const [invoices, setInvoices] = useState(data);
 
   const totalInvoicesText = () => {
@@ -35,40 +48,53 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
   };
 
   return (
-    <Container>
-      <Top invoices={invoices}>
-        <TitleContainer>
-          <Title>Factures</Title>
-          <TotalInvoices>{totalInvoicesText()}</TotalInvoices>
-        </TitleContainer>
+    <motion.div
+      initial={
+        isFromInvoicePage ? { x: -100, opacity: 0 } : { scale: 0.9, opacity: 0 }
+      }
+      animate={
+        isFromInvoicePage ? { x: 0, opacity: 1 } : { scale: 1, opacity: 1 }
+      }
+      transition={{
+        duration: 0.8,
+        type: "spring",
+      }}
+    >
+      <Container>
+        <Top invoices={invoices}>
+          <TitleContainer>
+            <Title>Factures</Title>
+            <TotalInvoices>{totalInvoicesText()}</TotalInvoices>
+          </TitleContainer>
 
-        <StatusFilter isSmallViewport={isSmallViewport} />
+          <StatusFilter isSmallViewport={isSmallViewport} />
 
-        <Button hasIcon hasBoxShadow>
-          <PlusIconContainer>
-            <PlusIcon />
-          </PlusIconContainer>
-          <NewInvoice>
-            {isSmallViewport ? "Nouv." : "Nouvelle facture"}
-          </NewInvoice>
-        </Button>
-      </Top>
+          <Button hasIcon hasBoxShadow>
+            <PlusIconContainer>
+              <PlusIcon />
+            </PlusIconContainer>
+            <NewInvoice>
+              {isSmallViewport ? "Nouv." : "Nouvelle facture"}
+            </NewInvoice>
+          </Button>
+        </Top>
 
-      {invoices.length ? (
-        <InvoicesList>
-          <Searchbar />
-          {invoices.map((invoice) =>
-            isMediumViewport ? (
-              <InvoiceCard key={invoice.id} invoice={invoice} />
-            ) : (
-              <InvoiceCardLarge key={invoice.id} invoice={invoice} />
-            )
-          )}
-        </InvoicesList>
-      ) : (
-        <NoInvoice isSmallViewport={isSmallViewport} />
-      )}
-    </Container>
+        {invoices.length ? (
+          <InvoicesList>
+            <Searchbar />
+            {invoices.map((invoice) =>
+              isMediumViewport ? (
+                <InvoiceCard key={invoice.id} invoice={invoice} />
+              ) : (
+                <InvoiceCardLarge key={invoice.id} invoice={invoice} />
+              )
+            )}
+          </InvoicesList>
+        ) : (
+          <NoInvoice isSmallViewport={isSmallViewport} />
+        )}
+      </Container>
+    </motion.div>
   );
 };
 
