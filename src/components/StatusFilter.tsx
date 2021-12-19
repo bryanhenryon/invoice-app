@@ -39,6 +39,9 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
     };
   });
 
+  /**
+   * Close the dropdown when clicking away
+   */
   const handleOutsideClick = (e: Event) => {
     if (
       dropdown.current &&
@@ -48,6 +51,10 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
     }
   };
 
+  /**
+   * Change the `checked` status of a selected checkbox
+   * @param id A checkbox identifier
+   */
   const changeCheckboxStatus = (id: number) => {
     const checkbox = checkboxesStatus.find((checkbox) => checkbox.id === id);
 

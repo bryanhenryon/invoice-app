@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
 import { colors, breakpoints } from "../assets/style/variables";
@@ -13,7 +14,6 @@ import InvoiceCardLarge from "../components/InvoiceCardLarge";
 import NoInvoice from "../components/NoInvoice";
 
 import data from "../data.json";
-import { useLocation } from "react-router-dom";
 
 interface LocationState {
   fromInvoice: boolean;
