@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { ReactComponent as ChevronLeftIcon } from "../assets/svg/icon-chevron-left.svg";
 import { colors, breakpoints } from "../assets/style/variables";
@@ -12,18 +12,17 @@ import InvoiceId from "../components/InvoiceId";
 import StatusBadge from "../components/InvoiceStatusBadge";
 import InvoiceActionButtons from "../components/InvoiceActionButtons";
 
-import invoices from "../data.json";
+import jsonInvoices from "../data.json";
 
 interface Props {
   isMediumViewport: boolean;
 }
 
 const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
+  const invoices: InvoiceInterface[] = jsonInvoices;
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
-  const [invoice, setInvoice] = useState<InvoiceInterface | null | undefined>(
-    null
-  );
+  const [invoice, setInvoice] = useState<InvoiceInterface | null>(null);
 
   /**
    * Total price of all the services

@@ -13,6 +13,8 @@ import InvoiceCard from "../components/InvoiceCard";
 import InvoiceCardLarge from "../components/InvoiceCardLarge";
 import NoInvoice from "../components/NoInvoice";
 
+import { Invoice as InvoiceInterface } from "../models/Invoice";
+
 import data from "../data.json";
 
 interface LocationState {
@@ -25,14 +27,14 @@ interface Props {
 }
 
 const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
+  const [invoices, setInvoices] = useState<InvoiceInterface[]>(data);
+
   const location = useLocation<LocationState>();
 
   /**
    * Check if the last visited page is Invoice or not in order to trigger the correct animation on render
    */
   const isFromInvoicePage = location?.state?.fromInvoice;
-
-  const [invoices, setInvoices] = useState(data);
 
   const totalInvoicesText = () => {
     switch (invoices.length) {
