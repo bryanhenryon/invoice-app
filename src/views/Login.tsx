@@ -27,6 +27,7 @@ const Login = () => {
           id='email'
           label='Adresse email'
           spellcheck={false}
+          autoComplete='email'
         />
         <FormInput
           placeholder='•••••••••'
@@ -35,6 +36,7 @@ const Login = () => {
           id='password'
           label='Mot de passe'
           spellcheck={false}
+          autoComplete='current-password'
         />
         <CenterButtonContainer>
           <Button hasBoxShadow>Se connecter</Button>

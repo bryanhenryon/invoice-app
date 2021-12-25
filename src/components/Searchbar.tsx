@@ -35,6 +35,7 @@ const Searchbar: React.FC = () => {
 };
 
 const InputContainer = styled.div`
+  transition: 100ms ease-in;
   display: flex;
   align-items: center;
   width: 100%;

@@ -27,6 +27,7 @@ const Register = () => {
           id='email'
           label='Adresse email'
           spellcheck={false}
+          autoComplete='email'
         />
         <FormInput
           placeholder='•••••••••'
@@ -35,6 +36,7 @@ const Register = () => {
           id='password'
           label='Mot de passe'
           spellcheck={false}
+          autoComplete='new-password'
         />
         <FormInput
           placeholder='•••••••••'
@@ -43,6 +45,7 @@ const Register = () => {
           id='confirm-password'
           label='Confirmation du mot de passe'
           spellcheck={false}
+          autoComplete='new-password'
         />
         <CenterButtonContainer>
           <Button hasBoxShadow>S'enregistrer</Button>

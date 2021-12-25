@@ -9,6 +9,7 @@ interface Props {
   type: string;
   required: boolean;
   spellcheck: boolean;
+  autoComplete: string;
 }
 
 const FormInput: React.FC<Props> = ({
@@ -18,6 +19,7 @@ const FormInput: React.FC<Props> = ({
   type,
   required,
   spellcheck,
+  autoComplete,
 }) => {
   return (
     <>
@@ -28,6 +30,7 @@ const FormInput: React.FC<Props> = ({
         type={type}
         required={required}
         spellCheck={spellcheck}
+        autoComplete={autoComplete}
       />
     </>
   );
