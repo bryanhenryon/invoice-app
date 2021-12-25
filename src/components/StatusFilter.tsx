@@ -68,7 +68,9 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
     <Container ref={dropdown}>
       <StatusFilterButton onClick={() => setShowDropdown(!showDropdown)}>
         {isSmallViewport ? "Filtrer" : "Filtrer par status"}
-        <ChevronDownIconExtended showDropdown={showDropdown} />
+        <ChevronDownIconContainer showDropdown={showDropdown}>
+          <ChevronDownIconExtended />
+        </ChevronDownIconContainer>
       </StatusFilterButton>
       <AnimatePresence>
         {showDropdown && (
@@ -166,9 +168,8 @@ interface ChevronDownIconExtendedProps {
   showDropdown: boolean;
 }
 
-const ChevronDownIconExtended = styled(
-  ChevronDownIcon
-)<ChevronDownIconExtendedProps>`
+const ChevronDownIconContainer = styled.span<ChevronDownIconExtendedProps>`
+  display: inline-block;
   margin-left: 1.2rem;
   transition: transform 300ms;
 
@@ -182,5 +183,7 @@ const ChevronDownIconExtended = styled(
     margin-left: 1.6rem;
   }
 `;
+
+const ChevronDownIconExtended = styled(ChevronDownIcon)``;
 
 export default StatusFilter;
