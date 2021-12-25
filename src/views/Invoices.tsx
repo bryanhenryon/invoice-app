@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 
 import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
 import { colors, breakpoints } from "../assets/style/variables";
+import { InvoicesContainer } from "../assets/style/mixins";
 
 import Button from "../components/Button";
 import StatusFilter from "../components/StatusFilter";
@@ -17,10 +18,6 @@ import { Invoice as InvoiceInterface } from "../models/Invoice";
 
 import data from "../data.json";
 
-interface LocationState {
-  fromInvoice: boolean;
-}
-
 interface Props {
   isSmallViewport: boolean;
   isMediumViewport: boolean;
@@ -28,13 +25,12 @@ interface Props {
 
 const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
   const [invoices, setInvoices] = useState<InvoiceInterface[]>(data);
-
-  const location = useLocation<LocationState>();
+  const { state } = useLocation();
 
   /**
    * Check if the last visited page is Invoice or not in order to trigger the correct animation on render
    */
-  const isFromInvoicePage = location?.state?.fromInvoice;
+  const isFromInvoicePage = state === "fromInvoice";
 
   const totalInvoicesText = () => {
     switch (invoices.length) {
@@ -62,7 +58,7 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
         type: "spring",
       }}
     >
-      <Container>
+      <InvoicesContainer>
         <Top invoices={invoices}>
           <TitleContainer>
             <Title>Factures</Title>
@@ -95,12 +91,10 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
         ) : (
           <NoInvoice isSmallViewport={isSmallViewport} />
         )}
-      </Container>
+      </InvoicesContainer>
     </motion.div>
   );
 };
-
-const Container = styled.div``;
 
 const TitleContainer = styled.div`
   flex-grow: 2;

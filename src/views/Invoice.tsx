@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link, useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
 import { ReactComponent as ChevronLeftIcon } from "../assets/svg/icon-chevron-left.svg";
 import { colors, breakpoints } from "../assets/style/variables";
+import { InvoicesContainer } from "../assets/style/mixins";
 
 import { Invoice as InvoiceInterface } from "../models/Invoice";
 
@@ -21,7 +22,7 @@ interface Props {
 const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
   const invoices: InvoiceInterface[] = jsonInvoices;
   const { id } = useParams<{ id: string }>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [invoice, setInvoice] = useState<InvoiceInterface | null>(null);
 
   /**
@@ -34,10 +35,10 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
 
   useEffect(() => {
     const invoice = invoices.find((invoice) => invoice.id === id);
-    if (!invoice) return history.push("/factures");
+    if (!invoice) return navigate("/factures");
 
     setInvoice(invoice);
-  }, [id, history]);
+  }, [id, navigate, invoices]);
 
   return (
     <motion.div
@@ -48,10 +49,8 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
         type: "spring",
       }}
     >
-      <Container>
-        <GoBackButton
-          to={{ pathname: "/factures", state: { fromInvoice: true } }}
-        >
+      <InvoicesContainer>
+        <GoBackButton to={{ pathname: "/factures" }} state={"fromInvoice"}>
           <ChevronLeftIconExtended />
           <GoBackButtonLabel>Retour</GoBackButtonLabel>
         </GoBackButton>
@@ -180,12 +179,10 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
             <InvoiceActionButtons isMediumViewport={isMediumViewport} />
           </Bottom>
         )}
-      </Container>
+      </InvoicesContainer>
     </motion.div>
   );
 };
-
-const Container = styled.div``;
 
 const ChevronLeftIconExtended = styled(ChevronLeftIcon)`
   transition: transform 0.2s ease-out;

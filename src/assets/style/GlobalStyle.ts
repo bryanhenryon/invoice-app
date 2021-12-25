@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.5rem;
     font-family: 'Spartan', sans-serif;
     min-width:320px;
+    overflow:hidden;
   }
 
   ul {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, useLocation, Switch } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import { AnimatePresence } from "framer-motion";
 
@@ -103,27 +103,31 @@ const App: React.FC = () => {
           <Views>
             <Content>
               <AnimatePresence exitBeforeEnter initial={false}>
-                <Switch location={location} key={location.pathname}>
-                  <Route path='/' exact component={Login} />
-                  <Route path='/inscription' exact component={Register} />
-
-                  <InvoicesContainer>
-                    <Route path='/factures' exact>
+                <Routes location={location} key={location.pathname}>
+                  <Route path='/' element={<Login />} />
+                  <Route path='/inscription' element={<Register />} />
+                  <Route
+                    path='/factures'
+                    element={
                       <InvoicesWrapper>
                         <Invoices
                           isSmallViewport={isSmallViewport}
                           isMediumViewport={isMediumViewport}
                         />
                       </InvoicesWrapper>
-                    </Route>
-
-                    <Route path='/factures/:id' exact>
+                    }
+                  />
+                  <Route
+                    path='/factures/:id'
+                    element={
                       <InvoiceWrapper>
                         <Invoice isMediumViewport={isMediumViewport} />
                       </InvoiceWrapper>
-                    </Route>
-                  </InvoicesContainer>
-                </Switch>
+                    }
+                  />
+
+                  <Route path='*' element={<Navigate to='/factures' />} />
+                </Routes>
               </AnimatePresence>
             </Content>
             <Footer />
@@ -197,15 +201,6 @@ const Views = styled.div`
 const Content = styled.div`
   height: 100%;
   flex-grow: 2;
-`;
-
-const InvoicesContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 730px;
-  margin: 0 auto;
-  height: 100%;
 `;
 
 const InvoiceWrapper = styled.div`

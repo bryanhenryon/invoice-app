@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { colors } from "../assets/style/variables";
 
@@ -9,11 +9,11 @@ import FormInput from "../components/FormInput";
 import Button from "../components/Button";
 
 const Register = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    history.push("/factures");
+    navigate("/factures");
   };
 
   return (
