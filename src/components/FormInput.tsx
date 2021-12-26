@@ -1,3 +1,4 @@
+import { ChangeEvent } from "react";
 import styled from "styled-components";
 
 import { colors } from "../assets/style/variables";
@@ -10,6 +11,9 @@ interface Props {
   required: boolean;
   spellcheck: boolean;
   autoComplete: string;
+  value: string;
+  name: string;
+  handleInputChange: (e: ChangeEvent) => void;
 }
 
 const FormInput: React.FC<Props> = ({
@@ -20,6 +24,9 @@ const FormInput: React.FC<Props> = ({
   required,
   spellcheck,
   autoComplete,
+  value,
+  name,
+  handleInputChange,
 }) => {
   return (
     <>
@@ -31,6 +38,9 @@ const FormInput: React.FC<Props> = ({
         required={required}
         spellCheck={spellcheck}
         autoComplete={autoComplete}
+        value={value}
+        name={name}
+        onChange={(e) => handleInputChange(e)}
       />
     </>
   );

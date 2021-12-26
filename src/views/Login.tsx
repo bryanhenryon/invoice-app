@@ -1,5 +1,7 @@
+import { useState, ChangeEvent } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import { colors } from "../assets/style/variables";
 
@@ -10,10 +12,35 @@ import Button from "../components/Button";
 
 const Login = () => {
   const navigate = useNavigate();
+  const auth = getAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [formInputs, setFormInputs] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleInputChange = (e: ChangeEvent) => {
+    const { name, value } = e.target as HTMLInputElement;
+
+    setFormInputs({ ...formInputs, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/factures");
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formInputs.email,
+        formInputs.password
+      );
+      const user = userCredential.user;
+
+      console.log(user); // TODO: save object to the store
+      navigate("/factures");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -21,6 +48,9 @@ const Login = () => {
       <FormTitle>Connexion</FormTitle>
       <form onSubmit={handleSubmit}>
         <FormInput
+          name='email'
+          value={formInputs.email}
+          handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
           placeholder='john.doe@gmail.com'
           required={true}
           type='email'
@@ -30,6 +60,9 @@ const Login = () => {
           autoComplete='email'
         />
         <FormInput
+          name='password'
+          value={formInputs.password}
+          handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
           placeholder='•••••••••'
           required={true}
           type='password'

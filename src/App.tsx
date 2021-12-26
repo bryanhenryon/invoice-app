@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import { AnimatePresence } from "framer-motion";
+import { initializeApp } from "firebase/app";
 
 import GlobalStyle from "./assets/style/GlobalStyle";
 import { breakpoints } from "./assets/style/variables";
@@ -16,6 +17,16 @@ import Invoices from "./views/Invoices";
 import Invoice from "./views/Invoice";
 
 const App: React.FC = () => {
+  // Initialize Firebase
+  initializeApp({
+    apiKey: "AIzaSyDdeIpC_pPvO5ksOABxMPWzsYaqZjig0Wc",
+    authDomain: "invoice-manager-f7e48.firebaseapp.com",
+    projectId: "invoice-manager-f7e48",
+    storageBucket: "invoice-manager-f7e48.appspot.com",
+    messagingSenderId: "857320069304",
+    appId: "1:857320069304:web:424f095427c79bb4dbfc4d",
+  });
+
   const location = useLocation();
 
   const [theme, setTheme] = useState("light");
