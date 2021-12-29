@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { breakpoints } from "../assets/style/variables";
+import { getAuth } from "firebase/auth";
 
 import Logo from "./Logo";
 import SwitchThemeButton from "./SwitchThemeButton";
@@ -9,17 +10,28 @@ interface Props {
   theme: string;
   className?: string;
   toggleTheme: () => void;
+  showLogoutModal: () => void;
 }
 
-const Sidebar: React.FC<Props> = ({ theme, className, toggleTheme }) => {
+const Sidebar: React.FC<Props> = ({
+  theme,
+  className,
+  toggleTheme,
+  showLogoutModal,
+}) => {
+  const auth = getAuth();
+
   return (
-    <Container className={className}>
-      <LogoContainer>
-        <Logo />
-      </LogoContainer>
-      <SwitchThemeButton theme={theme} toggleTheme={toggleTheme} />
-      <LogoutButton />
-    </Container>
+    <>
+      <Container className={className}>
+        <LogoContainer>
+          <Logo />
+        </LogoContainer>
+        
+        <SwitchThemeButton theme={theme} toggleTheme={toggleTheme} />
+        {auth.currentUser && <LogoutButton onClick={showLogoutModal} />}
+      </Container>
+    </>
   );
 };
 

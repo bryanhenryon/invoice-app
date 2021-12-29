@@ -12,12 +12,13 @@ const InvoiceActionButtons: React.FC<Props> = ({ isMediumViewport }) => (
   <ActionButtons>
     <MarkAsPaid fullWidth={isMediumViewport}>Marquer comme Payée</MarkAsPaid>
 
-    <Edit fullWidth={isMediumViewport} variant='light'>
+    <Button fullWidth={isMediumViewport} variant='light'>
       Editer
-    </Edit>
-    <Delete fullWidth={isMediumViewport} variant='red'>
+    </Button>
+
+    <Button fullWidth={isMediumViewport} variant='red'>
       Supprimer
-    </Delete>
+    </Button>
   </ActionButtons>
 );
 
@@ -38,8 +39,5 @@ const MarkAsPaid = styled(Button)`
     order: 3;
   }
 `;
-
-const Edit = styled(Button)``;
-const Delete = styled(Button)``;
 
 export default InvoiceActionButtons;

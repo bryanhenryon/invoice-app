@@ -23,6 +23,7 @@ const Searchbar: React.FC = () => {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
+
       {showDeleteIcon ? (
         <ResetInputButton onClick={() => setInputValue("")}>
           <CloseIconExtended />

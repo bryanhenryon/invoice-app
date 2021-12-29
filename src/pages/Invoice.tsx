@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import styled, { css } from "styled-components";
 import { motion } from "framer-motion";
 
 import { ReactComponent as ChevronLeftIcon } from "../assets/svg/icon-chevron-left.svg";
 import { colors, breakpoints } from "../assets/style/variables";
 import { InvoicesContainer } from "../assets/style/mixins";
 
-import { Invoice as InvoiceInterface } from "../models/Invoice";
-
 import InvoiceId from "../components/InvoiceId";
 import StatusBadge from "../components/InvoiceStatusBadge";
 import InvoiceActionButtons from "../components/InvoiceActionButtons";
+
+import { Invoice as InvoiceInterface } from "../models/Invoice";
 
 import jsonInvoices from "../data.json";
 
@@ -21,17 +21,26 @@ interface Props {
 
 const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
   const invoices: InvoiceInterface[] = jsonInvoices;
+
+  const { state } = useLocation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
   const [invoice, setInvoice] = useState<InvoiceInterface | null>(null);
 
-  /**
-   * Total price of all the services
-   */
+  /** Checks if the last visited page is Invoices or not in order to trigger the correct animation on render */
+  const isFromInvoicesPage = state === "fromInvoices";
+
+  /** Total price of all the services */
   const invoiceGrandTotal = invoice?.items
     .map((item) => item.price * item.quantity)
-    .reduce((prev: number, curr: number) => prev + curr)
+    .reduce((prev, curr) => prev + curr)
     .toFixed(2);
+
+  // Reset the history state so the correct animation can trigger on refresh
+  useEffect(() => {
+    window.history.replaceState({}, "");
+  }, []);
 
   useEffect(() => {
     const invoice = invoices.find((invoice) => invoice.id === id);
@@ -42,8 +51,12 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
 
   return (
     <motion.div
-      initial={{ x: 100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
+      initial={
+        isFromInvoicesPage ? { x: 100, opacity: 0 } : { scale: 0.9, opacity: 0 }
+      }
+      animate={
+        isFromInvoicesPage ? { x: 0, opacity: 1 } : { scale: 1, opacity: 1 }
+      }
       transition={{
         duration: 0.8,
         type: "spring",
@@ -60,6 +73,7 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
             <StatusText>Status</StatusText>
             <StatusBadge status={invoice?.status} />
           </Status>
+
           {!isMediumViewport && <InvoiceActionButtons />}
         </Top>
 
@@ -69,6 +83,7 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
               <InvoiceIdExtended id={invoice?.id} fontWeight='bold' />
               <InvoiceDescription>{invoice?.description}</InvoiceDescription>
             </InvoiceIdAndDescription>
+
             <Container3>
               {invoice?.senderAddress &&
                 Object.keys(invoice.senderAddress).map((index) => (
@@ -89,15 +104,17 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
                 <Label>Date de facturation</Label>
                 <InvoiceDate>{invoice?.createdAt}</InvoiceDate>
               </InvoiceDateContainer>
-              <PaymentDueContainer>
+
+              <div>
                 <Label>Paiement dû</Label>
                 <PaymentDue>{invoice?.paymentDue}</PaymentDue>
-              </PaymentDueContainer>
+              </div>
             </Container5>
 
             <Container6>
               <BillTo>Facturé à</BillTo>
               <ClientName>{invoice?.clientName}</ClientName>
+
               {invoice?.clientAddress &&
                 Object.keys(invoice.clientAddress).map((index) => (
                   <ClientAddress key={index}>
@@ -125,14 +142,14 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
             </SentTo>
           )}
 
-          <OrderSummary>
+          <div>
             <Items>
               {!isMediumViewport && (
                 <ItemValuesDescriptions>
                   <ItemNameLabel>Prestation</ItemNameLabel>
-                  <ItemQuantityLabel>Quantité</ItemQuantityLabel>
-                  <ItemPriceLabel>Prix</ItemPriceLabel>
-                  <ItemTotalLabel>Total</ItemTotalLabel>
+                  <div>Quantité</div>
+                  <div>Prix</div>
+                  <div>Total</div>
                 </ItemValuesDescriptions>
               )}
 
@@ -142,6 +159,7 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
                     <ItemContainer key={index}>
                       <div>
                         <ItemName>{item.name}</ItemName>
+
                         <ItemPriceAndQuantity>
                           <ItemQuantity>{item.quantity}</ItemQuantity>
                           <MultiplySymbol>x</MultiplySymbol>
@@ -156,9 +174,11 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
                     <ItemContainerDesktop key={index}>
                       <ItemName>{item.name}</ItemName>
                       <ItemQuantityDesktop>{item.quantity}</ItemQuantityDesktop>
+
                       <ItemPriceDesktop>
                         {item.price.toFixed(2)}€
                       </ItemPriceDesktop>
+
                       <ItemTotalPrice>
                         {(item.price * item.quantity).toFixed(2)}€
                       </ItemTotalPrice>
@@ -171,7 +191,7 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
               <GrandTotalText>Grand Total</GrandTotalText>
               <GrandTotalValue>{invoiceGrandTotal}€</GrandTotalValue>
             </GrandTotal>
-          </OrderSummary>
+          </div>
         </InvoiceInfos>
 
         {isMediumViewport && (
@@ -192,6 +212,7 @@ const GoBackButton = styled(Link)`
   display: inline-flex;
   align-items: center;
   margin-bottom: 3.2rem;
+  width: fit-content;
 
   &:hover {
     ${ChevronLeftIconExtended} {
@@ -200,7 +221,7 @@ const GoBackButton = styled(Link)`
   }
 `;
 
-const GoBackButtonLabel = styled.div`
+const GoBackButtonLabel = styled.span`
   margin-left: 2.3rem;
   font-weight: 700;
   color: ${({ theme }) => theme.blackToWhite};
@@ -233,9 +254,9 @@ const Status = styled.div<StatusProps>`
 
   ${({ isMediumViewport }) =>
     isMediumViewport &&
-    `
-    justify-content: space-between;
-  `}
+    css`
+      justify-content: space-between;
+    `}
 `;
 
 const StatusText = styled.div`
@@ -346,8 +367,6 @@ const InvoiceDateContainer = styled.div`
   margin-bottom: 1rem;
 `;
 
-const PaymentDueContainer = styled.div``;
-
 const InvoiceDate = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
@@ -392,8 +411,6 @@ const ClientEmailAddress = styled.div`
   font-weight: bold;
   color: ${({ theme }) => theme.blackToWhite};
 `;
-
-const OrderSummary = styled.div``;
 
 const Items = styled.div`
   display: flex;
@@ -448,10 +465,6 @@ const ItemValuesDescriptions = styled.div`
     text-align: left;
   }
 `;
-
-const ItemQuantityLabel = styled.div``;
-const ItemPriceLabel = styled.div``;
-const ItemTotalLabel = styled.div``;
 
 const ItemPriceAndQuantity = styled.div`
   display: flex;

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface Props {
   className?: string;
@@ -45,23 +45,23 @@ const Status = styled.div<StatusProps>`
 
   ${({ status }) =>
     status === "Paid" &&
-    `
-    color: #33D69F;
-    background: rgba(51, 214, 159, 0.06);
+    css`
+      color: #33d69f;
+      background: rgba(51, 214, 159, 0.06);
     `};
 
   ${({ status }) =>
     status === "Pending" &&
-    `
-    background: rgba(255, 143, 0, 0.06);
-    color: #FF8F00;
+    css`
+      background: rgba(255, 143, 0, 0.06);
+      color: #ff8f00;
     `};
 
   ${({ status, theme }) =>
     status === "Draft" &&
-    `
-    color: ${theme.draftStatusBadgeColor};
-    background: ${theme.draftStatusBadgeBackground};
+    css`
+      color: ${theme.draftStatusBadgeColor};
+      background: ${theme.draftStatusBadgeBackground};
     `};
 `;
 

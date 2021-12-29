@@ -4,8 +4,12 @@ import { colors, breakpoints } from "../assets/style/variables";
 
 import { ReactComponent as LogoutIcon } from "../assets/svg/shut-down.svg";
 
-const LogoutButton: React.FC = () => (
-  <Button>
+interface Props {
+  onClick: () => void;
+}
+
+const LogoutButton: React.FC<Props> = ({ onClick }) => (
+  <Button onClick={onClick}>
     <LogoutIcon />
   </Button>
 );

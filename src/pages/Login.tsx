@@ -1,7 +1,12 @@
 import { useState, ChangeEvent } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 
 import { colors } from "../assets/style/variables";
 
@@ -29,14 +34,13 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const userCredential = await signInWithEmailAndPassword(
+      await signInWithEmailAndPassword(
         auth,
         formInputs.email,
         formInputs.password
       );
-      const user = userCredential.user;
 
-      console.log(user); // TODO: save object to the store
+      await setPersistence(auth, browserLocalPersistence);
       navigate("/factures");
     } catch (error) {
       console.error(error);
@@ -46,6 +50,7 @@ const Login = () => {
   return (
     <AuthenticationContainer>
       <FormTitle>Connexion</FormTitle>
+
       <form onSubmit={handleSubmit}>
         <FormInput
           name='email'
@@ -59,6 +64,7 @@ const Login = () => {
           spellcheck={false}
           autoComplete='email'
         />
+
         <FormInput
           name='password'
           value={formInputs.password}
@@ -71,6 +77,7 @@ const Login = () => {
           spellcheck={false}
           autoComplete='current-password'
         />
+
         <CenterButtonContainer>
           <Button hasBoxShadow>Se connecter</Button>
         </CenterButtonContainer>

@@ -8,6 +8,7 @@ const Logo: React.FC = () => (
     <StyledLogo>
       <LogoIcon />
     </StyledLogo>
+    
     <Shade />
   </LogoContainer>
 );

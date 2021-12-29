@@ -8,12 +8,7 @@ interface Props {
   fontWeight: string;
 }
 
-const InvoiceId: React.FC<Props> = ({
-  id,
-  className,
-
-  fontWeight,
-}) => (
+const InvoiceId: React.FC<Props> = ({ id, className, fontWeight }) => (
   <Id className={className} fontWeight={fontWeight}>
     {id}
   </Id>

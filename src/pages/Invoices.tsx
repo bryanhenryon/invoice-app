@@ -1,5 +1,5 @@
-import { useState } from "react";
-import styled from "styled-components";
+import { useState, useEffect } from "react";
+import styled, { css } from "styled-components";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 
@@ -16,6 +16,7 @@ import NoInvoice from "../components/NoInvoice";
 
 import { Invoice as InvoiceInterface } from "../models/Invoice";
 
+import "../firebase/config";
 import data from "../data.json";
 
 interface Props {
@@ -27,9 +28,12 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
   const [invoices, setInvoices] = useState<InvoiceInterface[]>(data);
   const { state } = useLocation();
 
-  /**
-   * Check if the last visited page is Invoice or not in order to trigger the correct animation on render
-   */
+  // Reset the history state so the correct animation can trigger on refresh
+  useEffect(() => {
+    window.history.replaceState({}, "");
+  }, []);
+
+  /** Checks if the last visited page is Invoice or not in order to trigger the correct animation on render */
   const isFromInvoicePage = state === "fromInvoice";
 
   const totalInvoicesText = () => {
@@ -71,6 +75,7 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
             <PlusIconContainer>
               <PlusIcon />
             </PlusIconContainer>
+
             <NewInvoice>
               {isSmallViewport ? "Nouv." : "Nouvelle facture"}
             </NewInvoice>
@@ -80,6 +85,7 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
         {invoices.length ? (
           <InvoicesList>
             <Searchbar />
+
             {invoices.map((invoice) =>
               isMediumViewport ? (
                 <InvoiceCard key={invoice.id} invoice={invoice} />
@@ -101,7 +107,7 @@ const TitleContainer = styled.div`
 `;
 
 interface TopProps {
-  invoices: {}[];
+  invoices: InvoiceInterface[];
 }
 
 const Top = styled.div<TopProps>`
@@ -110,13 +116,13 @@ const Top = styled.div<TopProps>`
 
   ${({ invoices }) =>
     invoices.length &&
-    `
-    margin-bottom: 3.2rem;
-    
-    @media ${breakpoints.lg} {
-      margin-bottom: 6.5rem;
-    }
-  `}
+    css`
+      margin-bottom: 3.2rem;
+
+      @media ${breakpoints.lg} {
+        margin-bottom: 6.5rem;
+      }
+    `}
 `;
 
 const Title = styled.h1`

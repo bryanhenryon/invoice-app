@@ -39,9 +39,7 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
     };
   });
 
-  /**
-   * Close the dropdown when clicking away
-   */
+  /** Closes the dropdown when clicking away */
   const handleOutsideClick = (e: Event) => {
     if (
       dropdown.current &&
@@ -52,7 +50,7 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
   };
 
   /**
-   * Change the `checked` status of a selected checkbox
+   * Changes the `checked` status of a selected checkbox
    * @param id A checkbox identifier
    */
   const changeCheckboxStatus = (id: number) => {
@@ -68,10 +66,12 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
     <Container ref={dropdown}>
       <StatusFilterButton onClick={() => setShowDropdown(!showDropdown)}>
         {isSmallViewport ? "Filtrer" : "Filtrer par status"}
+
         <ChevronDownIconContainer showDropdown={showDropdown}>
           <ChevronDownIconExtended />
         </ChevronDownIconContainer>
       </StatusFilterButton>
+      
       <AnimatePresence>
         {showDropdown && (
           <StatusFilterDropdown

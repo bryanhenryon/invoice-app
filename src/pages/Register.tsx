@@ -1,7 +1,12 @@
 import { useState, ChangeEvent } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  browserLocalPersistence,
+  setPersistence,
+} from "firebase/auth";
 
 import { colors } from "../assets/style/variables";
 
@@ -30,14 +35,13 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
+      await createUserWithEmailAndPassword(
         auth,
         formInputs.email,
         formInputs.password
       );
-      const user = userCredential.user;
 
-      console.log(user); // TODO: save object to the store
+      await setPersistence(auth, browserLocalPersistence);
       navigate("/factures");
     } catch (error) {
       console.error(error);
@@ -47,6 +51,7 @@ const Register = () => {
   return (
     <AuthenticationContainer>
       <FormTitle>Création de compte</FormTitle>
+
       <form onSubmit={handleSubmit}>
         <FormInput
           name='email'
@@ -60,6 +65,7 @@ const Register = () => {
           spellcheck={false}
           autoComplete='email'
         />
+
         <FormInput
           name='password'
           value={formInputs.password}
@@ -72,6 +78,7 @@ const Register = () => {
           spellcheck={false}
           autoComplete='new-password'
         />
+
         <FormInput
           name='confirmPassword'
           value={formInputs.confirmPassword}
@@ -84,10 +91,12 @@ const Register = () => {
           spellcheck={false}
           autoComplete='new-password'
         />
+
         <CenterButtonContainer>
           <Button hasBoxShadow>S'enregistrer</Button>
         </CenterButtonContainer>
       </form>
+
       <AlreadyHaveAccount>
         Déjà un compte ? <Login to='/'>Se connecter</Login>
       </AlreadyHaveAccount>

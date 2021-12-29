@@ -13,7 +13,7 @@ interface Props {
 }
 
 const InvoiceCardLarge: React.FC<Props> = ({ invoice }) => (
-  <CardExtended to={`/factures/${invoice.id}`}>
+  <CardExtended to={`/factures/${invoice.id}`} state='fromInvoices'>
     <InvoiceIdExtended id={invoice.id} fontWeight='bold' />
     <PaymentDueExtended>Due {invoice.paymentDue}</PaymentDueExtended>
     <ClientNameExtended>{invoice.clientName}</ClientNameExtended>

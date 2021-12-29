@@ -4,9 +4,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const FormTitle: React.FC<Props> = ({ children }) => {
-  return <Title>{children}</Title>;
-};
+const FormTitle: React.FC<Props> = ({ children }) => <Title>{children}</Title>;
 
 const Title = styled.h2`
   margin-bottom: 3rem;

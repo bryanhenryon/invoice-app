@@ -3,13 +3,14 @@ import { colors } from "./variables";
 export const lightTheme = {
   // Global
   blackToWhite: colors.dark,
+  whiteToLightDark: colors.white,
   greyToWhite: colors.grey,
   paleVioletToWhite: colors.paleViolet,
   paleVioletToGrey: colors.paleViolet,
   paleVioletToLightPaleViolet: colors.paleViolet,
 
-  // Views
-  viewsContainerBackground: colors.bgLight,
+  // pages
+  pagesContainerBackground: colors.bgLight,
 
   // Sidebar
   sidebarBackground: "#373b53",
@@ -48,13 +49,14 @@ export const lightTheme = {
 export const darkTheme = {
   // Global
   blackToWhite: colors.white,
+  whiteToLightDark: colors.lightDark,
   greyToWhite: colors.white,
   paleVioletToWhite: colors.white,
   paleVioletToGrey: colors.grey,
   paleVioletToLightPaleViolet: colors.lightPaleViolet,
 
-  // Views
-  viewsContainerBackground: colors.bgDark,
+  // pages
+  pagesContainerBackground: colors.bgDark,
 
   // Invoice card
   invoiceCard: colors.lightDark,

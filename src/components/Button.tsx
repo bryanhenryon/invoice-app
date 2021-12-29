@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import { colors } from "../assets/style/variables";
 
@@ -9,6 +9,7 @@ interface Props {
   hasBoxShadow?: boolean;
   variant?: string;
   fullWidth?: boolean;
+  onClick?: () => void;
 }
 
 const Button: React.FC<Props> = ({
@@ -18,9 +19,11 @@ const Button: React.FC<Props> = ({
   hasBoxShadow,
   variant,
   fullWidth,
+  onClick,
 }) => {
   return (
     <StyledButton
+      onClick={onClick}
       className={className}
       hasBoxShadow={hasBoxShadow}
       variant={variant}
@@ -51,34 +54,44 @@ const StyledButton = styled.button<StyledButtonProps>`
   width: ${({ fullWidth }) => fullWidth && "100%"};
   ${({ variant }) =>
     variant === "red" &&
-    `
-    background: ${colors.red}
-  `};
+    css`
+      background: ${colors.red};
+    `};
+
   ${({ variant, theme }) =>
     variant === "light" &&
-    `
-    background: ${theme.buttonVariantLightBackground};
-    color: ${theme.buttonVariantLightColor};
-  `};
-  ${({ hasIcon }) => hasIcon && `padding: 0.8rem 0.8rem;`};
+    css`
+      background: ${theme.buttonVariantLightBackground};
+      color: ${theme.buttonVariantLightColor};
+    `};
+
+  ${({ hasIcon }) =>
+    hasIcon &&
+    css`
+      padding: 0.8rem 0.8rem;
+    `};
+
   ${({ hasBoxShadow }) =>
-    hasBoxShadow && `box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;`};
+    hasBoxShadow &&
+    css`
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    `};
 
   &:hover {
     background: ${colors.lightViolet};
 
     ${({ variant }) =>
       variant === "red" &&
-      `
-    background: #FF9797;
-    `}
+      css`
+        background: #ff9797;
+      `}
 
     ${({ variant, theme }) =>
       variant === "light" &&
-      `
-    background: ${theme.buttonVariantLightBackgroundHover};
-    color: ${colors.paleViolet};
-    `}
+      css`
+        background: ${theme.buttonVariantLightBackgroundHover};
+        color: ${colors.paleViolet};
+      `}
   }
 
   &:active {

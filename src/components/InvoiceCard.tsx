@@ -13,10 +13,9 @@ interface Props {
 }
 
 const InvoiceCard: React.FC<Props> = ({ invoice }) => (
-  <Card to={`/factures/${invoice.id}`}>
+  <Card to={`/factures/${invoice.id}`} state='fromInvoices'>
     <TopContainer>
       <InvoiceIdExtended id={invoice.id} fontWeight='bold' />
-
       <ClientName>{invoice.clientName}</ClientName>
     </TopContainer>
 
@@ -25,6 +24,7 @@ const InvoiceCard: React.FC<Props> = ({ invoice }) => (
         <PaymentDue>Due {invoice.paymentDue}</PaymentDue>
         <Total>{invoice.total}€</Total>
       </div>
+
       <InvoiceStatusBadge status={invoice.status} />
     </BottomContainer>
   </Card>
