@@ -14,6 +14,7 @@ import Footer from "./components/Footer";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import PasswordReset from "./pages/PasswordReset";
 import Invoices from "./pages/Invoices";
 import Invoice from "./pages/Invoice";
 
@@ -163,6 +164,17 @@ const App: React.FC = () => {
                           <Invoice isMediumViewport={isMediumViewport} />
                         ) : (
                           <Navigate to='/' />
+                        )
+                      }
+                    />
+
+                    <Route
+                      path='/reinitialisation'
+                      element={
+                        isLoggedIn ? (
+                          <Navigate to='/factures' />
+                        ) : (
+                          <PasswordReset />
                         )
                       }
                     />
