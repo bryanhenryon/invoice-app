@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import { colors } from "../assets/style/variables";
 
@@ -13,6 +13,8 @@ interface Props {
   autoComplete: string;
   value: string;
   name: string;
+  className?: string;
+  showError?: boolean;
   handleInputChange: (e: ChangeEvent) => void;
 }
 
@@ -27,11 +29,15 @@ const FormInput: React.FC<Props> = ({
   value,
   name,
   handleInputChange,
+  className,
+  showError,
 }) => {
   return (
     <>
       <Label htmlFor={id}>{label}</Label>
       <Input
+        showError={showError}
+        className={className}
         id={id}
         placeholder={placeholder}
         type={type}
@@ -52,18 +58,34 @@ const Label = styled.label`
   color: ${({ theme }) => theme.inputLabelColor};
 `;
 
-const Input = styled.input`
+interface InputProps {
+  showError: boolean | undefined;
+}
+
+const Input = styled.input<InputProps>`
   background: ${({ theme }) => theme.inputBackgroundColor};
   color: ${({ theme }) => theme.blackToWhite};
   width: 100%;
-  margin-bottom: 3rem;
   padding: 1.6rem 2rem;
   border-radius: 0.4rem;
   border: 1px solid ${({ theme }) => theme.inputBorderColor};
+
+  ${({ showError }) =>
+    showError &&
+    css`
+      border: 1px solid ${colors.red};
+    `}
+
   outline: none;
 
   &:focus {
     border-color: ${({ theme }) => theme.activeInputBorderColor};
+
+    ${({ showError }) =>
+      showError &&
+      css`
+        border: 1px solid ${colors.red};
+      `}
   }
 
   &::placeholder {

@@ -7,6 +7,7 @@ import styled from "styled-components";
 import AuthenticationContainer from "../components/AuthenticationContainer";
 import FormTitle from "../components/FormTitle";
 import FormInput from "../components/FormInput";
+import InputErrorMessage from "../components/InputErrorMessage";
 import Button from "../components/Button";
 
 import { colors } from "../assets/style/variables";
@@ -14,6 +15,7 @@ import { colors } from "../assets/style/variables";
 const PasswordReset: React.FC = () => {
   const auth = getAuth();
 
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -26,11 +28,26 @@ const PasswordReset: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await sendPasswordResetEmail(auth, email, {
-      url: "http://localhost:3000",
-    });
+    try {
+      await sendPasswordResetEmail(auth, email, {
+        url: "http://localhost:3000",
+      });
 
-    setShowConfirmation(true);
+      setShowConfirmation(true);
+    } catch ({ code }) {
+      switch (code) {
+        case "auth/invalid-email":
+          setError("Veuillez indiquer une adresse valide");
+          break;
+        case "auth/user-not-found":
+          setError("Aucun compte ne correspond à cette adresse");
+          break;
+        case "auth/too-many-requests":
+          setError(
+            "La connexion a été bloquée suite à un trop grand nombre de tentatives de connexion, veuillez réessayer dans quelques minutes"
+          );
+      }
+    }
   };
 
   return (
@@ -41,24 +58,28 @@ const PasswordReset: React.FC = () => {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
         >
-          Un email de réinitialisation vient de vous être envoyé (vérifiez vos
+          Un e-mail de réinitialisation vient de vous être envoyé (vérifiez vos
           spams)
         </Confirmation>
       ) : (
         <form onSubmit={handleSubmit}>
           <FormTitle>Réinitialisation de mot de passe</FormTitle>
-          <FormInput
-            name='email'
-            value={email}
-            handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
-            placeholder='john.doe@gmail.com'
-            required={true}
-            type='email'
-            id='email'
-            label='Veuillez indiquer votre email'
-            spellcheck={false}
-            autoComplete='email'
-          />
+          <InputContainer>
+            <FormInput
+              showError={error ? true : false}
+              name='email'
+              value={email}
+              handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
+              placeholder='john.doe@gmail.com'
+              required={true}
+              type='email'
+              id='email'
+              label='Veuillez indiquer votre e-mail'
+              spellcheck={false}
+              autoComplete='email'
+            />
+            {error && <InputErrorMessage>{error}</InputErrorMessage>}
+          </InputContainer>
 
           <CenterButtonContainer>
             <Button hasBoxShadow>Envoyer</Button>
@@ -69,6 +90,10 @@ const PasswordReset: React.FC = () => {
     </AuthenticationContainer>
   );
 };
+
+const InputContainer = styled.div`
+  margin-bottom: 3rem;
+`;
 
 const CenterButtonContainer = styled.div`
   text-align: center;

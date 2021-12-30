@@ -13,12 +13,14 @@ import { colors } from "../assets/style/variables";
 import AuthenticationContainer from "../components/AuthenticationContainer";
 import FormTitle from "../components/FormTitle";
 import FormInput from "../components/FormInput";
+import InputErrorMessage from "../components/InputErrorMessage";
 import Button from "../components/Button";
 
 const Login = () => {
   const navigate = useNavigate();
   const auth = getAuth();
 
+  const [error, setError] = useState("");
   const [formInputs, setFormInputs] = useState({
     email: "",
     password: "",
@@ -42,8 +44,20 @@ const Login = () => {
 
       await setPersistence(auth, browserLocalPersistence);
       navigate("/factures");
-    } catch (error) {
-      console.error(error);
+    } catch ({ code }) {
+      switch (code) {
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+          setError("Les identifiants indiqués sont incorrects");
+          break;
+        case "auth/user-disabled":
+          setError("Ce compte a été désactivé");
+          break;
+        case "auth/too-many-requests":
+          setError(
+            "La connexion a été bloquée suite à un trop grand nombre de tentatives de connexion, veuillez réessayer dans quelques minutes"
+          );
+      }
     }
   };
 
@@ -52,31 +66,36 @@ const Login = () => {
       <FormTitle>Connexion</FormTitle>
 
       <form onSubmit={handleSubmit}>
-        <FormInput
-          name='email'
-          value={formInputs.email}
-          handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
-          placeholder='john.doe@gmail.com'
-          required={true}
-          type='email'
-          id='email'
-          label='Adresse email'
-          spellcheck={false}
-          autoComplete='email'
-        />
+        <InputsContainer>
+          <FormInputExtended
+            showError={error ? true : false}
+            name='email'
+            value={formInputs.email}
+            handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
+            placeholder='john.doe@gmail.com'
+            required={true}
+            type='email'
+            id='email'
+            label='Adresse email'
+            spellcheck={false}
+            autoComplete='email'
+          />
 
-        <FormInput
-          name='password'
-          value={formInputs.password}
-          handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
-          placeholder='•••••••••'
-          required={true}
-          type='password'
-          id='password'
-          label='Mot de passe'
-          spellcheck={false}
-          autoComplete='current-password'
-        />
+          <FormInput
+            showError={error ? true : false}
+            name='password'
+            value={formInputs.password}
+            handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
+            placeholder='•••••••••'
+            required={true}
+            type='password'
+            id='password'
+            label='Mot de passe'
+            spellcheck={false}
+            autoComplete='current-password'
+          />
+          {error && <InputErrorMessage>{error}</InputErrorMessage>}
+        </InputsContainer>
 
         <CenterButtonContainer>
           <Button hasBoxShadow>Se connecter</Button>
@@ -96,6 +115,14 @@ const Login = () => {
     </AuthenticationContainer>
   );
 };
+
+const InputsContainer = styled.div`
+  margin-bottom: 3rem;
+`;
+
+const FormInputExtended = styled(FormInput)`
+  margin-bottom: 3rem;
+`;
 
 const CenterButtonContainer = styled.div`
   text-align: center;
