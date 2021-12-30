@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   setPersistence,
   browserLocalPersistence,
+  signInAnonymously,
 } from "firebase/auth";
 
 import { colors } from "../assets/style/variables";
@@ -32,15 +33,20 @@ const Login = () => {
     setFormInputs({ ...formInputs, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent,
+    signInAsAnonymous?: boolean
+  ) => {
     e.preventDefault();
 
     try {
-      await signInWithEmailAndPassword(
-        auth,
-        formInputs.email,
-        formInputs.password
-      );
+      signInAsAnonymous
+        ? await signInAnonymously(auth)
+        : await signInWithEmailAndPassword(
+            auth,
+            formInputs.email,
+            formInputs.password
+          );
 
       await setPersistence(auth, browserLocalPersistence);
       navigate("/factures");
@@ -112,6 +118,16 @@ const Login = () => {
           Mot de passe oublié
         </ForgottenPassword>
       </ForgottenPasswordContainer>
+
+      <Demo>
+        Vous pouvez également vous{" "}
+        <DemoCta onClick={(e) => handleSubmit(e, true)}>
+          connecter avec un compte anonyme
+        </DemoCta>{" "}
+        afin de tester rapidement l'application sans avoir à créer de compte et
+        en manipulant directement un jeu de fausses factures issues d'un fichier
+        local
+      </Demo>
     </AuthenticationContainer>
   );
 };
@@ -122,6 +138,19 @@ const InputsContainer = styled.div`
 
 const FormInputExtended = styled(FormInput)`
   margin-bottom: 3rem;
+`;
+
+const Demo = styled.p`
+  color: ${colors.grey};
+  font-size: 1.3rem;
+  margin-top: 0.5rem;
+  text-align: center;
+`;
+
+const DemoCta = styled.button`
+  font-weight: 500;
+  text-decoration: underline;
+  color: ${colors.grey};
 `;
 
 const CenterButtonContainer = styled.div`
@@ -145,6 +174,7 @@ const CreateNewAccount = styled(Link)`
 
 const ForgottenPasswordContainer = styled.div`
   text-align: center;
+  margin-bottom: 3rem;
 `;
 
 const ForgottenPassword = styled(Link)`
