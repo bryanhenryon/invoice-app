@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import styled, { ThemeProvider, css } from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
 
 import GlobalStyle from "./assets/style/GlobalStyle";
 import { breakpoints } from "./assets/style/variables";
@@ -23,6 +24,7 @@ import "./firebase/config";
 const App: React.FC = () => {
   const auth = getAuth();
   const location = useLocation();
+  const ref = useRef<LoadingBarRef>(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [theme, setTheme] = useState("light");
@@ -102,10 +104,16 @@ const App: React.FC = () => {
     setShowLogoutModal(false);
   };
 
+  /** @todo Remove parameters after react-top-loading-bar fixes the issue (they should be optional) */
+  const startLoadingBar = () => ref?.current?.continuousStart(20, 1000);
+
+  const endLoadingBar = () => ref?.current?.complete();
+
   return (
     <>
       <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
         <GlobalStyle />
+        <LoadingBar ref={ref} color='#7C5DFA' height={3} />
 
         <Container enableTransitions={enableTransitions}>
           <SidebarExtended
@@ -132,14 +140,28 @@ const App: React.FC = () => {
                     <Route
                       path='/'
                       element={
-                        !isLoggedIn ? <Login /> : <Navigate to='/factures' />
+                        !isLoggedIn ? (
+                          <Login
+                            startLoadingBar={startLoadingBar}
+                            endLoadingBar={endLoadingBar}
+                          />
+                        ) : (
+                          <Navigate to='/factures' />
+                        )
                       }
                     />
 
                     <Route
                       path='/inscription'
                       element={
-                        !isLoggedIn ? <Register /> : <Navigate to='/factures' />
+                        !isLoggedIn ? (
+                          <Register
+                            startLoadingBar={startLoadingBar}
+                            endLoadingBar={endLoadingBar}
+                          />
+                        ) : (
+                          <Navigate to='/factures' />
+                        )
                       }
                     />
 
@@ -174,7 +196,10 @@ const App: React.FC = () => {
                         isLoggedIn ? (
                           <Navigate to='/factures' />
                         ) : (
-                          <PasswordReset />
+                          <PasswordReset
+                            startLoadingBar={startLoadingBar}
+                            endLoadingBar={endLoadingBar}
+                          />
                         )
                       }
                     />

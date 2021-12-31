@@ -12,7 +12,12 @@ import Button from "../components/Button";
 
 import { colors } from "../assets/style/variables";
 
-const PasswordReset: React.FC = () => {
+interface Props {
+  startLoadingBar: () => void;
+  endLoadingBar: () => void;
+}
+
+const PasswordReset: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
   const auth = getAuth();
 
   const [error, setError] = useState("");
@@ -29,6 +34,8 @@ const PasswordReset: React.FC = () => {
     e.preventDefault();
 
     try {
+      startLoadingBar();
+
       await sendPasswordResetEmail(auth, email, {
         url: "http://localhost:3000",
       });
@@ -47,6 +54,8 @@ const PasswordReset: React.FC = () => {
             "La connexion a été bloquée suite à un trop grand nombre de tentatives de connexion, veuillez réessayer dans quelques minutes"
           );
       }
+    } finally {
+      endLoadingBar();
     }
   };
 

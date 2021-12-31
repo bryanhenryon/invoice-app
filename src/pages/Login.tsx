@@ -17,7 +17,12 @@ import FormInput from "../components/FormInput";
 import InputErrorMessage from "../components/InputErrorMessage";
 import Button from "../components/Button";
 
-const Login = () => {
+interface Props {
+  startLoadingBar: () => void;
+  endLoadingBar: () => void;
+}
+
+const Login: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -40,6 +45,8 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      startLoadingBar();
+
       signInAsAnonymous
         ? await signInAnonymously(auth)
         : await signInWithEmailAndPassword(
@@ -64,6 +71,8 @@ const Login = () => {
             "La connexion a été bloquée suite à un trop grand nombre de tentatives de connexion, veuillez réessayer dans quelques minutes"
           );
       }
+    } finally {
+      endLoadingBar();
     }
   };
 

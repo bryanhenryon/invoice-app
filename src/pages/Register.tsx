@@ -16,7 +16,12 @@ import FormInput from "../components/FormInput";
 import InputErrorMessage from "../components/InputErrorMessage";
 import Button from "../components/Button";
 
-const Register = () => {
+interface Props {
+  startLoadingBar: () => void;
+  endLoadingBar: () => void;
+}
+
+const Register: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
   const auth = getAuth();
   const navigate = useNavigate();
 
@@ -45,6 +50,8 @@ const Register = () => {
     if (!isFormValid) return;
 
     try {
+      startLoadingBar();
+
       await createUserWithEmailAndPassword(
         auth,
         formInputs.email,
@@ -56,6 +63,8 @@ const Register = () => {
       navigate("/factures");
     } catch ({ code }) {
       if (typeof code === "string") handleErrorsAndValidateForm(code);
+    } finally {
+      endLoadingBar();
     }
   };
 
