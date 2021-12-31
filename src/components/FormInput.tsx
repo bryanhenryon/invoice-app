@@ -1,6 +1,8 @@
-import { ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 import styled, { css } from "styled-components";
 
+import { ReactComponent as EyeOffLineIcon } from "../assets/svg/eye-off-line.svg";
+import { ReactComponent as EyeLineIcon } from "../assets/svg/eye-line.svg";
 import { colors } from "../assets/style/variables";
 
 interface Props {
@@ -16,6 +18,7 @@ interface Props {
   className?: string;
   showError?: boolean;
   handleInputChange: (e: ChangeEvent) => void;
+  displayEye?: boolean;
 }
 
 const FormInput: React.FC<Props> = ({
@@ -31,16 +34,20 @@ const FormInput: React.FC<Props> = ({
   handleInputChange,
   className,
   showError,
+  displayEye,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <>
+    <FormGroup>
       <Label htmlFor={id}>{label}</Label>
       <Input
+        displayEye={displayEye}
         showError={showError}
         className={className}
         id={id}
         placeholder={placeholder}
-        type={type}
+        type={showPassword ? "text" : type}
         required={required}
         spellCheck={spellcheck}
         autoComplete={autoComplete}
@@ -48,9 +55,22 @@ const FormInput: React.FC<Props> = ({
         name={name}
         onChange={(e) => handleInputChange(e)}
       />
-    </>
+      {displayEye && type === "password" && (
+        <button type='button' onClick={() => setShowPassword(!showPassword)}>
+          {showPassword ? (
+            <EyeLineIconExtended as={EyeLineIcon} />
+          ) : (
+            <EyeOffLineIconExtended />
+          )}
+        </button>
+      )}
+    </FormGroup>
   );
 };
+
+const FormGroup = styled.div`
+  position: relative;
+`;
 
 const Label = styled.label`
   display: block;
@@ -60,6 +80,7 @@ const Label = styled.label`
 
 interface InputProps {
   showError: boolean | undefined;
+  displayEye: boolean | undefined;
 }
 
 const Input = styled.input<InputProps>`
@@ -67,6 +88,13 @@ const Input = styled.input<InputProps>`
   color: ${({ theme }) => theme.blackToWhite};
   width: 100%;
   padding: 1.6rem 2rem;
+
+  ${({ displayEye }) =>
+    displayEye &&
+    css`
+      padding: 1.6rem 5rem 1.6rem 2rem;
+    `};
+
   border-radius: 0.4rem;
   border: 1px solid ${({ theme }) => theme.inputBorderColor};
 
@@ -93,5 +121,15 @@ const Input = styled.input<InputProps>`
     color: ${colors.grey};
   }
 `;
+
+const EyeOffLineIconExtended = styled(EyeOffLineIcon)`
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  fill: ${colors.grey};
+  transform: scale(0.8);
+`;
+
+const EyeLineIconExtended = styled(EyeOffLineIconExtended)``;
 
 export default FormInput;

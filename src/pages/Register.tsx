@@ -143,6 +143,7 @@ const Register: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
               label='Mot de passe'
               spellcheck={false}
               autoComplete='new-password'
+              displayEye
             />
             {formErrors.password && (
               <InputErrorMessage>{formErrors.password}</InputErrorMessage>
@@ -160,6 +161,7 @@ const Register: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
             label='Confirmation du mot de passe'
             spellcheck={false}
             autoComplete='new-password'
+            displayEye
           />
           {formErrors.confirmPassword && (
             <InputErrorMessage>{formErrors.confirmPassword}</InputErrorMessage>

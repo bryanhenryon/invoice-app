@@ -108,6 +108,7 @@ const Login: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
             label='Mot de passe'
             spellcheck={false}
             autoComplete='current-password'
+            displayEye
           />
           {error && <InputErrorMessage>{error}</InputErrorMessage>}
         </InputsContainer>
