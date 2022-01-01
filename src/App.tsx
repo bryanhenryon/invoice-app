@@ -110,120 +110,118 @@ const App: React.FC = () => {
   const endLoadingBar = () => ref?.current?.complete();
 
   return (
-    <>
-      <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
-        <GlobalStyle />
-        <LoadingBar ref={ref} color='#7C5DFA' height={3} />
+    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+      <GlobalStyle />
+      <LoadingBar ref={ref} color='#7C5DFA' height={3} />
 
-        <Container enableTransitions={enableTransitions}>
-          <SidebarExtended
-            show={showNavbar}
-            theme={theme}
-            toggleTheme={toggleTheme}
-            showLogoutModal={() => setShowLogoutModal(true)}
+      <Container enableTransitions={enableTransitions}>
+        <SidebarExtended
+          show={showNavbar}
+          theme={theme}
+          toggleTheme={toggleTheme}
+          showLogoutModal={() => setShowLogoutModal(true)}
+        />
+
+        {showLogoutModal && (
+          <ConfirmModal
+            title='Déconnexion'
+            text='Êtes-vous sûr de vouloir vous déconnecter ?'
+            cancel={() => setShowLogoutModal(false)}
+            confirm={logout}
           />
+        )}
 
-          {showLogoutModal && (
-            <ConfirmModal
-              title='Déconnexion'
-              text='Êtes-vous sûr de vouloir vous déconnecter ?'
-              cancel={() => setShowLogoutModal(false)}
-              confirm={logout}
-            />
-          )}
+        {isLoggedIn !== null && (
+          <Pages>
+            <Content>
+              <AnimatePresence exitBeforeEnter>
+                <Routes location={location} key={location.pathname}>
+                  <Route
+                    path='/'
+                    element={
+                      !isLoggedIn ? (
+                        <Login
+                          startLoadingBar={startLoadingBar}
+                          endLoadingBar={endLoadingBar}
+                        />
+                      ) : (
+                        <Navigate to='/factures' />
+                      )
+                    }
+                  />
 
-          {isLoggedIn !== null && (
-            <Pages>
-              <Content>
-                <AnimatePresence exitBeforeEnter>
-                  <Routes location={location} key={location.pathname}>
-                    <Route
-                      path='/'
-                      element={
-                        !isLoggedIn ? (
-                          <Login
-                            startLoadingBar={startLoadingBar}
-                            endLoadingBar={endLoadingBar}
-                          />
-                        ) : (
-                          <Navigate to='/factures' />
-                        )
-                      }
-                    />
+                  <Route
+                    path='/inscription'
+                    element={
+                      !isLoggedIn ? (
+                        <Register
+                          startLoadingBar={startLoadingBar}
+                          endLoadingBar={endLoadingBar}
+                        />
+                      ) : (
+                        <Navigate to='/factures' />
+                      )
+                    }
+                  />
 
-                    <Route
-                      path='/inscription'
-                      element={
-                        !isLoggedIn ? (
-                          <Register
-                            startLoadingBar={startLoadingBar}
-                            endLoadingBar={endLoadingBar}
-                          />
-                        ) : (
-                          <Navigate to='/factures' />
-                        )
-                      }
-                    />
+                  <Route
+                    path='/factures'
+                    element={
+                      isLoggedIn ? (
+                        <Invoices
+                          isSmallViewport={isSmallViewport}
+                          isMediumViewport={isMediumViewport}
+                        />
+                      ) : (
+                        <Navigate to='/' />
+                      )
+                    }
+                  />
 
-                    <Route
-                      path='/factures'
-                      element={
-                        isLoggedIn ? (
-                          <Invoices
-                            isSmallViewport={isSmallViewport}
-                            isMediumViewport={isMediumViewport}
-                          />
-                        ) : (
-                          <Navigate to='/' />
-                        )
-                      }
-                    />
+                  <Route
+                    path='/factures/:id'
+                    element={
+                      isLoggedIn ? (
+                        <Invoice isMediumViewport={isMediumViewport} />
+                      ) : (
+                        <Navigate to='/' />
+                      )
+                    }
+                  />
 
-                    <Route
-                      path='/factures/:id'
-                      element={
-                        isLoggedIn ? (
-                          <Invoice isMediumViewport={isMediumViewport} />
-                        ) : (
-                          <Navigate to='/' />
-                        )
-                      }
-                    />
+                  <Route
+                    path='/reinitialisation'
+                    element={
+                      isLoggedIn ? (
+                        <Navigate to='/factures' />
+                      ) : (
+                        <PasswordReset
+                          startLoadingBar={startLoadingBar}
+                          endLoadingBar={endLoadingBar}
+                        />
+                      )
+                    }
+                  />
 
-                    <Route
-                      path='/reinitialisation'
-                      element={
-                        isLoggedIn ? (
-                          <Navigate to='/factures' />
-                        ) : (
-                          <PasswordReset
-                            startLoadingBar={startLoadingBar}
-                            endLoadingBar={endLoadingBar}
-                          />
-                        )
-                      }
-                    />
+                  <Route
+                    path='*'
+                    element={
+                      isLoggedIn ? (
+                        <Navigate to='/factures' />
+                      ) : (
+                        <Navigate to='/' />
+                      )
+                    }
+                  />
+                </Routes>
+              </AnimatePresence>
+            </Content>
 
-                    <Route
-                      path='*'
-                      element={
-                        isLoggedIn ? (
-                          <Navigate to='/factures' />
-                        ) : (
-                          <Navigate to='/' />
-                        )
-                      }
-                    />
-                  </Routes>
-                </AnimatePresence>
-              </Content>
-
-              <Footer />
-            </Pages>
-          )}
-        </Container>
-      </ThemeProvider>
-    </>
+            <Footer />
+          </Pages>
+        )}
+      </Container>
+    </ThemeProvider>
   );
 };
 
@@ -232,9 +230,9 @@ interface ContainerProps {
 }
 
 const Container = styled.div<ContainerProps>`
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
+  display: grid;
+  grid-template: auto 1fr / 1fr;
   background-color: ${({ theme }) => theme.pagesContainerBackground};
   transition: background-color 0.3s;
 
@@ -248,7 +246,7 @@ const Container = styled.div<ContainerProps>`
     `}
 
   @media ${breakpoints.lg} {
-    flex-direction: row;
+    grid-template: 1fr / auto 1fr;
   }
 `;
 
@@ -273,7 +271,7 @@ const SidebarExtended = styled(Sidebar)<SidebarExtendedProps>`
 const Pages = styled.div`
   display: flex;
   flex-direction: column;
-  flex-grow: 2;
+  flex: 1;
   gap: 4rem;
   padding: 3.2rem 2.4rem;
 
@@ -288,8 +286,7 @@ const Pages = styled.div`
 `;
 
 const Content = styled.div`
-  height: 100%;
-  flex-grow: 2;
+  flex: 1;
 `;
 
 export default App;

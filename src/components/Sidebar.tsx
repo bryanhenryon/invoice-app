@@ -22,16 +22,14 @@ const Sidebar: React.FC<Props> = ({
   const auth = getAuth();
 
   return (
-    <>
-      <Container className={className}>
-        <LogoContainer>
-          <Logo />
-        </LogoContainer>
-        
-        <SwitchThemeButton theme={theme} toggleTheme={toggleTheme} />
-        {auth.currentUser && <LogoutButton onClick={showLogoutModal} />}
-      </Container>
-    </>
+    <Container className={className}>
+      <LogoContainer>
+        <Logo />
+      </LogoContainer>
+
+      <SwitchThemeButton theme={theme} toggleTheme={toggleTheme} />
+      {auth.currentUser && <LogoutButton onClick={showLogoutModal} />}
+    </Container>
   );
 };
 
@@ -47,7 +45,7 @@ const Container = styled.div`
 `;
 
 const LogoContainer = styled.div`
-  flex-grow: 2;
+  flex: 1;
 `;
 
 export default Sidebar;

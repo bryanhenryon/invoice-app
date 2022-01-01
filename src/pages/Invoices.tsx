@@ -50,7 +50,8 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
   };
 
   return (
-    <motion.div
+    <InvoicesContainer
+      as={motion.div}
       initial={
         isFromInvoicePage ? { x: -100, opacity: 0 } : { scale: 0.9, opacity: 0 }
       }
@@ -62,43 +63,41 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
         type: "spring",
       }}
     >
-      <InvoicesContainer>
-        <Top invoices={invoices}>
-          <TitleContainer>
-            <Title>Factures</Title>
-            <TotalInvoices>{totalInvoicesText()}</TotalInvoices>
-          </TitleContainer>
+      <Top invoices={invoices}>
+        <TitleContainer>
+          <Title>Factures</Title>
+          <TotalInvoices>{totalInvoicesText()}</TotalInvoices>
+        </TitleContainer>
 
-          <StatusFilter isSmallViewport={isSmallViewport} />
+        <StatusFilter isSmallViewport={isSmallViewport} />
 
-          <Button hasIcon hasBoxShadow>
-            <PlusIconContainer>
-              <PlusIcon />
-            </PlusIconContainer>
+        <Button hasIcon hasBoxShadow>
+          <PlusIconContainer>
+            <PlusIcon />
+          </PlusIconContainer>
 
-            <NewInvoice>
-              {isSmallViewport ? "Nouv." : "Nouvelle facture"}
-            </NewInvoice>
-          </Button>
-        </Top>
+          <NewInvoice>
+            {isSmallViewport ? "Nouv." : "Nouvelle facture"}
+          </NewInvoice>
+        </Button>
+      </Top>
 
-        {invoices.length ? (
-          <InvoicesList>
-            <Searchbar />
+      {invoices.length ? (
+        <InvoicesList>
+          <Searchbar />
 
-            {invoices.map((invoice) =>
-              isMediumViewport ? (
-                <InvoiceCard key={invoice.id} invoice={invoice} />
-              ) : (
-                <InvoiceCardLarge key={invoice.id} invoice={invoice} />
-              )
-            )}
-          </InvoicesList>
-        ) : (
-          <NoInvoice isSmallViewport={isSmallViewport} />
-        )}
-      </InvoicesContainer>
-    </motion.div>
+          {invoices.map((invoice) =>
+            isMediumViewport ? (
+              <InvoiceCard key={invoice.id} invoice={invoice} />
+            ) : (
+              <InvoiceCardLarge key={invoice.id} invoice={invoice} />
+            )
+          )}
+        </InvoicesList>
+      ) : (
+        <NoInvoice isSmallViewport={isSmallViewport} />
+      )}
+    </InvoicesContainer>
   );
 };
 

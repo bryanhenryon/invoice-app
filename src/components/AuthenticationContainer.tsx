@@ -5,7 +5,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-/** Wraps the Login & Register page */
+/** Wraps the Login, Register & PasswordReset pages */
 const AuthenticationContainer: React.FC<Props> = ({ children }) => (
   <Container
     as={motion.div}
