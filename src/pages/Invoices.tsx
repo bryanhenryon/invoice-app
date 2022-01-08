@@ -22,9 +22,14 @@ import data from "../data.json";
 interface Props {
   isSmallViewport: boolean;
   isMediumViewport: boolean;
+  showDrawer: () => void;
 }
 
-const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
+const Invoices: React.FC<Props> = ({
+  isSmallViewport,
+  isMediumViewport,
+  showDrawer,
+}) => {
   const [invoices, setInvoices] = useState<InvoiceInterface[]>(data);
   const { state } = useLocation();
 
@@ -49,6 +54,10 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
     }
   };
 
+  const newInvoice = () => {
+    showDrawer();
+  };
+
   return (
     <InvoicesContainer
       as={motion.div}
@@ -71,7 +80,7 @@ const Invoices: React.FC<Props> = ({ isSmallViewport, isMediumViewport }) => {
 
         <StatusFilter isSmallViewport={isSmallViewport} />
 
-        <Button hasIcon hasBoxShadow>
+        <Button hasIcon hasBoxShadow onClick={newInvoice}>
           <PlusIconContainer>
             <PlusIcon />
           </PlusIconContainer>

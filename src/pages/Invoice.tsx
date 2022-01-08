@@ -17,9 +17,10 @@ import jsonInvoices from "../data.json";
 
 interface Props {
   isMediumViewport: boolean;
+  showDrawer: () => void;
 }
 
-const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
+const Invoice: React.FC<Props> = ({ isMediumViewport, showDrawer }) => {
   const invoices: InvoiceInterface[] = jsonInvoices;
 
   const { state } = useLocation();
@@ -49,6 +50,19 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
     setInvoice(invoice);
   }, [id, navigate, invoices]);
 
+  const editInvoice = () => {
+    showDrawer();
+    // ...
+  };
+
+  const deleteInvoice = () => {
+    // ...
+  };
+
+  const markAsPaid = () => {
+    // ...
+  };
+
   return (
     <motion.div
       initial={
@@ -74,7 +88,14 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
             <StatusBadge status={invoice?.status} />
           </Status>
 
-          {!isMediumViewport && <InvoiceActionButtons />}
+          {!isMediumViewport && (
+            <InvoiceActionButtons
+              editInvoice={editInvoice}
+              deleteInvoice={deleteInvoice}
+              isMediumViewport={isMediumViewport}
+              markAsPaid={markAsPaid}
+            />
+          )}
         </Top>
 
         <InvoiceInfos>
@@ -196,7 +217,12 @@ const Invoice: React.FC<Props> = ({ isMediumViewport }) => {
 
         {isMediumViewport && (
           <Bottom>
-            <InvoiceActionButtons isMediumViewport={isMediumViewport} />
+            <InvoiceActionButtons
+              editInvoice={editInvoice}
+              deleteInvoice={deleteInvoice}
+              isMediumViewport={isMediumViewport}
+              markAsPaid={markAsPaid}
+            />
           </Bottom>
         )}
       </InvoicesContainer>

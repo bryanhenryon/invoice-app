@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-import Button from "../components/Button";
+import Overlay from "./Overlay";
+import Button from "./Button";
 
 import { colors, breakpoints } from "../assets/style/variables";
 
@@ -32,16 +33,14 @@ const ConfirmModal: React.FC<Props> = ({ title, text, cancel, confirm }) => {
       cancel();
   };
   return (
-    <Overlay
-      as={motion.div}
-      initial={{ background: "rgba(0, 0, 0, 0)" }}
-      animate={{ background: "rgba(0, 0, 0, 0.6)" }}
-    >
+    <Overlay centerContent maxPriority>
       <Modal
         ref={confirmModal}
         as={motion.div}
         initial={{ scale: 0.5 }}
         animate={{ scale: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ type: "spring", duration: 0.4 }}
       >
         <ModalTitle>{title}</ModalTitle>
         <ModalText>{text}</ModalText>
@@ -59,17 +58,6 @@ const ConfirmModal: React.FC<Props> = ({ title, text, cancel, confirm }) => {
     </Overlay>
   );
 };
-
-const Overlay = styled.div`
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 100;
-`;
 
 const Modal = styled.div`
   padding: 3.2rem;

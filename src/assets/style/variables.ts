@@ -14,6 +14,14 @@ export const colors = {
   bgDark: "#141625",
 };
 
+// z-index
+export const priorities = {
+  max: 1000,
+  high: 100,
+  medium: 10,
+  low: 1,
+};
+
 export const breakpoints = {
   sm: "(min-width: 576px)",
   md: "(min-width: 768px)",

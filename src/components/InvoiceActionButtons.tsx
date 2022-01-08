@@ -2,21 +2,31 @@ import styled from "styled-components";
 
 import { breakpoints } from "../assets/style/variables";
 
-import Button from "../components/Button";
+import Button from "./Button";
 
 interface Props {
   isMediumViewport?: boolean;
+  editInvoice: () => void;
+  deleteInvoice: () => void;
+  markAsPaid: () => void;
 }
 
-const InvoiceActionButtons: React.FC<Props> = ({ isMediumViewport }) => (
+const InvoiceActionButtons: React.FC<Props> = ({
+  isMediumViewport,
+  editInvoice,
+  deleteInvoice,
+  markAsPaid,
+}) => (
   <ActionButtons>
-    <MarkAsPaid fullWidth={isMediumViewport}>Marquer comme Payée</MarkAsPaid>
+    <MarkAsPaid fullWidth={isMediumViewport} onClick={markAsPaid}>
+      Marquer comme Payée
+    </MarkAsPaid>
 
-    <Button fullWidth={isMediumViewport} variant='light'>
+    <Button fullWidth={isMediumViewport} variant='light' onClick={editInvoice}>
       Editer
     </Button>
 
-    <Button fullWidth={isMediumViewport} variant='red'>
+    <Button fullWidth={isMediumViewport} variant='red' onClick={deleteInvoice}>
       Supprimer
     </Button>
   </ActionButtons>

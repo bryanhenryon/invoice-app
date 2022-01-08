@@ -1,5 +1,6 @@
+import React from "react";
 import styled from "styled-components";
-import { breakpoints } from "../assets/style/variables";
+import { breakpoints, priorities } from "../assets/style/variables";
 import { getAuth } from "firebase/auth";
 
 import Logo from "./Logo";
@@ -11,31 +12,30 @@ interface Props {
   className?: string;
   toggleTheme: () => void;
   showLogoutModal: () => void;
+  ref: HTMLDivElement;
 }
 
-const Sidebar: React.FC<Props> = ({
-  theme,
-  className,
-  toggleTheme,
-  showLogoutModal,
-}) => {
-  const auth = getAuth();
+const Sidebar = React.forwardRef<HTMLDivElement, Props>(
+  ({ theme, className, toggleTheme, showLogoutModal }, ref) => {
+    const auth = getAuth();
 
-  return (
-    <Container className={className}>
-      <LogoContainer>
-        <Logo />
-      </LogoContainer>
+    return (
+      <Container className={className} ref={ref}>
+        <LogoContainer>
+          <Logo />
+        </LogoContainer>
 
-      <SwitchThemeButton theme={theme} toggleTheme={toggleTheme} />
-      {auth.currentUser && <LogoutButton onClick={showLogoutModal} />}
-    </Container>
-  );
-};
+        <SwitchThemeButton theme={theme} toggleTheme={toggleTheme} />
+        {auth.currentUser && <LogoutButton onClick={showLogoutModal} />}
+      </Container>
+    );
+  }
+);
 
 const Container = styled.div`
   display: flex;
   background: ${({ theme }) => theme.sidebarBackground};
+  z-index: ${priorities.max};
 
   @media ${breakpoints.lg} {
     flex-direction: column;

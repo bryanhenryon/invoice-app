@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { ReactComponent as ChevronRightIcon } from "../assets/svg/icon-chevron-right.svg";
 
-import { Card, PaymentDue, ClientName, Total } from "../components/InvoiceCard";
+import { Card, PaymentDue, ClientName, Total } from "./InvoiceCard";
 import InvoiceId from "./InvoiceId";
 import InvoiceStatusBadge from "./InvoiceStatusBadge";
 

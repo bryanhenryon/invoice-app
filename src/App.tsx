@@ -10,6 +10,7 @@ import { breakpoints } from "./assets/style/variables";
 import { lightTheme, darkTheme } from "./assets/style/theme";
 
 import ConfirmModal from "./components/ConfirmModal";
+import Drawer from "./components/Drawer";
 import Sidebar from "./components/Sidebar";
 import Footer from "./components/Footer";
 
@@ -23,13 +24,17 @@ import "./firebase/config";
 
 const App: React.FC = () => {
   const auth = getAuth();
+
   const location = useLocation();
-  const ref = useRef<LoadingBarRef>(null);
+
+  const loadingBar = useRef<LoadingBarRef>(null);
+  const sidebar = useRef<HTMLDivElement>(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [theme, setTheme] = useState("light");
   const [enableTransitions, setEnableTransitions] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
+  const [showDrawer, setShowDrawer] = useState(false);
   const [isSmallViewport, setIsSmallViewport] = useState(
     window.innerWidth < 576
   );
@@ -37,6 +42,19 @@ const App: React.FC = () => {
     window.innerWidth < 768
   );
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const [sidebarHeight, setSidebarHeight] = useState(
+    sidebar.current?.offsetHeight
+  );
+
+  const [sidebarWidth, setSidebarWidth] = useState(
+    sidebar.current?.offsetWidth
+  );
+
+  useEffect(() => {
+    setSidebarHeight(sidebar.current?.offsetHeight);
+    setSidebarWidth(sidebar.current?.offsetWidth);
+  }, []);
 
   // Scrolls to the top on every page change
   useEffect(() => {
@@ -83,6 +101,13 @@ const App: React.FC = () => {
     }, 100);
   }, []);
 
+  // Disables pages scroll when the drawer is opened
+  useEffect(() => {
+    showDrawer || showLogoutModal
+      ? (document.body.style.overflowY = "hidden")
+      : (document.body.style.overflowY = "initial");
+  }, [showDrawer, showLogoutModal]);
+
   const toggleTheme = () => {
     if (theme === "light") {
       window.localStorage.setItem("theme", "dark");
@@ -93,43 +118,56 @@ const App: React.FC = () => {
     }
   };
 
-  // Observer tracking the user's sign-in state
-  onAuthStateChanged(auth, (currentUser) =>
-    currentUser ? setIsLoggedIn(true) : setIsLoggedIn(false)
-  );
-
   /** Signs out the user */
   const logout = () => {
     signOut(auth);
     setShowLogoutModal(false);
   };
 
-  /** @todo Remove parameters after react-top-loading-bar fixes the issue (they should be optional) */
-  const startLoadingBar = () => ref?.current?.continuousStart(20, 1000);
+  // Observer tracking the user's sign-in state
+  onAuthStateChanged(auth, (currentUser) =>
+    currentUser ? setIsLoggedIn(true) : setIsLoggedIn(false)
+  );
 
-  const endLoadingBar = () => ref?.current?.complete();
+  /** @todo Remove parameters after react-top-loading-bar fixes the issue (they should be optional) */
+  const startLoadingBar = () => loadingBar?.current?.continuousStart(20, 1000);
+  const endLoadingBar = () => loadingBar?.current?.complete();
 
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <GlobalStyle />
-      <LoadingBar ref={ref} color='#7C5DFA' height={3} />
+      <LoadingBar ref={loadingBar} color='#7C5DFA' height={3} />
 
       <Container enableTransitions={enableTransitions}>
         <SidebarExtended
+          ref={sidebar}
           show={showNavbar}
           theme={theme}
           toggleTheme={toggleTheme}
           showLogoutModal={() => setShowLogoutModal(true)}
         />
 
-        {showLogoutModal && (
-          <ConfirmModal
-            title='Déconnexion'
-            text='Êtes-vous sûr de vouloir vous déconnecter ?'
-            cancel={() => setShowLogoutModal(false)}
-            confirm={logout}
-          />
-        )}
+        <AnimatePresence>
+          {showLogoutModal && (
+            <ConfirmModal
+              title='Déconnexion'
+              text='Êtes-vous sûr de vouloir vous déconnecter ?'
+              cancel={() => setShowLogoutModal(false)}
+              confirm={logout}
+            />
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {showDrawer && (
+            <Drawer
+              closeDrawer={() => setShowDrawer(false)}
+              sidebar={sidebar}
+              sidebarHeight={sidebarHeight}
+              sidebarWidth={sidebarWidth}
+            />
+          )}
+        </AnimatePresence>
 
         {isLoggedIn !== null && (
           <Pages>
@@ -171,6 +209,7 @@ const App: React.FC = () => {
                         <Invoices
                           isSmallViewport={isSmallViewport}
                           isMediumViewport={isMediumViewport}
+                          showDrawer={() => setShowDrawer(true)}
                         />
                       ) : (
                         <Navigate to='/' />
@@ -182,7 +221,10 @@ const App: React.FC = () => {
                     path='/factures/:id'
                     element={
                       isLoggedIn ? (
-                        <Invoice isMediumViewport={isMediumViewport} />
+                        <Invoice
+                          showDrawer={() => setShowDrawer(true)}
+                          isMediumViewport={isMediumViewport}
+                        />
                       ) : (
                         <Navigate to='/' />
                       )
@@ -259,11 +301,13 @@ const SidebarExtended = styled(Sidebar)<SidebarExtendedProps>`
   transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-100%)")};
   position: sticky;
   top: 0;
-  z-index: 100;
 
   @media ${breakpoints.lg} {
     transition: none;
-    position: static;
+    position: sticky;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
     transform: translateY(0);
   }
 `;

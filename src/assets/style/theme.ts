@@ -4,10 +4,12 @@ export const lightTheme = {
   // Global
   blackToWhite: colors.dark,
   whiteToLightDark: colors.white,
+  whiteToBgDark: colors.white,
   greyToWhite: colors.grey,
   paleVioletToWhite: colors.paleViolet,
   paleVioletToGrey: colors.paleViolet,
   paleVioletToLightPaleViolet: colors.paleViolet,
+  paleVioletToLighterDark: colors.paleViolet,
 
   // pages
   pagesContainerBackground: colors.bgLight,
@@ -54,6 +56,8 @@ export const darkTheme = {
   paleVioletToWhite: colors.white,
   paleVioletToGrey: colors.grey,
   paleVioletToLightPaleViolet: colors.lightPaleViolet,
+  whiteToBgDark: colors.bgDark,
+  paleVioletToLighterDark: colors.lighterDark,
 
   // pages
   pagesContainerBackground: colors.bgDark,

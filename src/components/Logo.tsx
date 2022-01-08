@@ -1,14 +1,14 @@
 import styled from "styled-components";
 
 import { ReactComponent as LogoIcon } from "../assets/svg/logo.svg";
-import { colors } from "../assets/style/variables";
+import { colors, priorities } from "../assets/style/variables";
 
 const Logo: React.FC = () => (
   <LogoContainer>
     <StyledLogo>
       <LogoIcon />
     </StyledLogo>
-    
+
     <Shade />
   </LogoContainer>
 );
@@ -23,7 +23,7 @@ const LogoContainer = styled.div`
 
 const StyledLogo = styled.div`
   position: relative;
-  z-index: 1;
+  z-index: ${priorities.low};
   padding: 3.2rem;
 `;
 

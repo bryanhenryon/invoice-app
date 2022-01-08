@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { ReactComponent as ChevronDownIcon } from "../assets/svg/icon-chevron-down.svg";
 import { ReactComponent as CheckIcon } from "../assets/svg/icon-check.svg";
-import { colors, breakpoints } from "../assets/style/variables";
+import { colors, breakpoints, priorities } from "../assets/style/variables";
 
 interface Props {
   isSmallViewport: boolean;
@@ -71,14 +71,15 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
           <ChevronDownIconExtended />
         </ChevronDownIconContainer>
       </StatusFilterButton>
-      
+
       <AnimatePresence>
         {showDropdown && (
           <StatusFilterDropdown
             as={motion.div}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            exit={{ scale: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: "spring", duration: 0.4 }}
           >
             {checkboxesStatus.map(({ id, text, checked }) => (
               <Label key={id} onClick={() => changeCheckboxStatus(id)}>
@@ -115,7 +116,7 @@ const StatusFilterDropdown = styled.div`
   position: absolute;
   top: 45px;
   left: -10%;
-  z-index: 1;
+  z-index: ${priorities.low};
   min-width: 19.2rem;
   padding: 1.4rem;
   background: ${({ theme }) => theme.statusFilterDropdownBackground};
