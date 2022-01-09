@@ -171,11 +171,11 @@ const CenterButtonContainer = styled.div`
 const NewUser = styled.div`
   text-align: center;
   margin-bottom: 3rem;
-  color: ${(props) => props.theme.blackToWhite};
+  color: ${(props) => props.theme.darkToWhite};
 `;
 
 const CreateNewAccount = styled(Link)`
-  color: ${colors.paleViolet};
+  color: ${colors.lightVioletSecondary};
 
   &:hover {
     text-decoration: underline;
@@ -189,7 +189,7 @@ const ForgottenPasswordContainer = styled.div`
 
 const ForgottenPassword = styled(Link)`
   display: inline-block;
-  color: ${colors.paleViolet};
+  color: ${colors.lightVioletSecondary};
 
   &:hover {
     text-decoration: underline;

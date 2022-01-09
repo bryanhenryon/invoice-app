@@ -79,6 +79,9 @@ const App: React.FC = () => {
     window.addEventListener("resize", () => {
       setIsSmallViewport(window.innerWidth < 576);
       setIsMediumViewport(window.innerWidth < 768);
+
+      setSidebarHeight(sidebar.current?.offsetHeight);
+      setSidebarWidth(sidebar.current?.offsetWidth);
     });
   }, []);
 
@@ -87,6 +90,13 @@ const App: React.FC = () => {
     const localTheme = window.localStorage.getItem("theme");
     localTheme && setTheme(localTheme);
   }, []);
+
+  // Shows the navbar whenever the drawer is opened on mobile viewport
+  useEffect(() => {
+    if (showDrawer) {
+      setShowNavbar(true);
+    }
+  }, [showDrawer]);
 
   /* Sets the "enableTransitions" state to "true" once the app is rendered
   
@@ -275,7 +285,7 @@ const Container = styled.div<ContainerProps>`
   min-height: 100vh;
   display: grid;
   grid-template: auto 1fr / 1fr;
-  background-color: ${({ theme }) => theme.pagesContainerBackground};
+  background-color: ${({ theme }) => theme.lightGreyToLightDarkTertiary};
   transition: background-color 0.3s;
 
   ${({ enableTransitions }) =>

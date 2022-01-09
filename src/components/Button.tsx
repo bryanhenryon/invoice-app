@@ -61,8 +61,8 @@ const StyledButton = styled.button<StyledButtonProps>`
   ${({ variant, theme }) =>
     variant === "light" &&
     css`
-      background: ${theme.buttonVariantLightBackground};
-      color: ${theme.buttonVariantLightColor};
+      background: ${theme.lightGreyTertiaryToLightDarkSecondary};
+      color: ${theme.lightVioletSecondaryToWhite};
     `};
 
   ${({ hasIcon }) =>
@@ -89,8 +89,8 @@ const StyledButton = styled.button<StyledButtonProps>`
     ${({ variant, theme }) =>
       variant === "light" &&
       css`
-        background: ${theme.buttonVariantLightBackgroundHover};
-        color: ${colors.paleViolet};
+        background: ${theme.lightVioletTertiaryToWhite};
+        color: ${colors.lightVioletSecondary};
       `}
   }
 

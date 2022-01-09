@@ -9,7 +9,7 @@ const FormTitle: React.FC<Props> = ({ children }) => <Title>{children}</Title>;
 const Title = styled.h2`
   margin-bottom: 3rem;
   text-align: center;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 export default FormTitle;

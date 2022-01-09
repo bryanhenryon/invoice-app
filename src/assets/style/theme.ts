@@ -1,97 +1,65 @@
 import { colors } from "./variables";
 
 export const lightTheme = {
-  // Global
-  blackToWhite: colors.dark,
   whiteToLightDark: colors.white,
-  whiteToBgDark: colors.white,
+  whiteToLightDarkSecondary: colors.white,
+  whiteToLightDarkTertiary: colors.white,
+
+  darkToWhite: colors.dark,
+
+  lightDarkQuaternaryToLightDark: colors.lightDarkQuaternary,
+  lightDarkQuaternaryToDark: colors.lightDarkQuaternary,
+
   greyToWhite: colors.grey,
-  paleVioletToWhite: colors.paleViolet,
-  paleVioletToGrey: colors.paleViolet,
-  paleVioletToLightPaleViolet: colors.paleViolet,
-  paleVioletToLighterDark: colors.paleViolet,
 
-  // pages
-  pagesContainerBackground: colors.bgLight,
+  lightGreyToLightDarkTertiary: colors.lightGrey,
+  lightGreySecondaryToLightDarkSecondary: colors.lightGreySecondary,
+  lightGreyTertiaryToLightDarkSecondary: colors.lightGreyTertiary,
+  lightGreyQuaternaryTolightGreyQuinary: colors.lightGreyQuaternary,
+  lightDarkQuaternaryToLightGreySecondary: colors.lightDarkQuaternary,
 
-  // Sidebar
-  sidebarBackground: "#373b53",
+  violetToLightDarkSecondary: colors.violet,
 
-  // Invoice card
-  invoiceCard: colors.white,
+  lightVioletSecondaryToWhite: colors.lightVioletSecondary,
+  lightVioletSecondaryToGrey: colors.lightVioletSecondary,
+  lightVioletSecondaryToLightDark: colors.lightVioletSecondary,
+  lightVioletSecondaryTolightDarkSecondary: colors.lightVioletSecondary,
+  lightVioletSecondaryToLightVioletTertiary: colors.lightVioletSecondary,
 
-  // Input
-  inputLabelColor: colors.paleViolet,
-  inputBackgroundColor: colors.white,
-  inputBorderColor: "#dfe3fa",
-  activeInputBorderColor: "#7c5dfa",
+  lightVioletTertiaryToLightDark: colors.lightVioletTertiary,
+  lightVioletTertiaryToWhite: colors.lightVioletTertiary,
 
-  // Draft status badge
-  draftStatusBadgeBulletPoint: "#373B53",
-  draftStatusBadgeBackground: "rgba(55, 59, 83, 0.06)",
-  draftStatusBadgeColor: "#373B53",
-
-  // Status filter
-  statusFilterDropdownBackground: colors.white,
   statusFilterDropdownBoxShadow: "0px 10px 20px rgba(72, 84, 159, 0.25)",
-  statusFilterCheckboxBackground: colors.lightPaleViolet,
-
-  // Light variant button
-  buttonVariantLightBackground: "#F9FAFE",
-  buttonVariantLightBackgroundHover: colors.lightPaleViolet,
-  buttonVariantLightColor: colors.paleViolet,
-
-  // Invoice items background
-  invoiceItemsBackground: "#f9fafe",
-
-  // Invoice grand total
-  invoiceGrandTotalBackground: "#373b53",
 };
 
 export const darkTheme = {
-  // Global
-  blackToWhite: colors.white,
   whiteToLightDark: colors.lightDark,
+  whiteToLightDarkSecondary: colors.lightDarkSecondary,
+  whiteToLightDarkTertiary: colors.lightDarkTertiary,
+
+  darkToWhite: colors.white,
+
+  lightDarkQuaternaryToLightDark: colors.lightDark,
+  lightDarkQuaternaryToDark: colors.dark,
+  lightDarkQuaternaryToLightGreySecondary: colors.lightGreySecondary,
+
   greyToWhite: colors.white,
-  paleVioletToWhite: colors.white,
-  paleVioletToGrey: colors.grey,
-  paleVioletToLightPaleViolet: colors.lightPaleViolet,
-  whiteToBgDark: colors.bgDark,
-  paleVioletToLighterDark: colors.lighterDark,
 
-  // pages
-  pagesContainerBackground: colors.bgDark,
+  lightGreyToLightDarkTertiary: colors.lightDarkTertiary,
+  lightGreySecondaryToLightDarkSecondary: colors.lightDarkSecondary,
+  lightGreyTertiaryToLightDarkSecondary: colors.lightDarkSecondary,
+  lightGreyQuaternaryTolightGreyQuinary: colors.lightGreyQuinary,
 
-  // Invoice card
-  invoiceCard: colors.lightDark,
+  violetToLightDarkSecondary: colors.lightDarkSecondary,
 
-  // Sidebar
-  sidebarBackground: colors.lightDark,
+  lightVioletSecondaryToWhite: colors.white,
+  lightVioletSecondaryToGrey: colors.grey,
+  lightVioletSecondaryToLightDark: colors.lightDark,
+  lightVioletSecondaryTolightDarkSecondary: colors.lightDarkSecondary,
+  lightVioletSecondaryToLightVioletTertiary: colors.lightVioletTertiary,
 
-  // Input
-  inputLabelColor: colors.white,
-  inputBackgroundColor: colors.lightDark,
-  inputBorderColor: colors.lighterDark,
-  activeInputBorderColor: colors.lighterDark,
+  lightVioletTertiaryToLightDark: colors.lightDark,
+  lightVioletTertiaryToWhite: colors.white,
 
-  // Draft status badge
-  draftStatusBadgeBulletPoint: colors.lightPaleViolet,
-  draftStatusBadgeBackground: "rgba(223, 227, 250, 0.06)",
-  draftStatusBadgeColor: colors.lightPaleViolet,
-
-  // Status filter
-  statusFilterDropdownBackground: colors.lighterDark,
   statusFilterDropdownBoxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
-  statusFilterCheckboxBackground: colors.lightDark,
-
-  // Light variant button
-  buttonVariantLightBackground: colors.lighterDark,
-  buttonVariantLightBackgroundHover: colors.white,
-  buttonVariantLightColor: colors.lightPaleViolet,
-
-  // Invoice items background
-  invoiceItemsBackground: colors.lighterDark,
-
-  // Invoice grand total
-  invoiceGrandTotalBackground: colors.dark,
 };

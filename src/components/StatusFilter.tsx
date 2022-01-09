@@ -109,7 +109,7 @@ const StatusFilterButton = styled.button`
   font-weight: 700;
   font-size: 1.2rem;
   padding: 1rem;
-  color: ${(props) => props.theme.blackToWhite};
+  color: ${(props) => props.theme.darkToWhite};
 `;
 
 const StatusFilterDropdown = styled.div`
@@ -119,7 +119,7 @@ const StatusFilterDropdown = styled.div`
   z-index: ${priorities.low};
   min-width: 19.2rem;
   padding: 1.4rem;
-  background: ${({ theme }) => theme.statusFilterDropdownBackground};
+  background: ${({ theme }) => theme.whiteToLightDarkSecondary};
   box-shadow: ${({ theme }) => theme.statusFilterDropdownBoxShadow};
   border-radius: 8px;
 `;
@@ -135,7 +135,7 @@ const FakeCheckbox = styled.span<FakeCheckboxProps>`
   height: 1.6rem;
   width: 1.6rem;
   background: ${({ checked, theme }) =>
-    checked ? colors.violet : theme.statusFilterCheckboxBackground};
+    checked ? colors.violet : theme.lightVioletTertiaryToLightDark};
   border-radius: 0.2rem;
   cursor: pointer;
   margin-right: 1.3rem;
@@ -150,7 +150,7 @@ const CheckIconExtended = styled(CheckIcon)<CheckIconExtendedProps>`
 `;
 
 const Label = styled.label`
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
   display: flex;
   align-items: center;
   font-size: 1.2rem;

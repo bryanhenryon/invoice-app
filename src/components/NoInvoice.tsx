@@ -11,7 +11,7 @@ const NoInvoice: React.FC<Props> = ({ isSmallViewport }) => (
     <Content>
       <IllustrationEmptyExtended />
       <Title>Il n'y a rien pour le moment</Title>
-      
+
       <Text>
         Créez une nouvelle facture en cliquant sur{" "}
         <b>{isSmallViewport ? "Nouv." : "Nouvelle facture"}</b>
@@ -24,7 +24,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
   height: 100%;
   margin: 8rem 0;
 `;

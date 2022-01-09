@@ -250,13 +250,13 @@ const GoBackButton = styled(Link)`
 const GoBackButtonLabel = styled.span`
   margin-left: 2.3rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 const Top = styled.div`
   display: flex;
   align-items: center;
-  background: ${({ theme }) => theme.invoiceCard};
+  background: ${({ theme }) => theme.whiteToLightDark};
   border-radius: 8px;
   padding: 2.4rem 3.2rem;
   box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
@@ -333,7 +333,7 @@ const Container6 = styled.div`
 
 const InvoiceInfos = styled.div`
   padding: 2.4rem;
-  background: ${({ theme }) => theme.invoiceCard};
+  background: ${({ theme }) => theme.whiteToLightDark};
   border-radius: 8px;
   box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
   border: 2px solid transparent;
@@ -353,7 +353,7 @@ const InvoiceInfos = styled.div`
 const SenderAddress = styled.div`
   font-size: 1.1rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.paleVioletToWhite};
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
 
   @media ${breakpoints.md} {
     text-align: right;
@@ -363,7 +363,7 @@ const SenderAddress = styled.div`
 const ClientAddress = styled.div`
   font-size: 1.1rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.paleVioletToWhite};
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
 `;
 
 const InvoiceIdAndDescription = styled.div`
@@ -386,7 +386,7 @@ const InvoiceIdExtended = styled(InvoiceId)`
 const InvoiceDescription = styled.div`
   font-size: 1.2rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.paleVioletToWhite};
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
 `;
 
 const InvoiceDateContainer = styled.div`
@@ -396,18 +396,18 @@ const InvoiceDateContainer = styled.div`
 const InvoiceDate = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 const PaymentDue = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 const Label = styled.div`
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.paleVioletToWhite};
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
   margin-bottom: 1.2rem;
 
   @media ${breakpoints.md} {
@@ -417,7 +417,7 @@ const Label = styled.div`
 
 const BillTo = styled.div`
   font-size: 1.2rem;
-  color: ${({ theme }) => theme.paleVioletToWhite};
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
   margin-bottom: 1.2rem;
 `;
 
@@ -429,13 +429,13 @@ const ClientName = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 0.8rem;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 const ClientEmailAddress = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 const Items = styled.div`
@@ -443,7 +443,7 @@ const Items = styled.div`
   flex-direction: column;
   gap: 2.4rem;
   padding: 2.4rem;
-  background: ${({ theme }) => theme.invoiceItemsBackground};
+  background: ${({ theme }) => theme.lightGreyTertiaryToLightDarkSecondary};
   transition: background-color 0.3s;
   border-radius: 8px 8px 0px 0px;
 
@@ -462,7 +462,7 @@ const ItemName = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 0.8rem;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 const ItemContainerDesktop = styled.div`
@@ -484,7 +484,7 @@ const ItemValuesDescriptions = styled.div`
   align-items: center;
   text-align: right;
   font-size: 1.1rem;
-  color: ${({ theme }) => theme.paleVioletToWhite};
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
   font-weight: 500;
 
   ${ItemNameLabel} {
@@ -500,37 +500,38 @@ const ItemPriceAndQuantity = styled.div`
 const ItemPrice = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.paleVioletToGrey};
+  color: ${({ theme }) => theme.lightVioletSecondaryToLightVioletTertiary};
 `;
 
 const ItemPriceDesktop = styled(ItemPrice)`
-  color: ${({ theme }) => theme.paleVioletToLightPaleViolet};
+  color: ${({ theme }) => theme.lightVioletSecondaryToLightVioletTertiary};
 `;
 
 const ItemQuantity = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.paleVioletToGrey};
+  color: ${({ theme }) => theme.lightVioletSecondaryToLightVioletTertiary};
+
   text-align: center;
   transform: translateX(25%);
 `;
 
 const ItemQuantityDesktop = styled(ItemQuantity)`
   ${ItemQuantity};
-  color: ${({ theme }) => theme.paleVioletToLightPaleViolet};
+  color: ${({ theme }) => theme.lightVioletSecondaryToLightVioletTertiary};
 `;
 
 const MultiplySymbol = styled.div`
   margin: 0 0.5rem;
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.paleVioletToGrey};
+  color: ${({ theme }) => theme.lightVioletSecondaryToGrey};
 `;
 
 const ItemTotalPrice = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 const GrandTotal = styled.div`
@@ -540,7 +541,7 @@ const GrandTotal = styled.div`
   gap: 1rem;
   justify-content: space-between;
   padding: 3.1rem 2.4rem;
-  background-color: ${({ theme }) => theme.invoiceGrandTotalBackground};
+  background-color: ${({ theme }) => theme.lightDarkQuaternaryToDark};
   transition: background-color 0.3s;
   border-radius: 0px 0px 8px 8px;
 `;
@@ -558,7 +559,7 @@ const GrandTotalValue = styled.div`
 
 const Bottom = styled.div`
   padding: 2.1rem 2.4rem;
-  background: ${({ theme }) => theme.invoiceCard};
+  background: ${({ theme }) => theme.whiteToLightDarkTertiary};
   border-radius: 8px;
   box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
   border: 2px solid transparent;

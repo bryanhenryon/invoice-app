@@ -20,7 +20,7 @@ interface IdProps {
 
 const Id = styled.div<IdProps>`
   font-weight: ${({ fontWeight }) => fontWeight};
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 
   &::before {
     content: "#";

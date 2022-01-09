@@ -27,11 +27,11 @@ const StyledFooter = styled.footer`
 `;
 
 const CopyrightText = styled.span`
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 const PortfolioLink = styled.a`
-  color: ${colors.paleViolet};
+  color: ${colors.lightVioletSecondary};
 
   &:hover {
     text-decoration: underline;

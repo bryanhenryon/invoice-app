@@ -106,6 +106,10 @@ const StyledDrawer = styled.div<StyledDrawerProps>`
   bottom: 0;
   max-width: 70rem;
   width: 100%;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    visibility: hidden;
+  }
 
   ${({ sidebarHeight }) =>
     sidebarHeight &&
@@ -113,12 +117,13 @@ const StyledDrawer = styled.div<StyledDrawerProps>`
       height: calc(100vh - ${sidebarHeight}px);
     `}
 
-  background: ${({ theme }) => theme.whiteToBgDark};
+  background: ${({ theme }) => theme.whiteToLightDarkTertiary};
   transition: background-color 0.3s;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
   padding: 5.6rem;
 
   @media ${breakpoints.sm} {
+    overflow: initial;
     border-radius: 0px 2rem 2rem 0px;
   }
 
@@ -134,17 +139,20 @@ const StyledDrawer = styled.div<StyledDrawerProps>`
 `;
 
 const Content = styled.div`
-  height: 100%;
-  padding-right: 1.6rem;
-  overflow-y: scroll;
+  @media ${breakpoints.sm} {
+    height: 100%;
+    padding-right: 1.6rem;
+    overflow-y: scroll;
 
-  &::-webkit-scrollbar {
-    width: 0.8rem;
-  }
+    &::-webkit-scrollbar {
+      width: 0.8rem;
+    }
 
-  &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.paleVioletToLighterDark};
-    border-radius: 0.4rem;
+    &::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) =>
+        theme.lightVioletSecondaryTolightDarkSecondary};
+      border-radius: 0.4rem;
+    }
   }
 `;
 

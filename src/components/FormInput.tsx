@@ -75,7 +75,7 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 1rem;
-  color: ${({ theme }) => theme.inputLabelColor};
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
 `;
 
 interface InputProps {
@@ -84,8 +84,8 @@ interface InputProps {
 }
 
 const Input = styled.input<InputProps>`
-  background: ${({ theme }) => theme.inputBackgroundColor};
-  color: ${({ theme }) => theme.blackToWhite};
+  background: ${({ theme }) => theme.whiteToLightDark};
+  color: ${({ theme }) => theme.darkToWhite};
   width: 100%;
   padding: 1.6rem 2rem;
 
@@ -96,7 +96,8 @@ const Input = styled.input<InputProps>`
     `};
 
   border-radius: 0.4rem;
-  border: 1px solid ${({ theme }) => theme.inputBorderColor};
+  border: 1px solid
+    ${({ theme }) => theme.lightGreySecondaryToLightDarkSecondary};
 
   ${({ showError }) =>
     showError &&
@@ -107,7 +108,7 @@ const Input = styled.input<InputProps>`
   outline: none;
 
   &:focus {
-    border-color: ${({ theme }) => theme.activeInputBorderColor};
+    border-color: ${({ theme }) => theme.violetToLightDarkSecondary};
 
     ${({ showError }) =>
       showError &&

@@ -110,7 +110,7 @@ const CenterButtonContainer = styled.div`
 `;
 
 const Login = styled(Link)`
-  color: ${colors.paleViolet};
+  color: ${colors.lightVioletSecondary};
   text-align: center;
   display: block;
 
@@ -120,7 +120,7 @@ const Login = styled(Link)`
 `;
 
 const Confirmation = styled.p`
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
   text-align: center;
   margin-bottom: 2.9rem;
 `;

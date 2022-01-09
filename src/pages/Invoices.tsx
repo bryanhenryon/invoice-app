@@ -135,7 +135,7 @@ const Top = styled.div<TopProps>`
 
 const Title = styled.h1`
   margin-bottom: 0.4rem;
-  color: ${(props) => props.theme.blackToWhite};
+  color: ${(props) => props.theme.darkToWhite};
 
   @media ${breakpoints.md} {
     margin-bottom: 1.4rem;

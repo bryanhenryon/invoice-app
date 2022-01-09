@@ -34,7 +34,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, Props>(
 
 const Container = styled.div`
   display: flex;
-  background: ${({ theme }) => theme.sidebarBackground};
+  background: ${({ theme }) => theme.lightDarkQuaternaryToLightDark};
   z-index: ${priorities.max};
 
   @media ${breakpoints.lg} {

@@ -12,7 +12,7 @@ interface Props {
   invoice: InvoiceInterface;
 }
 
-const InvoiceCard: React.FC<Props> = ({ invoice }) => (
+const whiteToLightDarkTertiary: React.FC<Props> = ({ invoice }) => (
   <Card to={`/factures/${invoice.id}`} state='fromInvoices'>
     <TopContainer>
       <InvoiceIdExtended id={invoice.id} fontWeight='bold' />
@@ -32,7 +32,7 @@ const InvoiceCard: React.FC<Props> = ({ invoice }) => (
 
 export const Card = styled(Link)`
   display: block;
-  background: ${({ theme }) => theme.invoiceCard};
+  background: ${({ theme }) => theme.whiteToLightDark};
   border-radius: 8px;
   padding: 2.4rem;
   box-shadow: 0px 10px 10px -10px rgba(72, 84, 159, 0.100397);
@@ -72,7 +72,7 @@ export const ClientName = styled.div`
 export const Total = styled.div`
   font-size: 1.6rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 `;
 
-export default InvoiceCard;
+export default whiteToLightDarkTertiary;

@@ -40,9 +40,10 @@ const InputContainer = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  background: ${({ theme }) => theme.inputBackgroundColor};
+  background: ${({ theme }) => theme.whiteToLightDark};
   border-radius: 0.4rem;
-  border: 1px solid ${({ theme }) => theme.inputBorderColor};
+  border: 1px solid
+    ${({ theme }) => theme.lightGreySecondaryToLightDarkSecondary};
   padding-left: 1.2rem;
   min-height: 4rem;
 
@@ -53,8 +54,8 @@ const InputContainer = styled.div`
 
 const SearchInput = styled.input`
   transition: 100ms ease-in;
-  color: ${({ theme }) => theme.blackToWhite};
-  background: ${({ theme }) => theme.inputBackgroundColor};
+  color: ${({ theme }) => theme.darkToWhite};
+  background: ${({ theme }) => theme.whiteToLightDark};
   padding-right: 1.2rem;
   width: 100%;
   outline: none;

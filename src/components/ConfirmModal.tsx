@@ -76,7 +76,7 @@ const Modal = styled.div`
 `;
 
 const ModalTitle = styled.h2`
-  color: ${({ theme }) => theme.blackToWhite};
+  color: ${({ theme }) => theme.darkToWhite};
 
   @media ${breakpoints.sm} {
     font-size: 2.4rem;

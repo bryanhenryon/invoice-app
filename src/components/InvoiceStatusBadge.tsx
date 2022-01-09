@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components";
 
+import { colors } from "../assets/style/variables";
+
 interface Props {
   className?: string;
   status: string | undefined;
@@ -23,10 +25,10 @@ const BulletPoint = styled.div<BulletPointProps>`
   margin-right: 0.8rem;
   background: ${({ status, theme }) =>
     status === "Paid"
-      ? "#33D69F"
+      ? colors.green
       : status === "Pending"
-      ? "#FF8F00"
-      : theme.draftStatusBadgeBulletPoint};
+      ? colors.orange
+      : theme.lightDarkQuaternaryToLightGreySecondary};
 `;
 
 interface StatusProps {
@@ -46,22 +48,22 @@ const Status = styled.div<StatusProps>`
   ${({ status }) =>
     status === "Paid" &&
     css`
-      color: #33d69f;
-      background: rgba(51, 214, 159, 0.06);
+      color: ${colors.green};
+      background: ${colors.lightGreen};
     `};
 
   ${({ status }) =>
     status === "Pending" &&
     css`
-      background: rgba(255, 143, 0, 0.06);
-      color: #ff8f00;
+      background: ${colors.lightOrange};
+      color: ${colors.orange};
     `};
 
   ${({ status, theme }) =>
     status === "Draft" &&
     css`
-      color: ${theme.draftStatusBadgeColor};
-      background: ${theme.draftStatusBadgeBackground};
+      color: ${theme.lightDarkQuaternaryToLightGreySecondary};
+      background: ${theme.lightGreyQuaternaryTolightGreyQuinary};
     `};
 `;
 
