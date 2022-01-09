@@ -22,7 +22,11 @@ const InvoiceActionButtons: React.FC<Props> = ({
       Marquer comme Payée
     </MarkAsPaid>
 
-    <Button fullWidth={isMediumViewport} variant='light' onClick={editInvoice}>
+    <Button
+      fullWidth={isMediumViewport}
+      variant='light-to-dark'
+      onClick={editInvoice}
+    >
       Editer
     </Button>
 

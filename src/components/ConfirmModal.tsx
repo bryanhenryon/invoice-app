@@ -46,7 +46,7 @@ const ConfirmModal: React.FC<Props> = ({ title, text, cancel, confirm }) => {
         <ModalText>{text}</ModalText>
 
         <ActionButtons>
-          <Button variant='light' onClick={cancel}>
+          <Button variant='light-to-dark' onClick={cancel}>
             Annuler
           </Button>
 

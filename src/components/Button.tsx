@@ -52,6 +52,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   color: ${colors.white};
   white-space: nowrap;
   width: ${({ fullWidth }) => fullWidth && "100%"};
+
   ${({ variant }) =>
     variant === "red" &&
     css`
@@ -59,10 +60,25 @@ const StyledButton = styled.button<StyledButtonProps>`
     `};
 
   ${({ variant, theme }) =>
-    variant === "light" &&
+    variant === "light-to-dark" &&
     css`
       background: ${theme.lightGreyTertiaryToLightDarkSecondary};
       color: ${theme.lightVioletSecondaryToWhite};
+    `};
+
+  ${({ variant }) =>
+    variant === "light" &&
+    css`
+      background: ${colors.lightGreyTertiary};
+      color: ${colors.lightVioletSecondary};
+    `};
+
+  ${({ variant }) =>
+    variant === "dark" &&
+    css`
+      background-color: ${colors.lightDarkQuaternary};
+      transition: background-color 0.3s;
+      color: ${colors.lightGreySecondary};
     `};
 
   ${({ hasIcon }) =>
@@ -87,10 +103,22 @@ const StyledButton = styled.button<StyledButtonProps>`
       `}
 
     ${({ variant, theme }) =>
+      variant === "light-to-dark" &&
+      css`
+        background: ${theme.lightVioletTertiaryToLightGreyTertiary};
+        color: ${colors.lightVioletSecondary};
+      `}
+
+      ${({ variant, theme }) =>
       variant === "light" &&
       css`
-        background: ${theme.lightVioletTertiaryToWhite};
-        color: ${colors.lightVioletSecondary};
+        background: ${colors.lightGreySecondary};
+      `}
+
+        ${({ variant }) =>
+      variant === "dark" &&
+      css`
+        background: #1e2139;
       `}
   }
 

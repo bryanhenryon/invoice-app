@@ -11,6 +11,7 @@ export const lightTheme = {
   lightDarkQuaternaryToDark: colors.lightDarkQuaternary,
 
   greyToWhite: colors.grey,
+  greyToLightGreySecondary: colors.grey,
 
   lightGreyToLightDarkTertiary: colors.lightGrey,
   lightGreySecondaryToLightDarkSecondary: colors.lightGreySecondary,
@@ -27,6 +28,7 @@ export const lightTheme = {
   lightVioletSecondaryToLightVioletTertiary: colors.lightVioletSecondary,
 
   lightVioletTertiaryToLightDark: colors.lightVioletTertiary,
+  lightVioletTertiaryToLightGreyTertiary: colors.lightVioletTertiary,
   lightVioletTertiaryToWhite: colors.lightVioletTertiary,
 
   statusFilterDropdownBoxShadow: "0px 10px 20px rgba(72, 84, 159, 0.25)",
@@ -44,6 +46,7 @@ export const darkTheme = {
   lightDarkQuaternaryToLightGreySecondary: colors.lightGreySecondary,
 
   greyToWhite: colors.white,
+  greyToLightGreySecondary: colors.lightGreySecondary,
 
   lightGreyToLightDarkTertiary: colors.lightDarkTertiary,
   lightGreySecondaryToLightDarkSecondary: colors.lightDarkSecondary,
@@ -59,6 +62,7 @@ export const darkTheme = {
   lightVioletSecondaryToLightVioletTertiary: colors.lightVioletTertiary,
 
   lightVioletTertiaryToLightDark: colors.lightDark,
+  lightVioletTertiaryToLightGreyTertiary: colors.lightGreyTertiary,
   lightVioletTertiaryToWhite: colors.white,
 
   statusFilterDropdownBoxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
