@@ -76,7 +76,7 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
         {showDropdown && (
           <StatusFilterDropdown
             as={motion.div}
-            initial={{ scale: 0 }}
+            initial={{ scale: 0.5 }}
             animate={{ scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ type: "spring", duration: 0.4 }}

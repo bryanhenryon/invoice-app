@@ -6,6 +6,7 @@ export const lightTheme = {
   whiteToLightDarkTertiary: colors.white,
 
   darkToWhite: colors.dark,
+  darkToLightVioletTertiary: colors.dark,
 
   lightDarkQuaternaryToLightDark: colors.lightDarkQuaternary,
   lightDarkQuaternaryToDark: colors.lightDarkQuaternary,
@@ -13,6 +14,7 @@ export const lightTheme = {
   greyToWhite: colors.grey,
   greyToLightGreySecondary: colors.grey,
 
+  lightGreySecondaryToGrey: colors.lightGreySecondary,
   lightGreyToLightDarkTertiary: colors.lightGrey,
   lightGreySecondaryToLightDarkSecondary: colors.lightGreySecondary,
   lightGreyTertiaryToLightDarkSecondary: colors.lightGreyTertiary,
@@ -26,6 +28,7 @@ export const lightTheme = {
   lightVioletSecondaryToLightDark: colors.lightVioletSecondary,
   lightVioletSecondaryTolightDarkSecondary: colors.lightVioletSecondary,
   lightVioletSecondaryToLightVioletTertiary: colors.lightVioletSecondary,
+  lightVioletSecondaryToLightGreySecondary: colors.lightVioletSecondary,
 
   lightVioletTertiaryToLightDark: colors.lightVioletTertiary,
   lightVioletTertiaryToLightGreyTertiary: colors.lightVioletTertiary,
@@ -40,6 +43,7 @@ export const darkTheme = {
   whiteToLightDarkTertiary: colors.lightDarkTertiary,
 
   darkToWhite: colors.white,
+  darkToLightVioletTertiary: colors.lightVioletTertiary,
 
   lightDarkQuaternaryToLightDark: colors.lightDark,
   lightDarkQuaternaryToDark: colors.dark,
@@ -48,6 +52,7 @@ export const darkTheme = {
   greyToWhite: colors.white,
   greyToLightGreySecondary: colors.lightGreySecondary,
 
+  lightGreySecondaryToGrey: colors.grey,
   lightGreyToLightDarkTertiary: colors.lightDarkTertiary,
   lightGreySecondaryToLightDarkSecondary: colors.lightDarkSecondary,
   lightGreyTertiaryToLightDarkSecondary: colors.lightDarkSecondary,
@@ -60,6 +65,7 @@ export const darkTheme = {
   lightVioletSecondaryToLightDark: colors.lightDark,
   lightVioletSecondaryTolightDarkSecondary: colors.lightDarkSecondary,
   lightVioletSecondaryToLightVioletTertiary: colors.lightVioletTertiary,
+  lightVioletSecondaryToLightGreySecondary: colors.lightGreySecondary,
 
   lightVioletTertiaryToLightDark: colors.lightDark,
   lightVioletTertiaryToLightGreyTertiary: colors.lightGreyTertiary,

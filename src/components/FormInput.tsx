@@ -8,17 +8,18 @@ import { colors } from "../assets/style/variables";
 interface Props {
   label: string;
   id: string;
-  placeholder: string;
+  placeholder?: string;
   type: string;
   required: boolean;
   spellcheck: boolean;
-  autoComplete: string;
+  autoComplete?: string;
   value: string;
   name: string;
   className?: string;
   showError?: boolean;
   handleInputChange: (e: ChangeEvent) => void;
   displayEye?: boolean;
+  labelFontSize?: string | undefined;
 }
 
 const FormInput: React.FC<Props> = ({
@@ -35,12 +36,15 @@ const FormInput: React.FC<Props> = ({
   className,
   showError,
   displayEye,
+  labelFontSize,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <FormGroup>
-      <Label htmlFor={id}>{label}</Label>
+      <Label labelFontSize={labelFontSize} htmlFor={id}>
+        {label}
+      </Label>
       <Input
         displayEye={displayEye}
         showError={showError}
@@ -72,7 +76,16 @@ const FormGroup = styled.div`
   position: relative;
 `;
 
-const Label = styled.label`
+interface LabelProps {
+  labelFontSize: string | undefined;
+}
+
+const Label = styled.label<LabelProps>`
+  ${({ labelFontSize }) =>
+    labelFontSize &&
+    css`
+      font-size: 1.2rem;
+    `}
   display: block;
   margin-bottom: 1rem;
   color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
@@ -88,6 +101,16 @@ const Input = styled.input<InputProps>`
   color: ${({ theme }) => theme.darkToWhite};
   width: 100%;
   padding: 1.6rem 2rem;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
 
   ${({ displayEye }) =>
     displayEye &&

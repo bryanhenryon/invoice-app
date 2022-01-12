@@ -12,6 +12,8 @@ interface Props {
   sidebarHeight: number | undefined;
   sidebarWidth: number | undefined;
   sidebar: React.RefObject<HTMLDivElement>;
+  isSmallViewport: boolean;
+  isMediumViewport: boolean;
 }
 
 const Drawer: React.FC<Props> = ({
@@ -19,6 +21,8 @@ const Drawer: React.FC<Props> = ({
   sidebar,
   sidebarHeight,
   sidebarWidth,
+  isSmallViewport,
+  isMediumViewport,
 }) => {
   const drawer = useRef<HTMLDivElement>(null);
 
@@ -55,7 +59,11 @@ const Drawer: React.FC<Props> = ({
           duration: 0.7,
         }}
       >
-        <InvoiceForm />
+        <InvoiceForm
+          isSmallViewport={isSmallViewport}
+          isMediumViewport={isMediumViewport}
+          closeDrawer={closeDrawer}
+        />
       </StyledDrawer>
     </Overlay>
   );

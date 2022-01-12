@@ -175,6 +175,8 @@ const App: React.FC = () => {
               sidebar={sidebar}
               sidebarHeight={sidebarHeight}
               sidebarWidth={sidebarWidth}
+              isSmallViewport={isSmallViewport}
+              isMediumViewport={isMediumViewport}
             />
           )}
         </AnimatePresence>

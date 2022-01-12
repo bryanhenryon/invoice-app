@@ -10,6 +10,7 @@ interface Props {
   variant?: string;
   fullWidth?: boolean;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset" | undefined;
 }
 
 const Button: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const Button: React.FC<Props> = ({
   variant,
   fullWidth,
   onClick,
+  type,
 }) => {
   return (
     <StyledButton
@@ -29,6 +31,7 @@ const Button: React.FC<Props> = ({
       variant={variant}
       hasIcon={hasIcon}
       fullWidth={fullWidth}
+      type={type}
     >
       {children}
     </StyledButton>
@@ -40,6 +43,7 @@ interface StyledButtonProps {
   variant: string | undefined;
   hasIcon: boolean | undefined;
   fullWidth: boolean | undefined;
+  type: string | undefined;
 }
 
 const StyledButton = styled.button<StyledButtonProps>`
@@ -109,7 +113,7 @@ const StyledButton = styled.button<StyledButtonProps>`
         color: ${colors.lightVioletSecondary};
       `}
 
-      ${({ variant, theme }) =>
+      ${({ variant }) =>
       variant === "light" &&
       css`
         background: ${colors.lightGreySecondary};

@@ -82,7 +82,7 @@ const Invoices: React.FC<Props> = ({
 
         <Button hasIcon hasBoxShadow onClick={newInvoice}>
           <PlusIconContainer>
-            <PlusIcon />
+            <PlusIconExtended />
           </PlusIconContainer>
 
           <NewInvoice>
@@ -155,6 +155,10 @@ const PlusIconContainer = styled.span`
   background: ${colors.white};
   border-radius: 50%;
   padding: 1rem;
+`;
+
+const PlusIconExtended = styled(PlusIcon)`
+  fill: ${colors.violet};
 `;
 
 const NewInvoice = styled.span`

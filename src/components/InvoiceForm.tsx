@@ -1,96 +1,373 @@
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 
+import GoBackButton from "./GoBackButton";
+import FormInput from "./FormInput";
 import Button from "./Button";
+import { Calendar } from "./Calendar";
 
-import { breakpoints } from "../assets/style/variables";
+import { ReactComponent as TrashIcon } from "../assets/svg/icon-trash.svg";
+import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
+import { ReactComponent as CalendarIcon } from "../assets/svg/icon-calendar.svg";
 
-export const InvoiceForm: React.FC = () => {
+import { breakpoints, colors } from "../assets/style/variables";
+
+interface Props {
+  closeDrawer: () => void;
+  isSmallViewport: boolean;
+  isMediumViewport: boolean;
+}
+
+export const InvoiceForm: React.FC<Props> = ({
+  closeDrawer,
+  isSmallViewport,
+  isMediumViewport,
+}) => {
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [date, setDate] = useState(new Date());
+
+  const dateButtonLabel = useRef<HTMLDivElement | null>(null);
+  const dateButton = useRef<HTMLButtonElement | null>(null);
+  const calendar = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  const handleOutsideClick = (e: Event) => {
+    if (
+      !calendar.current?.contains(e.target as HTMLDivElement) &&
+      !dateButton.current?.contains(e.target as HTMLDivElement) &&
+      !dateButtonLabel.current?.contains(e.target as HTMLDivElement)
+    )
+      setShowCalendar(false);
+  };
+
+  const handleDateChange = (date: Date) => {
+    setDate(date);
+    setShowCalendar(false);
+  };
+
+  /** Focuses DateButton & open the calendar on click on the button's label  */
+  const focusDateButton = () => {
+    dateButton.current?.focus();
+    setShowCalendar(!showCalendar);
+  };
+
+  const months = [
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "aout",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
+  ];
+
+  const parsedDate = `${date.getDate()} ${
+    months[date.getMonth()]
+  } ${date.getFullYear()}`;
+
+  const ServiceName = () => (
+    <FormInput
+      value=''
+      handleInputChange={() => ""}
+      type='text'
+      name=''
+      label='Nom'
+      id='service-name'
+      required
+      spellcheck={false}
+      labelFontSize='1.2rem'
+    />
+  );
+
   return (
     <Container>
-      <Title>Nouvelle facture</Title>
       <Form>
+        <div>
+          {isMediumViewport && (
+            <GoBackButtonExtended type='button' action={closeDrawer} />
+          )}
+          <Title>Nouvelle facture</Title>
+        </div>
+
         <Content>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
-          expedita exercitationem corporis illo suscipit, nihil doloremque
-          quidem ipsa minus, repudiandae ex consectetur debitis dolor repellat
-          qui numquam neque natus dolorem? Neque iste vero accusantium unde
-          vitae. Dolorum sint quaerat, quae aspernatur et beatae numquam tenetur
-          explicabo iusto omnis quibusdam corrupti soluta at ducimus id
-          cupiditate autem? Voluptatibus ut exercitationem reprehenderit! Error
-          accusamus incidunt consectetur esse perferendis magni vel accusantium
-          dolores, ut nemo vit Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Non modi temporibus eius ratione deleniti facilis
-          ad, eligendi id, saepe, amet asperiores repellat neque! Atque aliquid
-          perspiciatis ea suscipit reiciendis maxime! Sapiente nostrum
-          recusandae culpa id illo molestias nemo optio explicabo nesciunt
-          perferendis nulla commodi deleniti porro dicta repellendus, dolore
-          repudiandae incidunt animi blanditiis maiores dolorem asperiores, enim
-          corporis aliquid. Quia. Pariatur iusto rem suscipit nam temporibus
-          reiciendis doloribus accusantium magni consequatur sequi, neque facere
-          vero minus, sint ullam ipsum deleniti non. Nulla mollitia ducimus,
-          culpa qui iste veritatis. Voluptatem, quaerat. Accusamus vel
-          consequatur exercitationem qui perspiciatis voluptas veritatis ea
-          iusto ad tempora laudantium expedita sapiente iure recusandae laborum
-          facere consectetur a, animi id eveniet. Dolor accusantium perspiciatis
-          corporis quisquam dolorem! Dolor qui veritatis quas, sed quisquam
-          mollitia eveniet dolore quis corporis. Commodi sunt magnam quibusdam
-          quis, voluptatum cum esse atque. Maxime facere accusantium, beatae
-          voluptatibus impedit nemo rem possimus velit! Explicabo eum magnam
-          optio corrupti. Quibusdam, harum optio. Iure dolor eveniet dicta sunt
-          temporibus quo enim, laborum atque exercitationem nihil, voluptatibus
-          corporis laboriosam et rerum inventore in recusandae explicabo quasi?
-          Quibusdam excepturi non consequuntur a tempore ducimus nostrum odit
-          velit reiciendis! Explicabo magni aspernatur commodi. Non voluptatum
-          veniam tempora ipsum iste, quibusdam modi omnis sequi pariatur,
-          mollitia, quo aperiam nemo! Vero suscipit ea est voluptate, sunt animi
-          molestias quibusdam, dolor ipsum architecto deleniti explicabo impedit
-          officiis necessitatibus ipsam, illum aut omnis. Magni minima sed
-          fugiat esse incidunt inventore recusandae ex. Dolor quo tenetur atque!
-          Ullam, placeat accusantium cumque quia neque tempore soluta a illum
-          magnam nostrum reiciendis, porro nisi maiores aliquam, unde nemo!
-          Ipsum nisi perspiciatis velit, vel natus molestiae? Corrupti,
-          voluptates magni sunt blanditiis a ad earum provident alias ea. Quis
-          harum nihil nam omnis iusto adipisci porro et inventore veniam sit
-          deleniti, unde quo iure. Quod, dolorem asperiores! Perferendis quam,
-          maiores facere aperiam enim in nulla quo debitis beatae ut blanditiis
-          nesciunt quis officiis consectetur officia suscipit mollitia
-          repellendus. Hic unde, voluptatum nemo animi soluta itaque voluptas
-          ut? Repudiandae quae quisquam nulla assumenda voluptates, magni
-          placeat, ea reprehenderit tenetur delectus nesciunt culpa suscipit,
-          odio libero quas! Consequuntur incidunt praesentium ratione
-          repudiandae, eaque iure laboriosam voluptas perferendis dolor
-          nesciunt! Minima consequatur magni debitis aperiam optio commodi rerum
-          quos fuga? Tempore quisquam, consequuntur earum ut adipisci ea in
-          pariatur, harum voluptatem eveniet fuga accusamus, doloremque
-          asperiores nesciunt maxime. Esse, eos. Molestias aliquam sint sit
-          vitae voluptatibus totam? Temporibus ex magnam doloribus totam
-          praesentium corrupti labore maiores cum dolor vel, incidunt iusto non
-          maxime excepturi nihil! Sequi quaerat iure non fugit? Ex, quibusdam
-          officiis, aliquid eligendi rerum a nulla, at quo vel nesciunt
-          temporibus. Necessitatibus, totam maiores voluptatibus corporis
-          pariatur enim minima ipsam minus repellendus labore. Necessitatibus
-          fugit unde corporis nobis? Quod architecto possimus minima asperiores
-          accusantium porro tempora maiores maxime reiciendis non nostrum,
-          quisquam quaerat delectus autem enim exercitationem eos. Quidem ipsa
-          ipsum eligendi eius aut reiciendis laudantium nobis nesciunt? Placeat
-          odit provident assumenda id accusamus, cumque, at necessitatibus
-          laboriosam, magni fugit excepturi exercitationem quas nemo! Molestias
-          vero iure perspiciatis adipisci facere non, dolore, sit praesentium
-          quo incidunt, cupiditate sint. Cupiditate eligendi voluptatem aut et
-          omnis. Laboriosam, inventore officia. Ipsum magni officia tempora
-          ratione molestiae porro, accusantium adipisci possimus. Odio dolore
-          cupiditate itaque in! Unde vel magni porro quia nisi! Itaque ipsam
-          cum, possimus beatae assumenda perspiciatis reprehenderit tenetur
-          corporis illum, amet nisi. Magni sapiente dicta eos itaque tenetur
-          eius, quaerat, expedita omnis veritatis modi deserunt obcaecati
-          suscipit incidunt facilis! Atque quas dolores ad dolor iure
-          reprehenderit distinctio voluptate eius dolorem quae. Vel quis
-          voluptatem enim a laudantium? Ipsum odio fugiat, dolorem eos qui
-          officia dignissimos. Quidem ipsam odio atque.
+          <BillLabelContainer>
+            <BillLabel>Facturé par</BillLabel>
+
+            <InputContainer>
+              <FormInput
+                value=''
+                handleInputChange={() => ""}
+                type='text'
+                name=''
+                label='Adresse'
+                id='address'
+                required
+                spellcheck={false}
+                labelFontSize='1.2rem'
+              />
+            </InputContainer>
+
+            <Grid>
+              <FormInput
+                value=''
+                handleInputChange={() => ""}
+                type='text'
+                name=''
+                label='Ville'
+                id='city'
+                required
+                spellcheck={false}
+                labelFontSize='1.2rem'
+              />
+
+              <FormInput
+                value=''
+                handleInputChange={() => ""}
+                type='text'
+                name=''
+                label='Code postal'
+                id='post-code'
+                required
+                spellcheck={false}
+                labelFontSize='1.2rem'
+              />
+
+              <CountryInputContainer>
+                <FormInput
+                  value=''
+                  handleInputChange={() => ""}
+                  type='text'
+                  name=''
+                  label='Pays'
+                  id='country'
+                  required
+                  spellcheck={false}
+                  labelFontSize='1.2rem'
+                />
+              </CountryInputContainer>
+            </Grid>
+          </BillLabelContainer>
+
+          <BillLabelContainer>
+            <BillLabel>Facturer à</BillLabel>
+
+            <InputContainer>
+              <FormInput
+                value=''
+                handleInputChange={() => ""}
+                type='text'
+                name=''
+                label='Nom'
+                id='client-name'
+                required
+                spellcheck={false}
+                labelFontSize='1.2rem'
+              />
+            </InputContainer>
+
+            <InputContainer>
+              <FormInput
+                value=''
+                handleInputChange={() => ""}
+                type='text'
+                name=''
+                label='E-mail'
+                id='client-email'
+                required
+                spellcheck={false}
+                labelFontSize='1.2rem'
+                placeholder='e.g.email@example.com'
+              />
+            </InputContainer>
+
+            <InputContainer>
+              <FormInput
+                value=''
+                handleInputChange={() => ""}
+                type='text'
+                name=''
+                label='Adresse'
+                id='client-address'
+                required
+                spellcheck={false}
+                labelFontSize='1.2rem'
+              />
+            </InputContainer>
+
+            <InputContainer>
+              <Grid>
+                <FormInput
+                  value=''
+                  handleInputChange={() => ""}
+                  type='text'
+                  name=''
+                  label='Ville'
+                  id='client-city'
+                  required
+                  spellcheck={false}
+                  labelFontSize='1.2rem'
+                />
+
+                <FormInput
+                  value=''
+                  handleInputChange={() => ""}
+                  type='text'
+                  name=''
+                  label='Code postal'
+                  id='client-post-code'
+                  required
+                  spellcheck={false}
+                  labelFontSize='1.2rem'
+                />
+
+                <CountryInputContainer>
+                  <FormInput
+                    value=''
+                    handleInputChange={() => ""}
+                    type='text'
+                    name=''
+                    label='Pays'
+                    id='client-country'
+                    required
+                    spellcheck={false}
+                    labelFontSize='1.2rem'
+                  />
+                </CountryInputContainer>
+              </Grid>
+            </InputContainer>
+
+            <InputContainer>
+              <InvoiceDatePaymentTermsContainer>
+                <InvoiceDateInputContainer>
+                  <DateButtonLabel
+                    ref={dateButtonLabel}
+                    onClick={focusDateButton}
+                  >
+                    Date de la facture
+                  </DateButtonLabel>
+                  <DateButton
+                    ref={dateButton}
+                    type='button'
+                    onClick={() => setShowCalendar(!showCalendar)}
+                  >
+                    <DateValue> {parsedDate}</DateValue>
+                    <CalendarIconExtended></CalendarIconExtended>
+                  </DateButton>
+
+                  <AnimatePresence>
+                    {showCalendar && (
+                      <Calendar
+                        initial={{ scale: 0.9 }}
+                        animate={{ scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        innerRef={calendar}
+                        date={date}
+                        onChange={(date: Date) => handleDateChange(date)}
+                      />
+                    )}
+                  </AnimatePresence>
+                </InvoiceDateInputContainer>
+
+                <FormInput
+                  value=''
+                  handleInputChange={() => ""}
+                  type='text'
+                  name=''
+                  label='Conditions de paiement'
+                  id='payment-terms'
+                  required
+                  spellcheck={false}
+                  labelFontSize='1.2rem'
+                />
+              </InvoiceDatePaymentTermsContainer>
+            </InputContainer>
+
+            <FormInput
+              value=''
+              handleInputChange={() => ""}
+              type='text'
+              name=''
+              label='Description du projet'
+              id='project-description'
+              required
+              spellcheck={false}
+              labelFontSize='1.2rem'
+            />
+          </BillLabelContainer>
+
+          <Services>
+            <ServicesListTitle>Liste des services</ServicesListTitle>
+
+            <ServicesList>
+              <Service>
+                {isSmallViewport && (
+                  <InputContainer>
+                    <ServiceName />
+                  </InputContainer>
+                )}
+
+                <ServiceGrid>
+                  {!isSmallViewport && <ServiceName />}
+                  <FormInput
+                    value=''
+                    handleInputChange={() => ""}
+                    type='number'
+                    name=''
+                    label='Qte.'
+                    id='service-quantity'
+                    required
+                    spellcheck={false}
+                    labelFontSize='1.2rem'
+                  />
+                  <FormInput
+                    value=''
+                    handleInputChange={() => ""}
+                    type='number'
+                    name=''
+                    label='Prix'
+                    id='service-price'
+                    required
+                    spellcheck={false}
+                    labelFontSize='1.2rem'
+                  />
+                  <Total>
+                    <TotalLabel>Total</TotalLabel>
+                    <TotalValue>400.00</TotalValue>
+                  </Total>
+                  <button type='button'>
+                    <TrashIconExtended />
+                  </button>
+                </ServiceGrid>
+              </Service>
+            </ServicesList>
+            <ButtonContainer>
+              <Button fullWidth variant='light-to-dark' type='button'>
+                <AddServiceLabelContainer>
+                  <PlusIconExtended />
+                  Ajouter un service
+                </AddServiceLabelContainer>
+              </Button>
+            </ButtonContainer>
+          </Services>
         </Content>
+
         <ActionButtons>
           <ActionButtonsFirst>
-            <Button variant='light'>Annuler</Button>
+            <Button onClick={closeDrawer} type='button' variant='light'>
+              Annuler
+            </Button>
           </ActionButtonsFirst>
 
           <ActionButtonsSecond>
@@ -109,20 +386,190 @@ const Container = styled.div`
   padding: 3.2rem 2.4rem;
 
   @media ${breakpoints.sm} {
-    padding: 5.6rem;
+    padding: 5.6rem 5.6rem 0 5.6rem;
   }
+`;
+
+const GoBackButtonExtended = styled(GoBackButton)`
+  margin-bottom: 2.4rem;
 `;
 
 const Title = styled.h2`
   font-size: 2.4rem;
-  margin-bottom: 4.8rem;
+  margin-bottom: 3.2rem;
 `;
 
 const Form = styled.form`
   height: 100%;
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+`;
+
+const BillLabelContainer = styled.div`
+  margin-bottom: 4.8rem;
+`;
+
+const BillLabel = styled.div`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: ${colors.violet};
+  margin-bottom: 2.4rem;
+`;
+
+const InputContainer = styled.div`
+  margin-bottom: 2.4rem;
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4rem;
+
+  @media ${breakpoints.sm} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+
+const InvoiceDatePaymentTermsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.4rem;
+
+  @media ${breakpoints.sm} {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const CountryInputContainer = styled.div`
+  grid-column: 1 / -1;
+
+  @media ${breakpoints.sm} {
+    grid-column: auto;
+  }
+`;
+
+const InvoiceDateInputContainer = styled.div`
+  position: relative;
+`;
+
+const DateButtonLabel = styled.div`
+  display: block;
+  margin-bottom: 1rem;
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
+  font-size: 1.2rem;
+  cursor: default;
+`;
+
+const CalendarIconExtended = styled(CalendarIcon)`
+  fill: ${colors.grey};
+`;
+
+const DateButton = styled.button`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: ${({ theme }) => theme.whiteToLightDark};
+  color: ${({ theme }) => theme.darkToWhite};
+  width: 100%;
+  padding: 1.6rem 2rem;
+  border-radius: 0.4rem;
+  border: 1px solid
+    ${({ theme }) => theme.lightGreySecondaryToLightDarkSecondary};
+
+  &:focus {
+    border-color: ${({ theme }) => theme.violetToLightDarkSecondary};
+
+    ${CalendarIconExtended} {
+      fill: ${({ theme }) => theme.darkToWhite};
+    }
+  }
+`;
+
+const DateValue = styled.span`
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.darkToWhite};
+  align-self: flex-end;
+`;
+
+const ServicesListTitle = styled.div`
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #777f98;
+  margin-bottom: 3.2rem;
+
+  @media ${breakpoints.sm} {
+    margin-bottom: 2.4rem;
+  }
+`;
+
+const ServicesList = styled.ul`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 4.8rem;
+  margin-bottom: 4.8rem;
+
+  @media ${breakpoints.sm} {
+    margin-bottom: 1.8rem;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const Services = styled.div``;
+
+const Service = styled.li``;
+
+const ServiceGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) min-content;
+  align-items: center;
+  gap: 1.6rem;
+
+  @media ${breakpoints.sm} {
+    grid-template-columns: 1fr 50px 75px 1fr min-content;
+  }
+`;
+
+const Total = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 2fr;
+`;
+
+const TotalLabel = styled.div`
+  display: block;
+  margin-bottom: 1rem;
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
+  font-size: 1.2rem;
+`;
+const TotalValue = styled.div`
+  align-self: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: ${colors.grey};
+`;
+
+const TrashIconExtended = styled(TrashIcon)`
+  transform: translateY(50%);
+  fill: ${colors.grey};
+
+  &:hover {
+    fill: ${colors.red};
+  }
+`;
+
+const AddServiceLabelContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const PlusIconExtended = styled(PlusIcon)`
+  fill: ${({ theme }) => theme.lightVioletSecondaryToLightGreySecondary};
+  margin-right: 0.4rem;
+  transform: scale(0.8);
 `;
 
 const Content = styled.div`
@@ -139,7 +586,7 @@ const Content = styled.div`
   }
 
   @media ${breakpoints.sm} {
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 `;
 
@@ -154,6 +601,8 @@ const ActionButtons = styled.div`
 
   @media ${breakpoints.sm} {
     flex-direction: row;
+    position: sticky;
+    bottom: 0;
   }
 `;
 

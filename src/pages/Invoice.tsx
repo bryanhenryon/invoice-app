@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { motion } from "framer-motion";
 
-import { ReactComponent as ChevronLeftIcon } from "../assets/svg/icon-chevron-left.svg";
 import { colors, breakpoints } from "../assets/style/variables";
 import { InvoicesContainer } from "../assets/style/mixins";
 
 import InvoiceId from "../components/InvoiceId";
 import StatusBadge from "../components/InvoiceStatusBadge";
 import InvoiceActionButtons from "../components/InvoiceActionButtons";
+import GoBackButton from "../components/GoBackButton";
 
 import { Invoice as InvoiceInterface } from "../models/Invoice";
 
@@ -77,11 +77,7 @@ const Invoice: React.FC<Props> = ({ isMediumViewport, showDrawer }) => {
       }}
     >
       <InvoicesContainer>
-        <GoBackButton to={{ pathname: "/factures" }} state={"fromInvoice"}>
-          <ChevronLeftIconExtended />
-          <GoBackButtonLabel>Retour</GoBackButtonLabel>
-        </GoBackButton>
-
+        <GoBackButtonExtended pathname='/factures' state='fromInvoice' />
         <Top>
           <Status isMediumViewport={isMediumViewport}>
             <StatusText>Status</StatusText>
@@ -230,27 +226,8 @@ const Invoice: React.FC<Props> = ({ isMediumViewport, showDrawer }) => {
   );
 };
 
-const ChevronLeftIconExtended = styled(ChevronLeftIcon)`
-  transition: transform 0.2s ease-out;
-`;
-
-const GoBackButton = styled(Link)`
-  display: inline-flex;
-  align-items: center;
+const GoBackButtonExtended = styled(GoBackButton)`
   margin-bottom: 3.2rem;
-  width: fit-content;
-
-  &:hover {
-    ${ChevronLeftIconExtended} {
-      transform: translateX(-0.5rem);
-    }
-  }
-`;
-
-const GoBackButtonLabel = styled.span`
-  margin-left: 2.3rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.darkToWhite};
 `;
 
 const Top = styled.div`
