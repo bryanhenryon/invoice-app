@@ -34,7 +34,7 @@ export const lightTheme = {
   lightVioletTertiaryToLightGreyTertiary: colors.lightVioletTertiary,
   lightVioletTertiaryToWhite: colors.lightVioletTertiary,
 
-  statusFilterDropdownBoxShadow: "0px 10px 20px rgba(72, 84, 159, 0.25)",
+  boxShadow: "0px 10px 20px rgba(72, 84, 159, 0.25)",
 };
 
 export const darkTheme = {
@@ -71,5 +71,5 @@ export const darkTheme = {
   lightVioletTertiaryToLightGreyTertiary: colors.lightGreyTertiary,
   lightVioletTertiaryToWhite: colors.white,
 
-  statusFilterDropdownBoxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+  boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
 };

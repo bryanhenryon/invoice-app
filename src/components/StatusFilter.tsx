@@ -120,7 +120,7 @@ const StatusFilterDropdown = styled.div`
   min-width: 19.2rem;
   padding: 1.4rem;
   background: ${({ theme }) => theme.whiteToLightDarkSecondary};
-  box-shadow: ${({ theme }) => theme.statusFilterDropdownBoxShadow};
+  box-shadow: ${({ theme }) => theme.boxShadow};
   border-radius: 8px;
 `;
 

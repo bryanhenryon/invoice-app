@@ -1,19 +1,19 @@
 import { RefObject } from "react";
 import styled from "styled-components";
 import Calendar from "react-calendar";
+import { motion } from "framer-motion";
 
 import "react-calendar/dist/Calendar.css";
 
 import { breakpoints, colors, priorities } from "../assets/style/variables";
-import { motion } from "framer-motion";
 
 interface Props {
   onChange: (date: Date) => void;
   date: Date;
   innerRef: RefObject<HTMLInputElement>;
-  initial: any;
-  animate: any;
-  exit: any;
+  initial: object;
+  animate: object;
+  exit: object;
 }
 
 const CustomCalendar: React.FC<Props> = ({
@@ -50,9 +50,9 @@ const CalendarContainer = styled.div`
   position: absolute;
   top: 120%;
   z-index: ${priorities.low};
-  background: ${({ theme }) => theme.whiteToLightDark};
-  padding: 2.5rem 1.9rem;
-  box-shadow: ${({ theme }) => theme.statusFilterDropdownBoxShadow};
+  background: ${({ theme }) => theme.whiteToLightDarkSecondary};
+  padding: 2rem;
+  box-shadow: ${({ theme }) => theme.boxShadow};
   border-radius: 0.8rem;
 
   @media ${breakpoints.sm} {
@@ -60,7 +60,7 @@ const CalendarContainer = styled.div`
   }
 
   .react-calendar {
-    background: ${({ theme }) => theme.whiteToLightDark};
+    background: ${({ theme }) => theme.whiteToLightDarkSecondary};
     border: none;
     font-family: inherit;
     width: auto;

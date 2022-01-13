@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import GoBackButton from "./GoBackButton";
 import FormInput from "./FormInput";
@@ -10,8 +10,9 @@ import { Calendar } from "./Calendar";
 import { ReactComponent as TrashIcon } from "../assets/svg/icon-trash.svg";
 import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
 import { ReactComponent as CalendarIcon } from "../assets/svg/icon-calendar.svg";
+import { ReactComponent as ChevronDownIcon } from "../assets/svg/icon-chevron-down.svg";
 
-import { breakpoints, colors } from "../assets/style/variables";
+import { breakpoints, colors, priorities } from "../assets/style/variables";
 
 interface Props {
   closeDrawer: () => void;
@@ -24,12 +25,29 @@ export const InvoiceForm: React.FC<Props> = ({
   isSmallViewport,
   isMediumViewport,
 }) => {
+  const paymentTermsDropdownValues = [
+    "1 jour net",
+    "7 jours net",
+    "14 jours net",
+    "30 jours net",
+  ];
+
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState(new Date());
+
+  const [paymentTermsValue, setPaymentTermsValue] = useState(
+    paymentTermsDropdownValues[3]
+  );
+  const [showPaymentTermsDropdown, setShowPaymentTermsDropdown] =
+    useState(false);
 
   const dateButtonLabel = useRef<HTMLDivElement | null>(null);
   const dateButton = useRef<HTMLButtonElement | null>(null);
   const calendar = useRef<HTMLInputElement | null>(null);
+
+  const paymentTermsButton = useRef<HTMLButtonElement | null>(null);
+  const paymentTermsDropdown = useRef<HTMLDivElement | null>(null);
+  const paymentTermsLabel = useRef<HTMLLabelElement | null>(null);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClick);
@@ -43,8 +61,17 @@ export const InvoiceForm: React.FC<Props> = ({
       !calendar.current?.contains(e.target as HTMLDivElement) &&
       !dateButton.current?.contains(e.target as HTMLDivElement) &&
       !dateButtonLabel.current?.contains(e.target as HTMLDivElement)
-    )
+    ) {
       setShowCalendar(false);
+    }
+
+    if (
+      !paymentTermsDropdown.current?.contains(e.target as HTMLDivElement) &&
+      !paymentTermsButton.current?.contains(e.target as HTMLDivElement) &&
+      !paymentTermsLabel.current?.contains(e.target as HTMLDivElement)
+    ) {
+      setShowPaymentTermsDropdown(false);
+    }
   };
 
   const handleDateChange = (date: Date) => {
@@ -52,10 +79,20 @@ export const InvoiceForm: React.FC<Props> = ({
     setShowCalendar(false);
   };
 
-  /** Focuses DateButton & open the calendar on click on the button's label  */
+  const handlePaymentTermsValueChange = (index: number) => {
+    setPaymentTermsValue(paymentTermsDropdownValues[index]);
+    setShowPaymentTermsDropdown(false);
+  };
+
   const focusDateButton = () => {
     dateButton.current?.focus();
-    setShowCalendar(!showCalendar);
+    if (!showCalendar) setShowCalendar(true);
+  };
+
+  const focusPaymentTermsButton = () => {
+    paymentTermsButton.current?.focus();
+    if (!showPaymentTermsDropdown)
+      setShowPaymentTermsDropdown(!showPaymentTermsDropdown);
   };
 
   const months = [
@@ -280,17 +317,56 @@ export const InvoiceForm: React.FC<Props> = ({
                   </AnimatePresence>
                 </InvoiceDateInputContainer>
 
-                <FormInput
-                  value=''
-                  handleInputChange={() => ""}
-                  type='text'
-                  name=''
-                  label='Conditions de paiement'
-                  id='payment-terms'
-                  required
-                  spellcheck={false}
-                  labelFontSize='1.2rem'
-                />
+                <PaymentTermsContainer>
+                  <PaymentTermsLabel
+                    ref={paymentTermsLabel}
+                    onClick={focusPaymentTermsButton}
+                  >
+                    Conditions de paiement
+                  </PaymentTermsLabel>
+
+                  <PaymentTermsButton
+                    onClick={() =>
+                      setShowPaymentTermsDropdown(!showPaymentTermsDropdown)
+                    }
+                    ref={paymentTermsButton}
+                    type='button'
+                  >
+                    <PaymentTermsValue>{paymentTermsValue}</PaymentTermsValue>
+                    <ChevronDownIconExtended
+                      active={showPaymentTermsDropdown}
+                    />
+                  </PaymentTermsButton>
+
+                  <AnimatePresence>
+                    {showPaymentTermsDropdown && (
+                      <PaymentTermsDropdown
+                        ref={paymentTermsDropdown}
+                        as={motion.div}
+                        initial={{ scale: 0.9 }}
+                        animate={{ scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4, type: "spring" }}
+                      >
+                        <ul>
+                          {paymentTermsDropdownValues.map((value, index) => (
+                            <PaymentTermsDropdownItem key={index}>
+                              <PaymentTermsDropdownButton
+                                active={paymentTermsValue === value}
+                                type='button'
+                                onClick={() =>
+                                  handlePaymentTermsValueChange(index)
+                                }
+                              >
+                                {value}
+                              </PaymentTermsDropdownButton>
+                            </PaymentTermsDropdownItem>
+                          ))}
+                        </ul>
+                      </PaymentTermsDropdown>
+                    )}
+                  </AnimatePresence>
+                </PaymentTermsContainer>
               </InvoiceDatePaymentTermsContainer>
             </InputContainer>
 
@@ -490,6 +566,95 @@ const DateValue = styled.span`
   font-weight: 500;
   color: ${({ theme }) => theme.darkToWhite};
   align-self: flex-end;
+`;
+
+const PaymentTermsContainer = styled.div`
+  position: relative;
+`;
+
+const PaymentTermsLabel = styled.label`
+  display: block;
+  margin-bottom: 1rem;
+  color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
+  font-size: 1.2rem;
+  cursor: default;
+`;
+
+const PaymentTermsButton = styled.button`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: ${({ theme }) => theme.whiteToLightDark};
+  width: 100%;
+  padding: 1.6rem 2rem;
+  border-radius: 0.4rem;
+  border: 1px solid
+    ${({ theme }) => theme.lightGreySecondaryToLightDarkSecondary};
+
+  &:focus {
+    border-color: ${({ theme }) => theme.violetToLightDarkSecondary};
+  }
+`;
+
+const PaymentTermsValue = styled.span`
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.darkToWhite};
+`;
+
+interface ChevronDownIconExtendedProps {
+  active: boolean;
+}
+
+const ChevronDownIconExtended = styled(
+  ChevronDownIcon
+)<ChevronDownIconExtendedProps>`
+  transition: transform 300ms;
+
+  ${({ active }) =>
+    active &&
+    css`
+      transform: rotate(-180deg);
+    `}
+`;
+
+const PaymentTermsDropdown = styled.ul`
+  position: absolute;
+  top: 120%;
+  width: 100%;
+  z-index: ${priorities.low};
+  background: ${({ theme }) => theme.whiteToLightDarkSecondary};
+  box-shadow: ${({ theme }) => theme.boxShadow};
+  border-radius: 0.8rem;
+`;
+
+const PaymentTermsDropdownItem = styled.li``;
+
+interface PaymentTermsDropdownButtonProps {
+  active: boolean;
+}
+
+const PaymentTermsDropdownButton = styled.button<PaymentTermsDropdownButtonProps>`
+  display: flex;
+  width: 100%;
+  padding: 1.6rem 2.4rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.darkToWhite};
+  border-bottom: 1px solid
+    ${({ theme }) => theme.lightVioletTertiaryToLightDark};
+
+  ${({ active }) =>
+    active &&
+    css`
+      color: ${colors.violet};
+      font-weight: bold;
+    `}
+
+  &:hover {
+    color: ${colors.violet};
+    font-weight: bold;
+  }
 `;
 
 const ServicesListTitle = styled.div`
