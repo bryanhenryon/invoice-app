@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import styled, { css } from "styled-components";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
@@ -17,20 +17,20 @@ import NoInvoice from "../components/NoInvoice";
 import { Invoice as InvoiceInterface } from "../models/Invoice";
 
 import "../firebase/config";
-import data from "../data.json";
 
 interface Props {
   isSmallViewport: boolean;
   isMediumViewport: boolean;
-  showDrawer: () => void;
+  createInvoice: () => void;
+  invoices: InvoiceInterface[];
 }
 
 const Invoices: React.FC<Props> = ({
   isSmallViewport,
   isMediumViewport,
-  showDrawer,
+  createInvoice,
+  invoices,
 }) => {
-  const [invoices, setInvoices] = useState<InvoiceInterface[]>(data);
   const { state } = useLocation();
 
   // Reset the history state so the correct animation can trigger on refresh
@@ -52,10 +52,6 @@ const Invoices: React.FC<Props> = ({
           ? `${invoices.length} factures`
           : `Il y a ${invoices.length} factures au total`;
     }
-  };
-
-  const newInvoice = () => {
-    showDrawer();
   };
 
   return (
@@ -80,7 +76,7 @@ const Invoices: React.FC<Props> = ({
 
         <StatusFilter isSmallViewport={isSmallViewport} />
 
-        <Button hasIcon hasBoxShadow onClick={newInvoice}>
+        <Button hasIcon hasBoxShadow onClick={createInvoice}>
           <PlusIconContainer>
             <PlusIconExtended />
           </PlusIconContainer>

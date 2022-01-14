@@ -6,24 +6,28 @@ import GoBackButton from "./GoBackButton";
 import FormInput from "./FormInput";
 import Button from "./Button";
 import { Calendar } from "./Calendar";
+import InvoiceId from "./InvoiceId";
 
 import { ReactComponent as TrashIcon } from "../assets/svg/icon-trash.svg";
 import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
 import { ReactComponent as CalendarIcon } from "../assets/svg/icon-calendar.svg";
 import { ReactComponent as ChevronDownIcon } from "../assets/svg/icon-chevron-down.svg";
-
 import { breakpoints, colors, priorities } from "../assets/style/variables";
+
+import { Invoice } from "../models/Invoice";
 
 interface Props {
   closeDrawer: () => void;
   isSmallViewport: boolean;
   isMediumViewport: boolean;
+  invoiceFormData: Invoice | null;
 }
 
 export const InvoiceForm: React.FC<Props> = ({
   closeDrawer,
   isSmallViewport,
   isMediumViewport,
+  invoiceFormData,
 }) => {
   const paymentTermsDropdownValues = [
     "1 jour net",
@@ -135,7 +139,14 @@ export const InvoiceForm: React.FC<Props> = ({
           {isMediumViewport && (
             <GoBackButtonExtended type='button' action={closeDrawer} />
           )}
-          <Title>Nouvelle facture</Title>
+
+          {!invoiceFormData ? (
+            <NewInvoiceTitle>Nouvelle facture</NewInvoiceTitle>
+          ) : (
+            <EditInvoiceTitle>
+              Modifier <InvoiceId id={invoiceFormData.id} fontWeight='bold' />
+            </EditInvoiceTitle>
+          )}
         </div>
 
         <Content>
@@ -333,9 +344,9 @@ export const InvoiceForm: React.FC<Props> = ({
                     type='button'
                   >
                     <PaymentTermsValue>{paymentTermsValue}</PaymentTermsValue>
-                    <ChevronDownIconExtended
-                      active={showPaymentTermsDropdown}
-                    />
+                    <ChevronDownIconWrapper active={showPaymentTermsDropdown}>
+                      <ChevronDownIcon />
+                    </ChevronDownIconWrapper>
                   </PaymentTermsButton>
 
                   <AnimatePresence>
@@ -350,7 +361,7 @@ export const InvoiceForm: React.FC<Props> = ({
                       >
                         <ul>
                           {paymentTermsDropdownValues.map((value, index) => (
-                            <PaymentTermsDropdownItem key={index}>
+                            <li key={index}>
                               <PaymentTermsDropdownButton
                                 active={paymentTermsValue === value}
                                 type='button'
@@ -360,7 +371,7 @@ export const InvoiceForm: React.FC<Props> = ({
                               >
                                 {value}
                               </PaymentTermsDropdownButton>
-                            </PaymentTermsDropdownItem>
+                            </li>
                           ))}
                         </ul>
                       </PaymentTermsDropdown>
@@ -383,11 +394,11 @@ export const InvoiceForm: React.FC<Props> = ({
             />
           </BillLabelContainer>
 
-          <Services>
+          <div>
             <ServicesListTitle>Liste des services</ServicesListTitle>
 
             <ServicesList>
-              <Service>
+              <li>
                 {isSmallViewport && (
                   <InputContainer>
                     <ServiceName />
@@ -426,31 +437,40 @@ export const InvoiceForm: React.FC<Props> = ({
                     <TrashIconExtended />
                   </button>
                 </ServiceGrid>
-              </Service>
+              </li>
             </ServicesList>
             <ButtonContainer>
-              <Button fullWidth variant='light-to-dark' type='button'>
+              <AddServiceButton fullWidth variant='light-to-dark' type='button'>
                 <AddServiceLabelContainer>
                   <PlusIconExtended />
                   Ajouter un service
                 </AddServiceLabelContainer>
-              </Button>
+              </AddServiceButton>
             </ButtonContainer>
-          </Services>
+          </div>
         </Content>
 
-        <ActionButtons>
-          <ActionButtonsFirst>
+        {!invoiceFormData ? (
+          <NewInvoiceActionButtons>
+            <NewInvoiceActionButtonsFirst>
+              <Button onClick={closeDrawer} type='button' variant='light'>
+                Annuler
+              </Button>
+            </NewInvoiceActionButtonsFirst>
+
+            <NewInvoiceActionButtonsSecond>
+              <Button variant='dark'>Brouillon</Button>
+              <Button>Enregistrer</Button>
+            </NewInvoiceActionButtonsSecond>
+          </NewInvoiceActionButtons>
+        ) : (
+          <EditInvoiceActionButtons>
             <Button onClick={closeDrawer} type='button' variant='light'>
               Annuler
             </Button>
-          </ActionButtonsFirst>
-
-          <ActionButtonsSecond>
-            <Button variant='dark'>Brouillon</Button>
             <Button>Enregistrer</Button>
-          </ActionButtonsSecond>
-        </ActionButtons>
+          </EditInvoiceActionButtons>
+        )}
       </Form>
     </Container>
   );
@@ -470,7 +490,14 @@ const GoBackButtonExtended = styled(GoBackButton)`
   margin-bottom: 2.4rem;
 `;
 
-const Title = styled.h2`
+const NewInvoiceTitle = styled.h2`
+  font-size: 2.4rem;
+  margin-bottom: 3.2rem;
+`;
+
+const EditInvoiceTitle = styled.h2`
+  display: flex;
+  gap: 0.5rem;
   font-size: 2.4rem;
   margin-bottom: 3.2rem;
 `;
@@ -602,13 +629,11 @@ const PaymentTermsValue = styled.span`
   color: ${({ theme }) => theme.darkToWhite};
 `;
 
-interface ChevronDownIconExtendedProps {
+interface ChevronDownIconWrapperProps {
   active: boolean;
 }
 
-const ChevronDownIconExtended = styled(
-  ChevronDownIcon
-)<ChevronDownIconExtendedProps>`
+const ChevronDownIconWrapper = styled.span<ChevronDownIconWrapperProps>`
   transition: transform 300ms;
 
   ${({ active }) =>
@@ -627,8 +652,6 @@ const PaymentTermsDropdown = styled.ul`
   box-shadow: ${({ theme }) => theme.boxShadow};
   border-radius: 0.8rem;
 `;
-
-const PaymentTermsDropdownItem = styled.li``;
 
 interface PaymentTermsDropdownButtonProps {
   active: boolean;
@@ -684,10 +707,6 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `;
 
-const Services = styled.div``;
-
-const Service = styled.li``;
-
 const ServiceGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr) min-content;
@@ -726,15 +745,23 @@ const TrashIconExtended = styled(TrashIcon)`
   }
 `;
 
-const AddServiceLabelContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 const PlusIconExtended = styled(PlusIcon)`
   fill: ${({ theme }) => theme.lightVioletSecondaryToLightGreySecondary};
   margin-right: 0.4rem;
   transform: scale(0.8);
+`;
+
+const AddServiceButton = styled(Button)`
+  &:hover {
+    ${PlusIconExtended} {
+      fill: ${colors.lightVioletSecondary};
+    }
+  }
+`;
+
+const AddServiceLabelContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const Content = styled.div`
@@ -755,7 +782,7 @@ const Content = styled.div`
   }
 `;
 
-const ActionButtons = styled.div`
+const NewInvoiceActionButtons = styled.div`
   padding: 3.2rem 0;
   display: flex;
   flex-direction: column;
@@ -771,18 +798,34 @@ const ActionButtons = styled.div`
   }
 `;
 
-const ActionButtonsFirst = styled.div`
+const NewInvoiceActionButtonsFirst = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const ActionButtonsSecond = styled.div`
+const NewInvoiceActionButtonsSecond = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
 
   @media ${breakpoints.sm} {
     flex-direction: row;
+  }
+`;
+
+const EditInvoiceActionButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 3.2rem 0;
+  gap: 0.8rem;
+  justify-content: flex-end;
+  background: ${({ theme }) => theme.whiteToLightDarkTertiary};
+  transition: background-color 0.3s;
+
+  @media ${breakpoints.sm} {
+    flex-direction: row;
+    position: sticky;
+    bottom: 0;
   }
 `;
 

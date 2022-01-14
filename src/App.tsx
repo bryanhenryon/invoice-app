@@ -22,6 +22,10 @@ import Invoice from "./pages/Invoice";
 
 import "./firebase/config";
 
+import { Invoice as InvoiceInterface } from "./models/Invoice";
+
+import data from "./data.json";
+
 const App: React.FC = () => {
   const auth = getAuth();
 
@@ -29,7 +33,9 @@ const App: React.FC = () => {
 
   const loadingBar = useRef<LoadingBarRef>(null);
   const sidebar = useRef<HTMLDivElement>(null);
-
+  const [invoices, setInvoices] = useState<InvoiceInterface[]>(data);
+  const [invoiceFormData, setInvoiceFormData] =
+    useState<InvoiceInterface | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [theme, setTheme] = useState("light");
   const [enableTransitions, setEnableTransitions] = useState(false);
@@ -143,10 +149,25 @@ const App: React.FC = () => {
   const startLoadingBar = () => loadingBar?.current?.continuousStart(20, 1000);
   const endLoadingBar = () => loadingBar?.current?.complete();
 
+  const createInvoice = () => {
+    setShowDrawer(true);
+    setInvoiceFormData(null);
+  };
+
+  const editInvoice = (id: string) => {
+    setShowDrawer(true);
+
+    const invoice = invoices.find((invoice) => invoice.id === id);
+
+    if (!invoice) throw Error("No invoice found");
+
+    setInvoiceFormData(invoice);
+  };
+
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <GlobalStyle />
-      <LoadingBar ref={loadingBar} color='#7C5DFA' height={3} />
+      <LoadingBar ref={loadingBar} color='#7c5dfa' height={3} />
 
       <Container enableTransitions={enableTransitions}>
         <SidebarExtended
@@ -171,6 +192,7 @@ const App: React.FC = () => {
         <AnimatePresence>
           {showDrawer && (
             <Drawer
+              invoiceFormData={invoiceFormData}
               closeDrawer={() => setShowDrawer(false)}
               sidebar={sidebar}
               sidebarHeight={sidebarHeight}
@@ -219,9 +241,10 @@ const App: React.FC = () => {
                     element={
                       isLoggedIn ? (
                         <Invoices
+                          invoices={invoices}
                           isSmallViewport={isSmallViewport}
                           isMediumViewport={isMediumViewport}
-                          showDrawer={() => setShowDrawer(true)}
+                          createInvoice={createInvoice}
                         />
                       ) : (
                         <Navigate to='/' />
@@ -234,7 +257,7 @@ const App: React.FC = () => {
                     element={
                       isLoggedIn ? (
                         <Invoice
-                          showDrawer={() => setShowDrawer(true)}
+                          editInvoice={editInvoice}
                           isMediumViewport={isMediumViewport}
                         />
                       ) : (

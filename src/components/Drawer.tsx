@@ -7,6 +7,8 @@ import InvoiceForm from "./InvoiceForm";
 
 import { breakpoints } from "../assets/style/variables";
 
+import { Invoice } from "../models/Invoice";
+
 interface Props {
   closeDrawer: () => void;
   sidebarHeight: number | undefined;
@@ -14,6 +16,7 @@ interface Props {
   sidebar: React.RefObject<HTMLDivElement>;
   isSmallViewport: boolean;
   isMediumViewport: boolean;
+  invoiceFormData: Invoice | null;
 }
 
 const Drawer: React.FC<Props> = ({
@@ -23,6 +26,7 @@ const Drawer: React.FC<Props> = ({
   sidebarWidth,
   isSmallViewport,
   isMediumViewport,
+  invoiceFormData,
 }) => {
   const drawer = useRef<HTMLDivElement>(null);
 
@@ -60,6 +64,7 @@ const Drawer: React.FC<Props> = ({
         }}
       >
         <InvoiceForm
+          invoiceFormData={invoiceFormData}
           isSmallViewport={isSmallViewport}
           isMediumViewport={isMediumViewport}
           closeDrawer={closeDrawer}
