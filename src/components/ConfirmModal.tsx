@@ -8,8 +8,8 @@ import Button from "./Button";
 import { colors, breakpoints } from "../assets/style/variables";
 
 interface Props {
-  title: string;
-  text: string;
+  title: string | JSX.Element;
+  text: string | JSX.Element;
   cancel: () => void;
   confirm: () => void;
 }

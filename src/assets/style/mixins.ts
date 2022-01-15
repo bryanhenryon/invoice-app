@@ -8,3 +8,10 @@ export const InvoicesContainer = styled.div`
   margin: 0 auto;
   height: 100%;
 `;
+
+export const CenteredSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;

@@ -7,12 +7,15 @@ import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
 import { colors, breakpoints } from "../assets/style/variables";
 import { InvoicesContainer } from "../assets/style/mixins";
 
+import { CenteredSpinner } from "../assets/style/mixins";
+
 import Button from "../components/Button";
 import StatusFilter from "../components/StatusFilter";
 import Searchbar from "../components/Searchbar";
 import InvoiceCard from "../components/InvoiceCard";
 import InvoiceCardLarge from "../components/InvoiceCardLarge";
 import NoInvoice from "../components/NoInvoice";
+import SpinnerRoller from "../components/SpinnerRoller";
 
 import { Invoice as InvoiceInterface } from "../models/Invoice";
 
@@ -22,7 +25,7 @@ interface Props {
   isSmallViewport: boolean;
   isMediumViewport: boolean;
   createInvoice: () => void;
-  invoices: InvoiceInterface[];
+  invoices: InvoiceInterface[] | null;
 }
 
 const Invoices: React.FC<Props> = ({
@@ -42,19 +45,23 @@ const Invoices: React.FC<Props> = ({
   const isFromInvoicePage = state === "fromInvoice";
 
   const totalInvoicesText = () => {
-    switch (invoices.length) {
+    switch (invoices?.length) {
       case 0:
         return "Aucune facture";
       case 1:
         return isSmallViewport ? "1 facture" : "Il y a 1 facture au total";
       default:
         return isSmallViewport
-          ? `${invoices.length} factures`
-          : `Il y a ${invoices.length} factures au total`;
+          ? `${invoices?.length} factures`
+          : `Il y a ${invoices?.length} factures au total`;
     }
   };
 
-  return (
+  return !invoices ? (
+    <CenteredSpinner>
+      <SpinnerRoller />
+    </CenteredSpinner>
+  ) : (
     <InvoicesContainer
       as={motion.div}
       initial={
@@ -87,11 +94,11 @@ const Invoices: React.FC<Props> = ({
         </Button>
       </Top>
 
-      {invoices.length ? (
+      {invoices?.length ? (
         <InvoicesList>
           <Searchbar />
 
-          {invoices.map((invoice) =>
+          {invoices?.map((invoice) =>
             isMediumViewport ? (
               <InvoiceCard key={invoice.id} invoice={invoice} />
             ) : (
@@ -111,7 +118,7 @@ const TitleContainer = styled.div`
 `;
 
 interface TopProps {
-  invoices: InvoiceInterface[];
+  invoices: InvoiceInterface[] | null;
 }
 
 const Top = styled.div<TopProps>`
@@ -119,7 +126,7 @@ const Top = styled.div<TopProps>`
   align-items: center;
 
   ${({ invoices }) =>
-    invoices.length &&
+    invoices?.length &&
     css`
       margin-bottom: 3.2rem;
 

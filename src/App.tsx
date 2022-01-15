@@ -4,11 +4,13 @@ import styled, { ThemeProvider, css } from "styled-components";
 import { AnimatePresence } from "framer-motion";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
+import toast, { Toaster } from "react-hot-toast";
 
 import GlobalStyle from "./assets/style/GlobalStyle";
-import { breakpoints } from "./assets/style/variables";
+import { breakpoints, colors } from "./assets/style/variables";
 import { lightTheme, darkTheme } from "./assets/style/theme";
 
+import InvoiceId from "./components/InvoiceId";
 import ConfirmModal from "./components/ConfirmModal";
 import Drawer from "./components/Drawer";
 import Sidebar from "./components/Sidebar";
@@ -21,6 +23,7 @@ import Invoices from "./pages/Invoices";
 import Invoice from "./pages/Invoice";
 
 import "./firebase/config";
+import getInvoicesCollection from "./firebase/invoicesCollection";
 
 import { Invoice as InvoiceInterface } from "./models/Invoice";
 
@@ -33,10 +36,11 @@ const App: React.FC = () => {
 
   const loadingBar = useRef<LoadingBarRef>(null);
   const sidebar = useRef<HTMLDivElement>(null);
-  const [invoices, setInvoices] = useState<InvoiceInterface[]>(data);
+  const [invoices, setInvoices] = useState<InvoiceInterface[] | null>(null);
   const [invoiceFormData, setInvoiceFormData] =
     useState<InvoiceInterface | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [isAnonymous, setIsAnonymous] = useState<boolean | null>(null);
   const [theme, setTheme] = useState("light");
   const [enableTransitions, setEnableTransitions] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
@@ -56,6 +60,35 @@ const App: React.FC = () => {
   const [sidebarWidth, setSidebarWidth] = useState(
     sidebar.current?.offsetWidth
   );
+
+  useEffect(() => {
+    (async () => {
+      if (isLoggedIn && isAnonymous) return setInvoices(data);
+
+      if (isLoggedIn && !isAnonymous) {
+        try {
+          if (!auth?.currentUser?.email) throw Error("No user found");
+          const invoices = await getInvoicesCollection(auth.currentUser.email);
+          if (invoices) return setInvoices(invoices);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    })();
+  }, [isAnonymous, isLoggedIn, auth.currentUser?.email]);
+
+  /* 
+    Observer tracking the user's sign-in state 
+
+    isAnonymous check must be done BEFORE isLoggedIn check, otherwise it causes a weird bug 
+    where local invoices are first loaded then Firestore invoices overwrite them for some reason
+  */
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      currentUser?.isAnonymous ? setIsAnonymous(true) : setIsAnonymous(false);
+      currentUser ? setIsLoggedIn(true) : setIsLoggedIn(false);
+    });
+  }, [auth]);
 
   useEffect(() => {
     setSidebarHeight(sidebar.current?.offsetHeight);
@@ -140,11 +173,6 @@ const App: React.FC = () => {
     setShowLogoutModal(false);
   };
 
-  // Observer tracking the user's sign-in state
-  onAuthStateChanged(auth, (currentUser) =>
-    currentUser ? setIsLoggedIn(true) : setIsLoggedIn(false)
-  );
-
   /** @todo Remove parameters after react-top-loading-bar fixes the issue (they should be optional) */
   const startLoadingBar = () => loadingBar?.current?.continuousStart(20, 1000);
   const endLoadingBar = () => loadingBar?.current?.complete();
@@ -157,11 +185,39 @@ const App: React.FC = () => {
   const editInvoice = (id: string) => {
     setShowDrawer(true);
 
-    const invoice = invoices.find((invoice) => invoice.id === id);
+    const invoice = invoices?.find((invoice) => invoice.id === id);
 
     if (!invoice) throw Error("No invoice found");
 
     setInvoiceFormData(invoice);
+  };
+
+  const deleteInvoice = (id: string) => {
+    const newInvoicesArray = invoices?.filter((invoice) => invoice.id !== id);
+
+    if (!newInvoicesArray) throw Error("Couldn't delete the invoice");
+
+    if (isAnonymous) {
+      setInvoices(newInvoicesArray);
+    }
+
+    toast.success(
+      () => (
+        <SuccessfullyDeletedInvoiceContainer>
+          <SuccessfullyDeletedInvoiceText>
+            {isSmallViewport ? "Facture" : "La facture"}
+          </SuccessfullyDeletedInvoiceText>{" "}
+          <InvoiceId fontWeight='bold' id={id} />{" "}
+          <SuccessfullyDeletedInvoiceText>
+            {isSmallViewport ? "supprimée" : "a bien été supprimée"}
+          </SuccessfullyDeletedInvoiceText>
+        </SuccessfullyDeletedInvoiceContainer>
+      ),
+      {
+        duration: 4000,
+        position: "top-center",
+      }
+    );
   };
 
   return (
@@ -188,6 +244,15 @@ const App: React.FC = () => {
             />
           )}
         </AnimatePresence>
+
+        <Toaster
+          toastOptions={{
+            style: {
+              maxWidth: "100%",
+              background: theme === "light" ? colors.white : colors.lightDark,
+            },
+          }}
+        />
 
         <AnimatePresence>
           {showDrawer && (
@@ -257,6 +322,8 @@ const App: React.FC = () => {
                     element={
                       isLoggedIn ? (
                         <Invoice
+                          invoices={invoices}
+                          deleteInvoice={deleteInvoice}
                           editInvoice={editInvoice}
                           isMediumViewport={isMediumViewport}
                         />
@@ -301,6 +368,15 @@ const App: React.FC = () => {
     </ThemeProvider>
   );
 };
+
+const SuccessfullyDeletedInvoiceContainer = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const SuccessfullyDeletedInvoiceText = styled.div`
+  color: ${({ theme }) => theme.darkToWhite};
+`;
 
 interface ContainerProps {
   enableTransitions: boolean;

@@ -21,6 +21,7 @@ export const lightTheme = {
   lightGreyQuaternaryTolightGreyQuinary: colors.lightGreyQuaternary,
   lightDarkQuaternaryToLightGreySecondary: colors.lightDarkQuaternary,
 
+  violetToWhite: colors.violet,
   violetToLightDarkSecondary: colors.violet,
 
   lightVioletSecondaryToWhite: colors.lightVioletSecondary,
@@ -58,6 +59,7 @@ export const darkTheme = {
   lightGreyTertiaryToLightDarkSecondary: colors.lightDarkSecondary,
   lightGreyQuaternaryTolightGreyQuinary: colors.lightGreyQuinary,
 
+  violetToWhite: colors.white,
   violetToLightDarkSecondary: colors.lightDarkSecondary,
 
   lightVioletSecondaryToWhite: colors.white,

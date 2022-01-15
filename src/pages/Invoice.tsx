@@ -1,33 +1,40 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { colors, breakpoints } from "../assets/style/variables";
-import { InvoicesContainer } from "../assets/style/mixins";
+
+import { CenteredSpinner, InvoicesContainer } from "../assets/style/mixins";
 
 import InvoiceId from "../components/InvoiceId";
 import StatusBadge from "../components/InvoiceStatusBadge";
 import InvoiceActionButtons from "../components/InvoiceActionButtons";
 import GoBackButton from "../components/GoBackButton";
+import ConfirmModal from "../components/ConfirmModal";
+import SpinnerRoller from "../components/SpinnerRoller";
 
 import { Invoice as InvoiceInterface } from "../models/Invoice";
-
-import jsonInvoices from "../data.json";
 
 interface Props {
   isMediumViewport: boolean;
   editInvoice: (id: string) => void;
+  deleteInvoice: (id: string) => void;
+  invoices: InvoiceInterface[] | null;
 }
 
-const Invoice: React.FC<Props> = ({ isMediumViewport, editInvoice }) => {
-  const invoices: InvoiceInterface[] = jsonInvoices;
-
+const Invoice: React.FC<Props> = ({
+  isMediumViewport,
+  editInvoice,
+  deleteInvoice,
+  invoices,
+}) => {
   const { state } = useLocation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [invoice, setInvoice] = useState<InvoiceInterface | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   /** Checks if the last visited page is Invoices or not in order to trigger the correct animation on render */
   const isFromInvoicesPage = state === "fromInvoices";
@@ -44,15 +51,14 @@ const Invoice: React.FC<Props> = ({ isMediumViewport, editInvoice }) => {
   }, []);
 
   useEffect(() => {
-    const invoice = invoices.find((invoice) => invoice.id === id);
-    if (!invoice) return navigate("/factures");
+    if (invoices) {
+      const invoice = invoices?.find((invoice) => invoice.id === id);
 
-    setInvoice(invoice);
+      if (!invoice) return navigate("/factures");
+
+      setInvoice(invoice);
+    }
   }, [id, navigate, invoices]);
-
-  const deleteInvoice = () => {
-    // ...
-  };
 
   const markAsPaid = () => {
     // ...
@@ -64,168 +70,210 @@ const Invoice: React.FC<Props> = ({ isMediumViewport, editInvoice }) => {
     editInvoice(id);
   };
 
-  return (
-    <motion.div
-      initial={
-        isFromInvoicesPage ? { x: 100, opacity: 0 } : { scale: 0.9, opacity: 0 }
-      }
-      animate={
-        isFromInvoicesPage ? { x: 0, opacity: 1 } : { scale: 1, opacity: 1 }
-      }
-      transition={{
-        duration: 0.8,
-        type: "spring",
-      }}
-    >
-      <InvoicesContainer>
-        <GoBackButtonExtended pathname='/factures' state='fromInvoice' />
-        <Top>
-          <Status isMediumViewport={isMediumViewport}>
-            <StatusText>Status</StatusText>
-            <StatusBadge status={invoice?.status} />
-          </Status>
+  const handleDeleteInvoice = () => {
+    if (!id)
+      throw Error("Couldn't delete the invoice because its id is undefined");
 
-          {!isMediumViewport && (
-            <InvoiceActionButtons
-              editInvoice={() => handleEditButtonClick(id)}
-              deleteInvoice={deleteInvoice}
-              isMediumViewport={isMediumViewport}
-              markAsPaid={markAsPaid}
-            />
-          )}
-        </Top>
+    deleteInvoice(id);
+    setShowConfirmModal(false);
+    navigate("/factures");
+  };
+  return !invoices ? (
+    <CenteredSpinner>
+      <SpinnerRoller />
+    </CenteredSpinner>
+  ) : (
+    <>
+      <AnimatePresence>
+        {showConfirmModal && (
+          <ConfirmModal
+            cancel={() => setShowConfirmModal(false)}
+            confirm={handleDeleteInvoice}
+            title={
+              <ConfirmModalTitleContainer>
+                <span>Supprimer</span>
+                <InvoiceId fontWeight='bold' id={id} />
+                <span>?</span>
+              </ConfirmModalTitleContainer>
+            }
+            text='Les données seront définitivement perdues'
+          />
+        )}
+      </AnimatePresence>
 
-        <InvoiceInfos>
-          <Container2>
-            <InvoiceIdAndDescription>
-              <InvoiceIdExtended id={invoice?.id} fontWeight='bold' />
-              <InvoiceDescription>{invoice?.description}</InvoiceDescription>
-            </InvoiceIdAndDescription>
-
-            <Container3>
-              {invoice?.senderAddress &&
-                Object.keys(invoice.senderAddress).map((index) => (
-                  <SenderAddress key={index}>
-                    {
-                      invoice.senderAddress[
-                        index as keyof typeof invoice.clientAddress
-                      ]
-                    }
-                  </SenderAddress>
-                ))}
-            </Container3>
-          </Container2>
-
-          <Container4>
-            <Container5>
-              <InvoiceDateContainer>
-                <Label>Date de facturation</Label>
-                <InvoiceDate>{invoice?.createdAt}</InvoiceDate>
-              </InvoiceDateContainer>
-
-              <div>
-                <Label>Paiement dû</Label>
-                <PaymentDue>{invoice?.paymentDue}</PaymentDue>
-              </div>
-            </Container5>
-
-            <Container6>
-              <BillTo>Facturé à</BillTo>
-              <ClientName>{invoice?.clientName}</ClientName>
-
-              {invoice?.clientAddress &&
-                Object.keys(invoice.clientAddress).map((index) => (
-                  <ClientAddress key={index}>
-                    {
-                      invoice.clientAddress[
-                        index as keyof typeof invoice.clientAddress
-                      ]
-                    }
-                  </ClientAddress>
-                ))}
-            </Container6>
+      <motion.div
+        initial={
+          isFromInvoicesPage
+            ? { x: 100, opacity: 0 }
+            : { scale: 0.9, opacity: 0 }
+        }
+        animate={
+          isFromInvoicesPage ? { x: 0, opacity: 1 } : { scale: 1, opacity: 1 }
+        }
+        transition={{
+          duration: 0.8,
+          type: "spring",
+        }}
+      >
+        <InvoicesContainer>
+          <GoBackButtonExtended pathname='/factures' state='fromInvoice' />
+          <Top>
+            <Status isMediumViewport={isMediumViewport}>
+              <StatusText>Status</StatusText>
+              <StatusBadge status={invoice?.status} />
+            </Status>
 
             {!isMediumViewport && (
+              <InvoiceActionButtons
+                editInvoice={() => handleEditButtonClick(id)}
+                deleteInvoice={() => setShowConfirmModal(true)}
+                isMediumViewport={isMediumViewport}
+                markAsPaid={markAsPaid}
+              />
+            )}
+          </Top>
+
+          <InvoiceInfos>
+            <Container2>
+              <InvoiceIdAndDescription>
+                <InvoiceIdExtended id={invoice?.id} fontWeight='bold' />
+                <InvoiceDescription>{invoice?.description}</InvoiceDescription>
+              </InvoiceIdAndDescription>
+
+              <Container3>
+                {invoice?.senderAddress &&
+                  Object.keys(invoice.senderAddress).map((index) => (
+                    <SenderAddress key={index}>
+                      {
+                        invoice.senderAddress[
+                          index as keyof typeof invoice.clientAddress
+                        ]
+                      }
+                    </SenderAddress>
+                  ))}
+              </Container3>
+            </Container2>
+
+            <Container4>
+              <Container5>
+                <InvoiceDateContainer>
+                  <Label>Date de facturation</Label>
+                  <InvoiceDate>{invoice?.createdAt}</InvoiceDate>
+                </InvoiceDateContainer>
+
+                <div>
+                  <Label>Paiement dû</Label>
+                  <PaymentDue>{invoice?.paymentDue}</PaymentDue>
+                </div>
+              </Container5>
+
+              <Container6>
+                <BillTo>Facturé à</BillTo>
+                <ClientName>{invoice?.clientName}</ClientName>
+
+                {invoice?.clientAddress &&
+                  Object.keys(invoice.clientAddress).map((index) => (
+                    <ClientAddress key={index}>
+                      {
+                        invoice.clientAddress[
+                          index as keyof typeof invoice.clientAddress
+                        ]
+                      }
+                    </ClientAddress>
+                  ))}
+              </Container6>
+
+              {!isMediumViewport && (
+                <SentTo>
+                  <Label>Envoyé à</Label>
+                  <ClientEmailAddress>
+                    {invoice?.clientEmail}
+                  </ClientEmailAddress>
+                </SentTo>
+              )}
+            </Container4>
+
+            {isMediumViewport && (
               <SentTo>
                 <Label>Envoyé à</Label>
                 <ClientEmailAddress>{invoice?.clientEmail}</ClientEmailAddress>
               </SentTo>
             )}
-          </Container4>
+
+            <div>
+              <Items>
+                {!isMediumViewport && (
+                  <ItemValuesDescriptions>
+                    <ItemNameLabel>Prestation</ItemNameLabel>
+                    <div>Quantité</div>
+                    <div>Prix</div>
+                    <div>Total</div>
+                  </ItemValuesDescriptions>
+                )}
+
+                {invoice?.items &&
+                  invoice?.items.map((item, index) =>
+                    isMediumViewport ? (
+                      <ItemContainer key={index}>
+                        <div>
+                          <ItemName>{item.name}</ItemName>
+
+                          <ItemPriceAndQuantity>
+                            <ItemQuantity>{item.quantity}</ItemQuantity>
+                            <MultiplySymbol>x</MultiplySymbol>
+                            <ItemPrice>{item.price.toFixed(2)}€</ItemPrice>
+                          </ItemPriceAndQuantity>
+                        </div>
+                        <ItemTotalPrice>
+                          {(item.price * item.quantity).toFixed(2)}€
+                        </ItemTotalPrice>
+                      </ItemContainer>
+                    ) : (
+                      <ItemContainerDesktop key={index}>
+                        <ItemName>{item.name}</ItemName>
+                        <ItemQuantityDesktop>
+                          {item.quantity}
+                        </ItemQuantityDesktop>
+
+                        <ItemPriceDesktop>
+                          {item.price.toFixed(2)}€
+                        </ItemPriceDesktop>
+
+                        <ItemTotalPrice>
+                          {(item.price * item.quantity).toFixed(2)}€
+                        </ItemTotalPrice>
+                      </ItemContainerDesktop>
+                    )
+                  )}
+              </Items>
+
+              <GrandTotal>
+                <GrandTotalText>Grand Total</GrandTotalText>
+                <GrandTotalValue>{invoiceGrandTotal}€</GrandTotalValue>
+              </GrandTotal>
+            </div>
+          </InvoiceInfos>
 
           {isMediumViewport && (
-            <SentTo>
-              <Label>Envoyé à</Label>
-              <ClientEmailAddress>{invoice?.clientEmail}</ClientEmailAddress>
-            </SentTo>
+            <Bottom>
+              <InvoiceActionButtons
+                editInvoice={() => handleEditButtonClick(id)}
+                deleteInvoice={() => setShowConfirmModal(true)}
+                isMediumViewport={isMediumViewport}
+                markAsPaid={markAsPaid}
+              />
+            </Bottom>
           )}
-
-          <div>
-            <Items>
-              {!isMediumViewport && (
-                <ItemValuesDescriptions>
-                  <ItemNameLabel>Prestation</ItemNameLabel>
-                  <div>Quantité</div>
-                  <div>Prix</div>
-                  <div>Total</div>
-                </ItemValuesDescriptions>
-              )}
-
-              {invoice?.items &&
-                invoice?.items.map((item, index) =>
-                  isMediumViewport ? (
-                    <ItemContainer key={index}>
-                      <div>
-                        <ItemName>{item.name}</ItemName>
-
-                        <ItemPriceAndQuantity>
-                          <ItemQuantity>{item.quantity}</ItemQuantity>
-                          <MultiplySymbol>x</MultiplySymbol>
-                          <ItemPrice>{item.price.toFixed(2)}€</ItemPrice>
-                        </ItemPriceAndQuantity>
-                      </div>
-                      <ItemTotalPrice>
-                        {(item.price * item.quantity).toFixed(2)}€
-                      </ItemTotalPrice>
-                    </ItemContainer>
-                  ) : (
-                    <ItemContainerDesktop key={index}>
-                      <ItemName>{item.name}</ItemName>
-                      <ItemQuantityDesktop>{item.quantity}</ItemQuantityDesktop>
-
-                      <ItemPriceDesktop>
-                        {item.price.toFixed(2)}€
-                      </ItemPriceDesktop>
-
-                      <ItemTotalPrice>
-                        {(item.price * item.quantity).toFixed(2)}€
-                      </ItemTotalPrice>
-                    </ItemContainerDesktop>
-                  )
-                )}
-            </Items>
-
-            <GrandTotal>
-              <GrandTotalText>Grand Total</GrandTotalText>
-              <GrandTotalValue>{invoiceGrandTotal}€</GrandTotalValue>
-            </GrandTotal>
-          </div>
-        </InvoiceInfos>
-
-        {isMediumViewport && (
-          <Bottom>
-            <InvoiceActionButtons
-              editInvoice={() => handleEditButtonClick(id)}
-              deleteInvoice={deleteInvoice}
-              isMediumViewport={isMediumViewport}
-              markAsPaid={markAsPaid}
-            />
-          </Bottom>
-        )}
-      </InvoicesContainer>
-    </motion.div>
+        </InvoicesContainer>
+      </motion.div>
+    </>
   );
 };
+
+const ConfirmModalTitleContainer = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
 
 const GoBackButtonExtended = styled(GoBackButton)`
   margin-bottom: 3.2rem;
