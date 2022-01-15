@@ -23,7 +23,10 @@ import Invoices from "./pages/Invoices";
 import Invoice from "./pages/Invoice";
 
 import "./firebase/config";
-import getInvoicesCollection from "./firebase/invoicesCollection";
+import {
+  getInvoices,
+  deleteInvoice as deleteInvoiceDocument,
+} from "./firebase/invoicesCollection";
 
 import { Invoice as InvoiceInterface } from "./models/Invoice";
 
@@ -36,6 +39,7 @@ const App: React.FC = () => {
 
   const loadingBar = useRef<LoadingBarRef>(null);
   const sidebar = useRef<HTMLDivElement>(null);
+  
   const [invoices, setInvoices] = useState<InvoiceInterface[] | null>(null);
   const [invoiceFormData, setInvoiceFormData] =
     useState<InvoiceInterface | null>(null);
@@ -68,7 +72,7 @@ const App: React.FC = () => {
       if (isLoggedIn && !isAnonymous) {
         try {
           if (!auth?.currentUser?.email) throw Error("No user found");
-          const invoices = await getInvoicesCollection(auth.currentUser.email);
+          const invoices = await getInvoices(auth.currentUser.email);
           if (invoices) return setInvoices(invoices);
         } catch (error) {
           console.log(error);
@@ -192,14 +196,30 @@ const App: React.FC = () => {
     setInvoiceFormData(invoice);
   };
 
-  const deleteInvoice = (id: string) => {
+  const deleteInvoice = async (id: string) => {
+    if (!isAnonymous) {
+      try {
+        const invoiceToDelete = invoices?.find((invoice) => invoice.id === id);
+
+        if (!invoiceToDelete)
+          throw Error("No invoice corresponds to the invoice to delete");
+
+        const { documentId } = invoiceToDelete;
+
+        if (!documentId)
+          throw Error("The invoice to delete has no documentId property");
+
+        await deleteInvoiceDocument(documentId);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     const newInvoicesArray = invoices?.filter((invoice) => invoice.id !== id);
 
     if (!newInvoicesArray) throw Error("Couldn't delete the invoice");
 
-    if (isAnonymous) {
-      setInvoices(newInvoicesArray);
-    }
+    setInvoices(newInvoicesArray);
 
     toast.success(
       () => (
