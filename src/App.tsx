@@ -226,25 +226,31 @@ const App: React.FC = () => {
   };
 
   const editInvoice = async (data: InvoiceInterface) => {
+    const invoiceToUpdate = invoices?.find((invoice) => invoice.id === data.id);
+
+    if (!invoiceToUpdate)
+      throw Error("No invoice corresponding to the one to edit");
+
     if (!isAnonymous) {
-      const invoiceToUpdate = invoices?.find(
-        (invoice) => invoice.id === data.id
-      );
-
-      if (!invoiceToUpdate)
-        throw Error("No invoice corresponding to the one to edit");
-
       await editInvoiceDocument({
         ...data,
         documentId: invoiceToUpdate.documentId,
       });
+
+      if (!auth?.currentUser?.email) throw Error("No user found");
+      const firestoreInvoices = await getInvoices(auth?.currentUser?.email);
+      if (!invoices) throw Error("No invoices found");
+
+      setInvoices(firestoreInvoices);
+    } else {
+      const newArr = invoices?.map((invoice) =>
+        invoice.id === data.id ? { ...data } : invoice
+      );
+
+      if (!newArr) throw Error("Trying to map a null state");
+
+      setInvoices(newArr);
     }
-
-    if (!auth?.currentUser?.email) throw Error("No user found");
-    const firestoreInvoices = await getInvoices(auth?.currentUser?.email);
-    if (!invoices) throw Error("No invoices found");
-
-    setInvoices(firestoreInvoices);
 
     setShowDrawer(false);
 
