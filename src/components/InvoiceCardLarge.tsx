@@ -15,7 +15,7 @@ interface Props {
 const InvoiceCardLarge: React.FC<Props> = ({ invoice }) => (
   <CardExtended to={`/factures/${invoice.id}`} state='fromInvoices'>
     <InvoiceIdExtended id={invoice.id} fontWeight='bold' />
-    <PaymentDueExtended>Due le {invoice.paymentDue}</PaymentDueExtended>
+    <PaymentDueExtended>Dû le {invoice.paymentDue}</PaymentDueExtended>
     <ClientNameExtended>{invoice.clientName}</ClientNameExtended>
     <TotalExtended>{invoice.total}€</TotalExtended>
     <InvoiceStatusBadgeExtended status={invoice.status} />

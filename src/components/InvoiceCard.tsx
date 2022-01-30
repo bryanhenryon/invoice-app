@@ -21,7 +21,7 @@ const InvoiceCard: React.FC<Props> = ({ invoice }) => (
 
     <BottomContainer>
       <div>
-        <PaymentDue>Due le {invoice.paymentDue}</PaymentDue>
+        <PaymentDue>Dû le {invoice.paymentDue}</PaymentDue>
         <Total>{invoice.total}€</Total>
       </div>
 
