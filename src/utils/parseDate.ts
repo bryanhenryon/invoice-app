@@ -8,7 +8,7 @@ const parseDate = (timestamp: Date) => {
     "mai",
     "juin",
     "juillet",
-    "aout",
+    "août",
     "septembre",
     "octobre",
     "novembre",
