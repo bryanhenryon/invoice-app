@@ -24,14 +24,14 @@ import "../firebase/config";
 interface Props {
   isSmallViewport: boolean;
   isMediumViewport: boolean;
-  createInvoice: () => void;
+  showForm: () => void;
   invoices: InvoiceInterface[] | null;
 }
 
 const Invoices: React.FC<Props> = ({
   isSmallViewport,
   isMediumViewport,
-  createInvoice,
+  showForm,
   invoices,
 }) => {
   const { state } = useLocation();
@@ -83,7 +83,7 @@ const Invoices: React.FC<Props> = ({
 
         <StatusFilter isSmallViewport={isSmallViewport} />
 
-        <Button hasIcon hasBoxShadow onClick={createInvoice}>
+        <Button hasIcon hasBoxShadow onClick={() => showForm()}>
           <PlusIconContainer>
             <PlusIconExtended />
           </PlusIconContainer>

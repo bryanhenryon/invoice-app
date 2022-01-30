@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import { RefObject, useEffect } from "react";
 import styled from "styled-components";
 import Calendar from "react-calendar";
 import { motion } from "framer-motion";
@@ -24,6 +24,10 @@ const CustomCalendar: React.FC<Props> = ({
   animate,
   exit,
 }) => {
+  useEffect(() => {
+    console.log(date);
+  }, [date]);
+
   return (
     <CalendarContainer
       as={motion.div}
@@ -33,6 +37,7 @@ const CustomCalendar: React.FC<Props> = ({
       transition={{ duration: 0.4, type: "spring" }}
     >
       <Calendar
+        showNeighboringMonth={false}
         minDetail={"decade"}
         inputRef={innerRef}
         minDate={new Date()}

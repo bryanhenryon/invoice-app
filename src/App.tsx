@@ -25,6 +25,8 @@ import Invoice from "./pages/Invoice";
 import "./firebase/config";
 import {
   getInvoices,
+  addInvoice,
+  editInvoice as editInvoiceDocument,
   deleteInvoice as deleteInvoiceDocument,
 } from "./firebase/invoicesCollection";
 
@@ -39,7 +41,7 @@ const App: React.FC = () => {
 
   const loadingBar = useRef<LoadingBarRef>(null);
   const sidebar = useRef<HTMLDivElement>(null);
-  
+
   const [invoices, setInvoices] = useState<InvoiceInterface[] | null>(null);
   const [invoiceFormData, setInvoiceFormData] =
     useState<InvoiceInterface | null>(null);
@@ -67,16 +69,13 @@ const App: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (isLoggedIn && isAnonymous) return setInvoices(data);
+      if (isLoggedIn && isAnonymous)
+        return setInvoices(data as InvoiceInterface[]);
 
       if (isLoggedIn && !isAnonymous) {
-        try {
-          if (!auth?.currentUser?.email) throw Error("No user found");
-          const invoices = await getInvoices(auth.currentUser.email);
-          if (invoices) return setInvoices(invoices);
-        } catch (error) {
-          console.log(error);
-        }
+        if (!auth?.currentUser?.email) throw Error("No user found");
+        const invoices = await getInvoices(auth.currentUser.email);
+        if (invoices) return setInvoices(invoices);
       }
     })();
   }, [isAnonymous, isLoggedIn, auth.currentUser?.email]);
@@ -181,45 +180,111 @@ const App: React.FC = () => {
   const startLoadingBar = () => loadingBar?.current?.continuousStart(20, 1000);
   const endLoadingBar = () => loadingBar?.current?.complete();
 
-  const createInvoice = () => {
+  const showForm = (id?: string) => {
     setShowDrawer(true);
-    setInvoiceFormData(null);
-  };
 
-  const editInvoice = (id: string) => {
-    setShowDrawer(true);
+    if (!id) return setInvoiceFormData(null);
 
     const invoice = invoices?.find((invoice) => invoice.id === id);
-
     if (!invoice) throw Error("No invoice found");
+    return setInvoiceFormData(invoice);
+  };
 
-    setInvoiceFormData(invoice);
+  const newInvoice = async (data: InvoiceInterface) => {
+    if (!isAnonymous && auth?.currentUser?.email) {
+      await addInvoice({
+        ...data,
+        createdBy: auth.currentUser.email,
+      });
+
+      if (!auth?.currentUser?.email) throw Error("No user found");
+      const invoices = await getInvoices(auth.currentUser.email);
+      if (invoices) setInvoices(invoices);
+    }
+
+    if (invoices && isAnonymous) setInvoices([data, ...invoices]);
+
+    setShowDrawer(false);
+
+    toast.success(
+      () => (
+        <SuccessfullyDeletedInvoiceContainer>
+          <SuccessfullyDeletedInvoiceText>
+            {isSmallViewport ? "Facture" : "La facture"}
+          </SuccessfullyDeletedInvoiceText>{" "}
+          <InvoiceId fontWeight='bold' id={data.id} />{" "}
+          <SuccessfullyDeletedInvoiceText>
+            {isSmallViewport ? "ajoutée" : "a bien été créée"}
+          </SuccessfullyDeletedInvoiceText>
+        </SuccessfullyDeletedInvoiceContainer>
+      ),
+      {
+        duration: 4000,
+        position: "top-center",
+      }
+    );
+  };
+
+  const editInvoice = async (data: InvoiceInterface) => {
+    if (!isAnonymous) {
+      const invoiceToUpdate = invoices?.find(
+        (invoice) => invoice.id === data.id
+      );
+
+      if (!invoiceToUpdate)
+        throw Error("No invoice corresponding to the one to edit");
+
+      await editInvoiceDocument({
+        ...data,
+        documentId: invoiceToUpdate.documentId,
+      });
+    }
+
+    if (!auth?.currentUser?.email) throw Error("No user found");
+    const firestoreInvoices = await getInvoices(auth?.currentUser?.email);
+    if (!invoices) throw Error("No invoices found");
+
+    setInvoices(firestoreInvoices);
+
+    setShowDrawer(false);
+
+    toast.success(
+      () => (
+        <SuccessfullyDeletedInvoiceContainer>
+          <SuccessfullyDeletedInvoiceText>
+            {isSmallViewport ? "Facture" : "La facture"}
+          </SuccessfullyDeletedInvoiceText>{" "}
+          <InvoiceId fontWeight='bold' id={data.id} />{" "}
+          <SuccessfullyDeletedInvoiceText>
+            {isSmallViewport ? "modifiée" : "a bien été modifiée"}
+          </SuccessfullyDeletedInvoiceText>
+        </SuccessfullyDeletedInvoiceContainer>
+      ),
+      {
+        duration: 4000,
+        position: "top-center",
+      }
+    );
   };
 
   const deleteInvoice = async (id: string) => {
-    if (!isAnonymous) {
-      try {
-        const invoiceToDelete = invoices?.find((invoice) => invoice.id === id);
-
-        if (!invoiceToDelete)
-          throw Error("No invoice corresponds to the invoice to delete");
-
-        const { documentId } = invoiceToDelete;
-
-        if (!documentId)
-          throw Error("The invoice to delete has no documentId property");
-
-        await deleteInvoiceDocument(documentId);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
     const newInvoicesArray = invoices?.filter((invoice) => invoice.id !== id);
 
     if (!newInvoicesArray) throw Error("Couldn't delete the invoice");
 
     setInvoices(newInvoicesArray);
+
+    if (!isAnonymous) {
+      const invoiceToDelete = invoices?.find((invoice) => invoice.id === id);
+
+      if (!invoiceToDelete)
+        throw Error("No invoice corresponds to the invoice to delete");
+
+      if (!invoiceToDelete.documentId)
+        throw Error("The invoice to delete has no documentId property");
+
+      await deleteInvoiceDocument(invoiceToDelete.documentId);
+    }
 
     toast.success(
       () => (
@@ -275,8 +340,11 @@ const App: React.FC = () => {
         />
 
         <AnimatePresence>
-          {showDrawer && (
+          {showDrawer && invoices && (
             <Drawer
+              invoices={invoices}
+              newInvoice={(data: InvoiceInterface) => newInvoice(data)}
+              editInvoice={(data: InvoiceInterface) => editInvoice(data)}
               invoiceFormData={invoiceFormData}
               closeDrawer={() => setShowDrawer(false)}
               sidebar={sidebar}
@@ -329,7 +397,7 @@ const App: React.FC = () => {
                           invoices={invoices}
                           isSmallViewport={isSmallViewport}
                           isMediumViewport={isMediumViewport}
-                          createInvoice={createInvoice}
+                          showForm={() => showForm()}
                         />
                       ) : (
                         <Navigate to='/' />
@@ -344,7 +412,7 @@ const App: React.FC = () => {
                         <Invoice
                           invoices={invoices}
                           deleteInvoice={deleteInvoice}
-                          editInvoice={editInvoice}
+                          showForm={(id?: string) => showForm(id)}
                           isMediumViewport={isMediumViewport}
                         />
                       ) : (

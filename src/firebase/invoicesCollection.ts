@@ -5,7 +5,10 @@ import {
   query,
   where,
   doc,
+  addDoc,
   deleteDoc,
+  orderBy,
+  updateDoc,
 } from "firebase/firestore";
 
 import { Invoice } from "../models/Invoice";
@@ -13,24 +16,29 @@ import { Invoice } from "../models/Invoice";
 const db = getFirestore();
 
 export const getInvoices = async (email: string) => {
-  try {
-    const snapshot = await getDocs(
-      query(collection(db, "invoices"), where("createdBy", "==", email))
-    );
+  const snapshot = await getDocs(
+    query(
+      collection(db, "invoices"),
+      orderBy("timestamp", "desc"),
+      where("createdBy", "==", email)
+    )
+  );
 
-    return snapshot.docs.map((doc) => ({
-      ...(doc.data() as Invoice),
-      documentId: doc.id,
-    }));
-  } catch (error) {
-    console.error(error);
-  }
+  return snapshot.docs.map((doc) => ({
+    ...(doc.data() as Invoice),
+    documentId: doc.id,
+    timestamp: doc.data().timestamp.toDate(),
+  }));
 };
 
-export const deleteInvoice = async (documentId: string) => {
-  try {
-    await deleteDoc(doc(db, "invoices", documentId));
-  } catch (error) {
-    console.error(error);
-  }
+export const addInvoice = async (data: Invoice) => {
+  await addDoc(collection(db, "invoices"), data);
 };
+
+export const editInvoice = async (data: any) => {
+  const invoiceRef = doc(db, "invoices", data.documentId);
+  await updateDoc(invoiceRef, data);
+};
+
+export const deleteInvoice = async (documentId: string) =>
+  await deleteDoc(doc(db, "invoices", documentId));

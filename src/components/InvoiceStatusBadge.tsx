@@ -7,12 +7,27 @@ interface Props {
   status: string | undefined;
 }
 
-const InvoiceStatusBadge: React.FC<Props> = ({ className, status }) => (
-  <Status className={className} status={status}>
-    <BulletPoint status={status} />
-    {status}
-  </Status>
-);
+const InvoiceStatusBadge: React.FC<Props> = ({ className, status }) => {
+  const getStatus = (): string => {
+    switch (status) {
+      case "draft":
+        return "Brouillon";
+      case "pending":
+        return "En attente";
+      case "paid":
+        return "Payée";
+      default:
+        return "";
+    }
+  };
+
+  return (
+    <Status className={className} status={status}>
+      <BulletPoint status={status} />
+      {getStatus()}
+    </Status>
+  );
+};
 
 interface BulletPointProps {
   status: string | undefined;
@@ -24,9 +39,9 @@ const BulletPoint = styled.div<BulletPointProps>`
   border-radius: 50%;
   margin-right: 0.8rem;
   background: ${({ status, theme }) =>
-    status === "Paid"
+    status === "paid"
       ? colors.green
-      : status === "Pending"
+      : status === "pending"
       ? colors.orange
       : theme.lightDarkQuaternaryToLightGreySecondary};
 `;
@@ -44,23 +59,24 @@ const Status = styled.div<StatusProps>`
   font-weight: 700;
   padding: 1.3rem 1.7rem;
   border-radius: 6px;
+  text-align: center;
 
   ${({ status }) =>
-    status === "Paid" &&
+    status === "paid" &&
     css`
       color: ${colors.green};
       background: ${colors.lightGreen};
     `};
 
   ${({ status }) =>
-    status === "Pending" &&
+    status === "pending" &&
     css`
       background: ${colors.lightOrange};
       color: ${colors.orange};
     `};
 
   ${({ status, theme }) =>
-    status === "Draft" &&
+    status === "draft" &&
     css`
       color: ${theme.lightDarkQuaternaryToLightGreySecondary};
       background: ${theme.lightGreyQuaternaryTolightGreyQuinary};

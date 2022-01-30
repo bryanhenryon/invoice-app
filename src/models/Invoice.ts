@@ -1,14 +1,17 @@
+export type InvoiceStatus = "paid" | "pending" | "draft" | "";
+export type PaymentTerms = 1 | 7 | 14 | 30;
 export interface Invoice {
   id: string;
   createdAt: string;
+  timestamp: Date;
   createdBy?: string;
   documentId?: string;
   paymentDue: string;
+  paymentTerms: PaymentTerms;
   description: string;
-  paymentTerms: number;
   clientName: string;
   clientEmail: string;
-  status: string;
+  status: InvoiceStatus;
   senderAddress: {
     street: string;
     city: string;
@@ -25,7 +28,6 @@ export interface Invoice {
     name: string;
     quantity: number;
     price: number;
-    total: number;
   }[];
   total: number;
 }

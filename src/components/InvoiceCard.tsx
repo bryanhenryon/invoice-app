@@ -12,7 +12,7 @@ interface Props {
   invoice: InvoiceInterface;
 }
 
-const whiteToLightDarkTertiary: React.FC<Props> = ({ invoice }) => (
+const InvoiceCard: React.FC<Props> = ({ invoice }) => (
   <Card to={`/factures/${invoice.id}`} state='fromInvoices'>
     <TopContainer>
       <InvoiceIdExtended id={invoice.id} fontWeight='bold' />
@@ -21,7 +21,7 @@ const whiteToLightDarkTertiary: React.FC<Props> = ({ invoice }) => (
 
     <BottomContainer>
       <div>
-        <PaymentDue>Due {invoice.paymentDue}</PaymentDue>
+        <PaymentDue>Due le {invoice.paymentDue}</PaymentDue>
         <Total>{invoice.total}€</Total>
       </div>
 
@@ -75,4 +75,4 @@ export const Total = styled.div`
   color: ${({ theme }) => theme.darkToWhite};
 `;
 
-export default whiteToLightDarkTertiary;
+export default InvoiceCard;

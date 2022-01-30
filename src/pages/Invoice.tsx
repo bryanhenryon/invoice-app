@@ -18,14 +18,14 @@ import { Invoice as InvoiceInterface } from "../models/Invoice";
 
 interface Props {
   isMediumViewport: boolean;
-  editInvoice: (id: string) => void;
+  showForm: (id?: string) => void;
   deleteInvoice: (id: string) => void;
   invoices: InvoiceInterface[] | null;
 }
 
 const Invoice: React.FC<Props> = ({
   isMediumViewport,
-  editInvoice,
+  showForm,
   deleteInvoice,
   invoices,
 }) => {
@@ -38,12 +38,6 @@ const Invoice: React.FC<Props> = ({
 
   /** Checks if the last visited page is Invoices or not in order to trigger the correct animation on render */
   const isFromInvoicesPage = state === "fromInvoices";
-
-  /** Total price of all the services */
-  const invoiceGrandTotal = invoice?.items
-    .map((item) => item.price * item.quantity)
-    .reduce((prev, curr) => prev + curr)
-    .toFixed(2);
 
   // Reset the history state so the correct animation can trigger on refresh
   useEffect(() => {
@@ -67,7 +61,7 @@ const Invoice: React.FC<Props> = ({
   const handleEditButtonClick = (id: string | undefined) => {
     if (!id) throw Error("Undefined invoice id");
 
-    editInvoice(id);
+    showForm(id);
   };
 
   const handleDeleteInvoice = () => {
@@ -76,7 +70,7 @@ const Invoice: React.FC<Props> = ({
 
     deleteInvoice(id);
     setShowConfirmModal(false);
-    navigate("/factures");
+    navigate("/factures", { state: "fromInvoice" });
   };
   return !invoices ? (
     <CenteredSpinner>
@@ -141,16 +135,10 @@ const Invoice: React.FC<Props> = ({
               </InvoiceIdAndDescription>
 
               <Container3>
-                {invoice?.senderAddress &&
-                  Object.keys(invoice.senderAddress).map((index) => (
-                    <SenderAddress key={index}>
-                      {
-                        invoice.senderAddress[
-                          index as keyof typeof invoice.clientAddress
-                        ]
-                      }
-                    </SenderAddress>
-                  ))}
+                <SenderAddress>{invoice?.senderAddress.street}</SenderAddress>
+                <SenderAddress>{invoice?.senderAddress.city}</SenderAddress>
+                <SenderAddress>{invoice?.senderAddress.postCode}</SenderAddress>
+                <SenderAddress>{invoice?.senderAddress.country}</SenderAddress>
               </Container3>
             </Container2>
 
@@ -170,17 +158,10 @@ const Invoice: React.FC<Props> = ({
               <Container6>
                 <BillTo>Facturé à</BillTo>
                 <ClientName>{invoice?.clientName}</ClientName>
-
-                {invoice?.clientAddress &&
-                  Object.keys(invoice.clientAddress).map((index) => (
-                    <ClientAddress key={index}>
-                      {
-                        invoice.clientAddress[
-                          index as keyof typeof invoice.clientAddress
-                        ]
-                      }
-                    </ClientAddress>
-                  ))}
+                <ClientAddress>{invoice?.clientAddress.street}</ClientAddress>
+                <ClientAddress>{invoice?.clientAddress.city}</ClientAddress>
+                <ClientAddress>{invoice?.clientAddress.postCode}</ClientAddress>
+                <ClientAddress>{invoice?.clientAddress.country}</ClientAddress>
               </Container6>
 
               {!isMediumViewport && (
@@ -221,26 +202,26 @@ const Invoice: React.FC<Props> = ({
                           <ItemPriceAndQuantity>
                             <ItemQuantity>{item.quantity}</ItemQuantity>
                             <MultiplySymbol>x</MultiplySymbol>
-                            <ItemPrice>{item.price.toFixed(2)}€</ItemPrice>
+                            <ItemPrice>{item.price}€</ItemPrice>
                           </ItemPriceAndQuantity>
                         </div>
                         <ItemTotalPrice>
-                          {(item.price * item.quantity).toFixed(2)}€
+                          {item.price * item.quantity}€
                         </ItemTotalPrice>
                       </ItemContainer>
                     ) : (
                       <ItemContainerDesktop key={index}>
                         <ItemName>{item.name}</ItemName>
                         <ItemQuantityDesktop>
-                          {item.quantity}
+                          {+item.quantity}
                         </ItemQuantityDesktop>
 
                         <ItemPriceDesktop>
-                          {item.price.toFixed(2)}€
+                          {(+item.price).toFixed(2)}€
                         </ItemPriceDesktop>
 
                         <ItemTotalPrice>
-                          {(item.price * item.quantity).toFixed(2)}€
+                          {(+item.price * +item.quantity).toFixed(2)}€
                         </ItemTotalPrice>
                       </ItemContainerDesktop>
                     )
@@ -249,7 +230,7 @@ const Invoice: React.FC<Props> = ({
 
               <GrandTotal>
                 <GrandTotalText>Grand Total</GrandTotalText>
-                <GrandTotalValue>{invoiceGrandTotal}€</GrandTotalValue>
+                <GrandTotalValue>{invoice?.total}€</GrandTotalValue>
               </GrandTotal>
             </div>
           </InvoiceInfos>

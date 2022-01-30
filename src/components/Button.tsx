@@ -9,8 +9,8 @@ interface Props {
   hasBoxShadow?: boolean;
   variant?: string;
   fullWidth?: boolean;
-  onClick?: () => void;
-  type?: "button" | "submit" | "reset" | undefined;
+  onClick?: (param?: any) => any;
+  type?: "button" | "submit" | undefined;
 }
 
 const Button: React.FC<Props> = ({

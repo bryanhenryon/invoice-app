@@ -57,7 +57,7 @@ const FormInput: React.FC<Props> = ({
         autoComplete={autoComplete}
         value={value}
         name={name}
-        onChange={(e) => handleInputChange(e)}
+        onChange={(e: ChangeEvent) => handleInputChange(e)}
       />
       {displayEye && type === "password" && (
         <button type='button' onClick={() => setShowPassword(!showPassword)}>

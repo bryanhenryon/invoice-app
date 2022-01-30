@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import styled, { css } from "styled-components";
 
@@ -14,13 +14,19 @@ import { ReactComponent as CalendarIcon } from "../assets/svg/icon-calendar.svg"
 import { ReactComponent as ChevronDownIcon } from "../assets/svg/icon-chevron-down.svg";
 import { breakpoints, colors, priorities } from "../assets/style/variables";
 
-import { Invoice } from "../models/Invoice";
+import generateInvoiceId from "../utils/generateInvoiceId";
+import parseDate from "../utils/parseDate";
+
+import { Invoice, PaymentTerms } from "../models/Invoice";
 
 interface Props {
   closeDrawer: () => void;
   isSmallViewport: boolean;
   isMediumViewport: boolean;
   invoiceFormData: Invoice | null;
+  newInvoice: (data: Invoice) => void;
+  editInvoice: (data: Invoice) => void;
+  invoices: Invoice[];
 }
 
 export const InvoiceForm: React.FC<Props> = ({
@@ -28,22 +34,47 @@ export const InvoiceForm: React.FC<Props> = ({
   isSmallViewport,
   isMediumViewport,
   invoiceFormData,
+  newInvoice,
+  editInvoice,
+  invoices,
 }) => {
-  const paymentTermsDropdownValues = [
-    "1 jour net",
-    "7 jours net",
-    "14 jours net",
-    "30 jours net",
-  ];
-
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [date, setDate] = useState(new Date());
-
-  const [paymentTermsValue, setPaymentTermsValue] = useState(
-    paymentTermsDropdownValues[3]
-  );
+  const paymentTermsDropdownValues = [1, 7, 14, 30];
   const [showPaymentTermsDropdown, setShowPaymentTermsDropdown] =
     useState(false);
+  const [paymentTerm, setPaymentTerm] = useState<PaymentTerms>(30);
+
+  const [date, setDate] = useState(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const [formData, setFormData] = useState<Invoice>({
+    id: invoiceFormData?.id || generateInvoiceId(invoices),
+    createdAt: invoiceFormData?.createdAt || parseDate(new Date()),
+    timestamp: invoiceFormData?.timestamp || new Date(),
+    paymentDue:
+      invoiceFormData?.paymentDue ||
+      parseDate(
+        new Date(new Date().setDate(new Date().getDate() + paymentTerm))
+      ),
+    paymentTerms: invoiceFormData?.paymentTerms || paymentTerm,
+    description: invoiceFormData?.description || "",
+    clientName: invoiceFormData?.clientName || "",
+    clientEmail: invoiceFormData?.clientEmail || "",
+    status: invoiceFormData?.status || "",
+    senderAddress: {
+      street: invoiceFormData?.senderAddress.street || "",
+      city: invoiceFormData?.senderAddress.city || "",
+      postCode: invoiceFormData?.senderAddress.postCode || "",
+      country: invoiceFormData?.senderAddress.country || "",
+    },
+    clientAddress: {
+      street: invoiceFormData?.clientAddress.street || "",
+      city: invoiceFormData?.clientAddress.city || "",
+      postCode: invoiceFormData?.clientAddress.postCode || "",
+      country: invoiceFormData?.clientAddress.country || "",
+    },
+    items: invoiceFormData?.items || [],
+    total: invoiceFormData?.total || 0,
+  });
 
   const dateButtonLabel = useRef<HTMLDivElement | null>(null);
   const dateButton = useRef<HTMLButtonElement | null>(null);
@@ -78,14 +109,89 @@ export const InvoiceForm: React.FC<Props> = ({
     }
   };
 
-  const handleDateChange = (date: Date) => {
-    setDate(date);
+  const handleDateChange = (calendarDate: Date) => {
+    setDate(calendarDate);
+
+    setFormData({
+      ...formData,
+      timestamp: new Date(calendarDate),
+      createdAt: parseDate(calendarDate),
+      paymentDue: parseDate(
+        new Date(
+          calendarDate.setDate(calendarDate.getDate() + formData.paymentTerms)
+        )
+      ),
+    });
+
     setShowCalendar(false);
   };
 
   const handlePaymentTermsValueChange = (index: number) => {
-    setPaymentTermsValue(paymentTermsDropdownValues[index]);
+    const paymentTerm = paymentTermsDropdownValues[index];
+
+    /*
+      Probably a bad solution but I couldn't find how to make 
+      a direct comparison with the PaymentTerms type 
+    */
+    if (
+      paymentTerm !== 1 &&
+      paymentTerm !== 7 &&
+      paymentTerm !== 14 &&
+      paymentTerm !== 30
+    )
+      throw Error("Value is not of type PaymentTerms");
+
+    setPaymentTerm(paymentTerm);
+
+    /* Calendar issue seems to be related to this */
+    setFormData({
+      ...formData,
+      paymentTerms: paymentTerm,
+
+      paymentDue: parseDate(
+        new Date(
+          new Date().setDate(date.getDate() + paymentTermsDropdownValues[index])
+        )
+      ),
+    });
+
     setShowPaymentTermsDropdown(false);
+  };
+
+  const addService = () =>
+    setFormData({
+      ...formData,
+      items: [
+        ...formData.items,
+        {
+          name: "",
+          quantity: 1,
+          price: 0,
+        },
+      ],
+    });
+
+  const setService = (e: ChangeEvent, index: number) => {
+    const target = e.target as HTMLInputElement;
+
+    const newArr = [...formData.items];
+
+    newArr[index] = {
+      ...newArr[index],
+      [target.name]: target.value,
+    };
+
+    setFormData({
+      ...formData,
+      items: newArr,
+    });
+  };
+
+  const removeService = (index: number) => {
+    setFormData({
+      ...formData,
+      items: formData.items.filter((item, itemIndex) => itemIndex !== index),
+    });
   };
 
   const focusDateButton = () => {
@@ -99,38 +205,72 @@ export const InvoiceForm: React.FC<Props> = ({
       setShowPaymentTermsDropdown(!showPaymentTermsDropdown);
   };
 
-  const months = [
-    "janvier",
-    "février",
-    "mars",
-    "avril",
-    "mai",
-    "juin",
-    "juillet",
-    "aout",
-    "septembre",
-    "octobre",
-    "novembre",
-    "décembre",
-  ];
+  const setSenderAddress = (e: ChangeEvent) => {
+    const target = e.target as HTMLInputElement;
 
-  const parsedDate = `${date.getDate()} ${
-    months[date.getMonth()]
-  } ${date.getFullYear()}`;
+    setFormData((formData) => ({
+      ...formData,
+      senderAddress: {
+        ...formData.senderAddress,
+        [target.name]: target.value,
+      },
+    }));
+  };
 
-  const ServiceName = () => (
-    <FormInput
-      value=''
-      handleInputChange={() => ""}
-      type='text'
-      name=''
-      label='Nom'
-      id='service-name'
-      required
-      spellcheck={false}
-      labelFontSize='1.2rem'
-    />
-  );
+  const setClientAddress = (e: ChangeEvent) => {
+    const target = e.target as HTMLInputElement;
+
+    setFormData((formData) => ({
+      ...formData,
+      clientAddress: {
+        ...formData.clientAddress,
+        [target.name]: target.value,
+      },
+    }));
+  };
+
+  const handleInputChange = (e: ChangeEvent) => {
+    const target = e.target as HTMLInputElement;
+
+    setFormData((formData) => ({
+      ...formData,
+      [target.name]: target.value,
+    }));
+  };
+
+  const handleSubmit = (e: Event, operation: "draft" | "edit" | "create") => {
+    e.preventDefault();
+
+    const total = parseFloat(
+      formData.items
+        .map((item) => item.price * item.quantity)
+        .reduce((prev, curr) => prev + curr, 0)
+        .toFixed(2)
+    );
+
+    if (operation === "draft") {
+      newInvoice({
+        ...formData,
+        status: "draft",
+        total,
+      });
+    }
+
+    if (operation === "edit") {
+      editInvoice({
+        ...formData,
+        total,
+      });
+    }
+
+    if (operation === "create") {
+      newInvoice({
+        ...formData,
+        status: "pending",
+        total,
+      });
+    }
+  };
 
   return (
     <Container>
@@ -155,10 +295,11 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <InputContainer>
               <FormInput
-                value=''
-                handleInputChange={() => ""}
+                autoComplete='off'
+                value={formData.senderAddress.street}
+                handleInputChange={(e: ChangeEvent) => setSenderAddress(e)}
                 type='text'
-                name=''
+                name='street'
                 label='Adresse'
                 id='address'
                 required
@@ -169,10 +310,11 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <Grid>
               <FormInput
-                value=''
-                handleInputChange={() => ""}
+                autoComplete='off'
+                value={formData.senderAddress.city}
+                handleInputChange={(e: ChangeEvent) => setSenderAddress(e)}
                 type='text'
-                name=''
+                name='city'
                 label='Ville'
                 id='city'
                 required
@@ -181,10 +323,11 @@ export const InvoiceForm: React.FC<Props> = ({
               />
 
               <FormInput
-                value=''
-                handleInputChange={() => ""}
-                type='text'
-                name=''
+                autoComplete='off'
+                value={formData.senderAddress.postCode}
+                handleInputChange={(e: ChangeEvent) => setSenderAddress(e)}
+                type='number'
+                name='postCode'
                 label='Code postal'
                 id='post-code'
                 required
@@ -194,10 +337,11 @@ export const InvoiceForm: React.FC<Props> = ({
 
               <CountryInputContainer>
                 <FormInput
-                  value=''
-                  handleInputChange={() => ""}
+                  autoComplete='off'
+                  value={formData.senderAddress.country}
+                  handleInputChange={(e: ChangeEvent) => setSenderAddress(e)}
                   type='text'
-                  name=''
+                  name='country'
                   label='Pays'
                   id='country'
                   required
@@ -213,10 +357,11 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <InputContainer>
               <FormInput
-                value=''
-                handleInputChange={() => ""}
+                autoComplete='off'
+                value={formData.clientName}
+                handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
                 type='text'
-                name=''
+                name='clientName'
                 label='Nom'
                 id='client-name'
                 required
@@ -227,10 +372,11 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <InputContainer>
               <FormInput
-                value=''
-                handleInputChange={() => ""}
+                autoComplete='off'
+                value={formData.clientEmail}
+                handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
                 type='text'
-                name=''
+                name='clientEmail'
                 label='E-mail'
                 id='client-email'
                 required
@@ -242,10 +388,11 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <InputContainer>
               <FormInput
-                value=''
-                handleInputChange={() => ""}
+                autoComplete='off'
+                value={formData.clientAddress.street}
+                handleInputChange={(e: ChangeEvent) => setClientAddress(e)}
                 type='text'
-                name=''
+                name='street'
                 label='Adresse'
                 id='client-address'
                 required
@@ -257,10 +404,11 @@ export const InvoiceForm: React.FC<Props> = ({
             <InputContainer>
               <Grid>
                 <FormInput
-                  value=''
-                  handleInputChange={() => ""}
+                  autoComplete='off'
+                  value={formData.clientAddress.city}
+                  handleInputChange={(e: ChangeEvent) => setClientAddress(e)}
                   type='text'
-                  name=''
+                  name='city'
                   label='Ville'
                   id='client-city'
                   required
@@ -269,10 +417,11 @@ export const InvoiceForm: React.FC<Props> = ({
                 />
 
                 <FormInput
-                  value=''
-                  handleInputChange={() => ""}
-                  type='text'
-                  name=''
+                  autoComplete='off'
+                  value={formData.clientAddress.postCode}
+                  handleInputChange={(e: ChangeEvent) => setClientAddress(e)}
+                  type='number'
+                  name='postCode'
                   label='Code postal'
                   id='client-post-code'
                   required
@@ -282,10 +431,11 @@ export const InvoiceForm: React.FC<Props> = ({
 
                 <CountryInputContainer>
                   <FormInput
-                    value=''
-                    handleInputChange={() => ""}
+                    autoComplete='off'
+                    value={formData.clientAddress.country}
+                    handleInputChange={(e: ChangeEvent) => setClientAddress(e)}
                     type='text'
-                    name=''
+                    name='country'
                     label='Pays'
                     id='client-country'
                     required
@@ -310,8 +460,8 @@ export const InvoiceForm: React.FC<Props> = ({
                     type='button'
                     onClick={() => setShowCalendar(!showCalendar)}
                   >
-                    <DateValue> {parsedDate}</DateValue>
-                    <CalendarIconExtended></CalendarIconExtended>
+                    <DateValue>{formData?.createdAt}</DateValue>
+                    <CalendarIconExtended />
                   </DateButton>
 
                   <AnimatePresence>
@@ -321,7 +471,7 @@ export const InvoiceForm: React.FC<Props> = ({
                         animate={{ scale: 1 }}
                         exit={{ opacity: 0 }}
                         innerRef={calendar}
-                        date={date}
+                        date={formData.timestamp || new Date()}
                         onChange={(date: Date) => handleDateChange(date)}
                       />
                     )}
@@ -343,7 +493,11 @@ export const InvoiceForm: React.FC<Props> = ({
                     ref={paymentTermsButton}
                     type='button'
                   >
-                    <PaymentTermsValue>{paymentTermsValue}</PaymentTermsValue>
+                    <PaymentTermsValue>
+                      {formData.paymentTerms === 1
+                        ? `${formData.paymentTerms} jour net`
+                        : `${formData.paymentTerms} jours net`}
+                    </PaymentTermsValue>
                     <ChevronDownIconWrapper active={showPaymentTermsDropdown}>
                       <ChevronDownIcon />
                     </ChevronDownIconWrapper>
@@ -363,13 +517,15 @@ export const InvoiceForm: React.FC<Props> = ({
                           {paymentTermsDropdownValues.map((value, index) => (
                             <li key={index}>
                               <PaymentTermsDropdownButton
-                                active={paymentTermsValue === value}
+                                active={formData.paymentTerms === value}
                                 type='button'
                                 onClick={() =>
                                   handlePaymentTermsValueChange(index)
                                 }
                               >
-                                {value}
+                                {value === 1
+                                  ? `${value} jour net`
+                                  : `${value} jours net`}
                               </PaymentTermsDropdownButton>
                             </li>
                           ))}
@@ -382,10 +538,11 @@ export const InvoiceForm: React.FC<Props> = ({
             </InputContainer>
 
             <FormInput
-              value=''
-              handleInputChange={() => ""}
+              autoComplete='off'
+              value={formData.description}
+              handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
               type='text'
-              name=''
+              name='description'
               label='Description du projet'
               id='project-description'
               required
@@ -397,50 +554,103 @@ export const InvoiceForm: React.FC<Props> = ({
           <div>
             <ServicesListTitle>Liste des services</ServicesListTitle>
 
-            <ServicesList>
-              <li>
-                {isSmallViewport && (
-                  <InputContainer>
-                    <ServiceName />
-                  </InputContainer>
-                )}
+            {formData.items.length !== 0 && (
+              <ServicesList>
+                {formData.items.map((item, index) => (
+                  <li key={index}>
+                    <motion.div
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {isSmallViewport && (
+                        <InputContainer>
+                          <FormInput
+                            value={item.name}
+                            handleInputChange={(e: ChangeEvent) =>
+                              setService(e, index)
+                            }
+                            type='text'
+                            name='name'
+                            label='Nom'
+                            id='service-name'
+                            required
+                            spellcheck={false}
+                            labelFontSize='1.2rem'
+                          />
+                        </InputContainer>
+                      )}
 
-                <ServiceGrid>
-                  {!isSmallViewport && <ServiceName />}
-                  <FormInput
-                    value=''
-                    handleInputChange={() => ""}
-                    type='number'
-                    name=''
-                    label='Qte.'
-                    id='service-quantity'
-                    required
-                    spellcheck={false}
-                    labelFontSize='1.2rem'
-                  />
-                  <FormInput
-                    value=''
-                    handleInputChange={() => ""}
-                    type='number'
-                    name=''
-                    label='Prix'
-                    id='service-price'
-                    required
-                    spellcheck={false}
-                    labelFontSize='1.2rem'
-                  />
-                  <Total>
-                    <TotalLabel>Total</TotalLabel>
-                    <TotalValue>400.00</TotalValue>
-                  </Total>
-                  <button type='button'>
-                    <TrashIconExtended />
-                  </button>
-                </ServiceGrid>
-              </li>
-            </ServicesList>
+                      <ServiceGrid>
+                        {!isSmallViewport && (
+                          <FormInput
+                            handleInputChange={(e: ChangeEvent) =>
+                              setService(e, index)
+                            }
+                            value={item.name}
+                            type='text'
+                            name='name'
+                            label='Nom'
+                            id='service-name'
+                            required
+                            spellcheck={false}
+                            labelFontSize='1.2rem'
+                          />
+                        )}
+
+                        <FormInput
+                          handleInputChange={(e: ChangeEvent) =>
+                            setService(e, index)
+                          }
+                          value={item.quantity.toString()}
+                          type='number'
+                          name='quantity'
+                          label='Qte.'
+                          id='service-quantity'
+                          required
+                          spellcheck={false}
+                          labelFontSize='1.2rem'
+                        />
+
+                        <FormInput
+                          handleInputChange={(e: ChangeEvent) =>
+                            setService(e, index)
+                          }
+                          value={item.price.toString()}
+                          type='number'
+                          name='price'
+                          label='Prix'
+                          id='service-price'
+                          required
+                          spellcheck={false}
+                          labelFontSize='1.2rem'
+                        />
+
+                        <Total>
+                          <TotalLabel>Total</TotalLabel>
+                          <TotalValue>
+                            {(+item.quantity * +item.price).toFixed(2)}
+                          </TotalValue>
+                        </Total>
+                        <button
+                          type='button'
+                          onClick={() => removeService(index)}
+                        >
+                          <TrashIconExtended />
+                        </button>
+                      </ServiceGrid>
+                    </motion.div>
+                  </li>
+                ))}
+              </ServicesList>
+            )}
             <ButtonContainer>
-              <AddServiceButton fullWidth variant='light-to-dark' type='button'>
+              <AddServiceButton
+                fullWidth
+                onClick={addService}
+                variant='light-to-dark'
+                type='button'
+              >
                 <AddServiceLabelContainer>
                   <PlusIconExtended />
                   Ajouter un service
@@ -459,8 +669,16 @@ export const InvoiceForm: React.FC<Props> = ({
             </NewInvoiceActionButtonsFirst>
 
             <NewInvoiceActionButtonsSecond>
-              <Button variant='dark'>Brouillon</Button>
-              <Button>Enregistrer</Button>
+              <Button
+                variant='dark'
+                onClick={(e: Event) => handleSubmit(e, "draft")}
+              >
+                Brouillon
+              </Button>
+
+              <Button onClick={(e: Event) => handleSubmit(e, "create")}>
+                Enregistrer
+              </Button>
             </NewInvoiceActionButtonsSecond>
           </NewInvoiceActionButtons>
         ) : (
@@ -468,7 +686,9 @@ export const InvoiceForm: React.FC<Props> = ({
             <Button onClick={closeDrawer} type='button' variant='light'>
               Annuler
             </Button>
-            <Button>Enregistrer</Button>
+            <Button onClick={(e: Event) => handleSubmit(e, "edit")}>
+              Enregistrer
+            </Button>
           </EditInvoiceActionButtons>
         )}
       </Form>
@@ -694,11 +914,11 @@ const ServicesListTitle = styled.div`
 const ServicesList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 4.8rem;
+  gap: 3rem;
   margin-bottom: 4.8rem;
 
   @media ${breakpoints.sm} {
-    margin-bottom: 1.8rem;
+    margin-bottom: 3rem;
   }
 `;
 

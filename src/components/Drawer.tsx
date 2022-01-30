@@ -17,6 +17,9 @@ interface Props {
   isSmallViewport: boolean;
   isMediumViewport: boolean;
   invoiceFormData: Invoice | null;
+  newInvoice: (data: Invoice) => void;
+  editInvoice: (data: Invoice) => void;
+  invoices: Invoice[];
 }
 
 const Drawer: React.FC<Props> = ({
@@ -27,6 +30,9 @@ const Drawer: React.FC<Props> = ({
   isSmallViewport,
   isMediumViewport,
   invoiceFormData,
+  newInvoice,
+  editInvoice,
+  invoices,
 }) => {
   const drawer = useRef<HTMLDivElement>(null);
 
@@ -64,6 +70,9 @@ const Drawer: React.FC<Props> = ({
         }}
       >
         <InvoiceForm
+          invoices={invoices}
+          newInvoice={(data: Invoice) => newInvoice(data)}
+          editInvoice={(data: Invoice) => editInvoice(data)}
           invoiceFormData={invoiceFormData}
           isSmallViewport={isSmallViewport}
           isMediumViewport={isMediumViewport}
