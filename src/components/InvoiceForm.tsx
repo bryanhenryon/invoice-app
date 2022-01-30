@@ -610,6 +610,7 @@ export const InvoiceForm: React.FC<Props> = ({
                           required
                           spellcheck={false}
                           labelFontSize='1.2rem'
+                          min='1'
                         />
 
                         <FormInput

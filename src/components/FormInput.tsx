@@ -20,6 +20,8 @@ interface Props {
   handleInputChange: (e: ChangeEvent) => void;
   displayEye?: boolean;
   labelFontSize?: string | undefined;
+  min?: string;
+  max?: string;
 }
 
 const FormInput: React.FC<Props> = ({
@@ -37,6 +39,8 @@ const FormInput: React.FC<Props> = ({
   showError,
   displayEye,
   labelFontSize,
+  min,
+  max,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -46,6 +50,8 @@ const FormInput: React.FC<Props> = ({
         {label}
       </Label>
       <Input
+        min={min}
+        max={max}
         displayEye={displayEye}
         showError={showError}
         className={className}
