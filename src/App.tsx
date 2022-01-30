@@ -73,7 +73,7 @@ const App: React.FC = () => {
         return setInvoices(data as InvoiceInterface[]);
 
       if (isLoggedIn && !isAnonymous) {
-        if (!auth?.currentUser?.email) throw Error("No user found");
+        if (!auth?.currentUser?.email) return;
         const invoices = await getInvoices(auth.currentUser.email);
         if (invoices) return setInvoices(invoices);
       }
