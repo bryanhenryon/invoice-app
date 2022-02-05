@@ -8,13 +8,20 @@ import Button from "./Button";
 import { colors, breakpoints } from "../assets/style/variables";
 
 interface Props {
+  confirmButtonVariant?: string;
   title: string | JSX.Element;
   text: string | JSX.Element;
   cancel: () => void;
-  confirm: () => void;
+  confirm: (param?: any) => any;
 }
 
-const ConfirmModal: React.FC<Props> = ({ title, text, cancel, confirm }) => {
+const ConfirmModal: React.FC<Props> = ({
+  title,
+  text,
+  cancel,
+  confirm,
+  confirmButtonVariant,
+}) => {
   const confirmModal = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,7 +57,7 @@ const ConfirmModal: React.FC<Props> = ({ title, text, cancel, confirm }) => {
             Annuler
           </Button>
 
-          <Button variant='red' onClick={confirm}>
+          <Button variant={confirmButtonVariant} onClick={confirm}>
             OK
           </Button>
         </ActionButtons>

@@ -4,7 +4,10 @@ import { breakpoints } from "../assets/style/variables";
 
 import Button from "./Button";
 
+import { Invoice } from "../models/Invoice";
+
 interface Props {
+  invoice: Invoice;
   isMediumViewport?: boolean;
   editInvoice: () => void;
   deleteInvoice: () => void;
@@ -16,19 +19,24 @@ const InvoiceActionButtons: React.FC<Props> = ({
   editInvoice,
   deleteInvoice,
   markAsPaid,
+  invoice,
 }) => (
   <ActionButtons>
-    <MarkAsPaid fullWidth={isMediumViewport} onClick={markAsPaid}>
-      Marquer comme Payée
-    </MarkAsPaid>
+    {invoice.status === "pending" && (
+      <MarkAsPaid fullWidth={isMediumViewport} onClick={markAsPaid}>
+        Marquer comme Payée
+      </MarkAsPaid>
+    )}
 
-    <Button
-      fullWidth={isMediumViewport}
-      variant='light-to-dark'
-      onClick={editInvoice}
-    >
-      Editer
-    </Button>
+    {invoice.status !== "paid" && (
+      <Button
+        fullWidth={isMediumViewport}
+        variant='light-to-dark'
+        onClick={editInvoice}
+      >
+        Editer
+      </Button>
+    )}
 
     <Button fullWidth={isMediumViewport} variant='red' onClick={deleteInvoice}>
       Supprimer

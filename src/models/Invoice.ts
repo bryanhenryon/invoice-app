@@ -1,4 +1,4 @@
-export type InvoiceStatus = "paid" | "pending" | "draft" | "";
+export type InvoiceStatus = "paid" | "pending" | "draft" | "editDraft" | "";
 export type PaymentTerms = 1 | 7 | 14 | 30;
 export interface Invoice {
   id: string;

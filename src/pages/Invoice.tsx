@@ -21,6 +21,7 @@ interface Props {
   showForm: (id?: string) => void;
   deleteInvoice: (id: string) => void;
   invoices: InvoiceInterface[] | null;
+  markAsPaid: (id: string) => Promise<void>;
 }
 
 const Invoice: React.FC<Props> = ({
@@ -28,6 +29,7 @@ const Invoice: React.FC<Props> = ({
   showForm,
   deleteInvoice,
   invoices,
+  markAsPaid,
 }) => {
   const { state } = useLocation();
   const { id } = useParams<{ id: string }>();
@@ -35,6 +37,8 @@ const Invoice: React.FC<Props> = ({
 
   const [invoice, setInvoice] = useState<InvoiceInterface | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showMarkAsPaidConfirmModal, setShowMarkAsPaidConfirmModal] =
+    useState(false);
 
   /** Checks if the last visited page is Invoices or not in order to trigger the correct animation on render */
   const isFromInvoicesPage = state === "fromInvoices";
@@ -54,8 +58,13 @@ const Invoice: React.FC<Props> = ({
     }
   }, [id, navigate, invoices]);
 
-  const markAsPaid = () => {
-    // ...
+  const handleMarkAsPaid = () => {
+    if (!id)
+      throw Error("Couldn't delete the invoice because its id is undefined");
+
+    markAsPaid(id);
+
+    setShowMarkAsPaidConfirmModal(false);
   };
 
   const handleEditButtonClick = (id: string | undefined) => {
@@ -81,6 +90,7 @@ const Invoice: React.FC<Props> = ({
       <AnimatePresence>
         {showConfirmModal && (
           <ConfirmModal
+            confirmButtonVariant='red'
             cancel={() => setShowConfirmModal(false)}
             confirm={handleDeleteInvoice}
             title={
@@ -91,6 +101,21 @@ const Invoice: React.FC<Props> = ({
               </ConfirmModalTitleContainer>
             }
             text='Les données seront définitivement perdues'
+          />
+        )}
+
+        {showMarkAsPaidConfirmModal && id && (
+          <ConfirmModal
+            cancel={() => setShowMarkAsPaidConfirmModal(false)}
+            confirm={handleMarkAsPaid}
+            title={
+              <ConfirmModalTitleContainer>
+                <span>Marquer</span>
+                <InvoiceId fontWeight='bold' id={id} />
+                <span>comme payée ?</span>
+              </ConfirmModalTitleContainer>
+            }
+            text='Les informations ne pourront plus être modifiées'
           />
         )}
       </AnimatePresence>
@@ -117,12 +142,13 @@ const Invoice: React.FC<Props> = ({
               <StatusBadge status={invoice?.status} />
             </Status>
 
-            {!isMediumViewport && (
+            {!isMediumViewport && invoice && (
               <InvoiceActionButtons
+                invoice={invoice}
                 editInvoice={() => handleEditButtonClick(id)}
                 deleteInvoice={() => setShowConfirmModal(true)}
                 isMediumViewport={isMediumViewport}
-                markAsPaid={markAsPaid}
+                markAsPaid={() => setShowMarkAsPaidConfirmModal(true)}
               />
             )}
           </Top>
@@ -235,13 +261,14 @@ const Invoice: React.FC<Props> = ({
             </div>
           </InvoiceInfos>
 
-          {isMediumViewport && (
+          {isMediumViewport && invoice && (
             <Bottom>
               <InvoiceActionButtons
+                invoice={invoice}
                 editInvoice={() => handleEditButtonClick(id)}
                 deleteInvoice={() => setShowConfirmModal(true)}
                 isMediumViewport={isMediumViewport}
-                markAsPaid={markAsPaid}
+                markAsPaid={() => setShowMarkAsPaidConfirmModal(true)}
               />
             </Bottom>
           )}
@@ -253,6 +280,7 @@ const Invoice: React.FC<Props> = ({
 
 const ConfirmModalTitleContainer = styled.div`
   display: flex;
+  flex-flow: row wrap;
   gap: 0.5rem;
 `;
 

@@ -30,7 +30,7 @@ import {
   deleteInvoice as deleteInvoiceDocument,
 } from "./firebase/invoicesCollection";
 
-import { Invoice as InvoiceInterface } from "./models/Invoice";
+import { Invoice as InvoiceInterface, InvoiceStatus } from "./models/Invoice";
 
 import data from "./data.json";
 
@@ -311,6 +311,56 @@ const App: React.FC = () => {
     );
   };
 
+  const markAsPaid = async (id: string) => {
+    const invoiceToUpdate = invoices?.find((invoice) => invoice.id === id);
+
+    if (!invoiceToUpdate)
+      throw Error("No invoice corresponding to the one to edit");
+
+    if (!isAnonymous) {
+      await editInvoiceDocument({
+        ...invoiceToUpdate,
+        status: "paid",
+      });
+
+      if (!auth?.currentUser?.email) throw Error("No user found");
+      const firestoreInvoices = await getInvoices(auth?.currentUser?.email);
+      if (!invoices) throw Error("No invoices found");
+
+      setInvoices(firestoreInvoices);
+    } else {
+      const newArr = invoices?.map((invoice) =>
+        invoice.id === id
+          ? { ...invoiceToUpdate, status: "paid" as InvoiceStatus }
+          : invoice
+      );
+
+      if (!newArr) throw Error("Trying to map a null state");
+
+      setInvoices(newArr);
+    }
+
+    setShowDrawer(false);
+
+    toast.success(
+      () => (
+        <SuccessfullyDeletedInvoiceContainer>
+          <SuccessfullyDeletedInvoiceText>
+            {isSmallViewport ? "Facture" : "La facture"}
+          </SuccessfullyDeletedInvoiceText>{" "}
+          <InvoiceId fontWeight='bold' id={id} />{" "}
+          <SuccessfullyDeletedInvoiceText>
+            {isSmallViewport ? "payée" : "a bien été marquée comme payée"}
+          </SuccessfullyDeletedInvoiceText>
+        </SuccessfullyDeletedInvoiceContainer>
+      ),
+      {
+        duration: 4000,
+        position: "top-center",
+      }
+    );
+  };
+
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <GlobalStyle />
@@ -328,6 +378,7 @@ const App: React.FC = () => {
         <AnimatePresence>
           {showLogoutModal && (
             <ConfirmModal
+              confirmButtonVariant='red'
               title='Déconnexion'
               text='Êtes-vous sûr de vouloir vous déconnecter ?'
               cancel={() => setShowLogoutModal(false)}
@@ -416,6 +467,7 @@ const App: React.FC = () => {
                     element={
                       isLoggedIn ? (
                         <Invoice
+                          markAsPaid={(id: string) => markAsPaid(id)}
                           invoices={invoices}
                           deleteInvoice={deleteInvoice}
                           showForm={(id?: string) => showForm(id)}

@@ -371,7 +371,10 @@ export const InvoiceForm: React.FC<Props> = ({
     return formIsValid;
   };
 
-  const handleSubmit = (e: Event, operation: "draft" | "edit" | "create") => {
+  const handleSubmit = (
+    e: Event,
+    operation: "draft" | "edit" | "create" | "editDraft"
+  ) => {
     e.preventDefault();
 
     const total = parseFloat(
@@ -386,6 +389,14 @@ export const InvoiceForm: React.FC<Props> = ({
         ...formData,
         status: "draft",
         total,
+      });
+    }
+
+    if (operation === "editDraft") {
+      editInvoice({
+        ...formData,
+        total,
+        status: "draft",
       });
     }
 
@@ -861,6 +872,17 @@ export const InvoiceForm: React.FC<Props> = ({
             <Button onClick={closeDrawer} type='button' variant='light'>
               Annuler
             </Button>
+
+            {invoiceFormData?.status && invoiceFormData?.status === "draft" && (
+              <Button
+                type='button'
+                variant='dark'
+                onClick={(e: Event) => handleSubmit(e, "editDraft")}
+              >
+                Sauv. le brouillon
+              </Button>
+            )}
+
             <Button
               type='button'
               onClick={(e: Event) => handleSubmit(e, "edit")}
