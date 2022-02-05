@@ -126,7 +126,9 @@ const Register: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
               autoComplete='email'
             />
             {formErrors.email && (
-              <InputErrorMessage>{formErrors.email}</InputErrorMessage>
+              <InputErrorMessageExtended>
+                {formErrors.email}
+              </InputErrorMessageExtended>
             )}
           </InputContainer>
 
@@ -146,7 +148,9 @@ const Register: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
               displayEye
             />
             {formErrors.password && (
-              <InputErrorMessage>{formErrors.password}</InputErrorMessage>
+              <InputErrorMessageExtended>
+                {formErrors.password}
+              </InputErrorMessageExtended>
             )}
           </InputContainer>
           <FormInput
@@ -164,7 +168,9 @@ const Register: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
             displayEye
           />
           {formErrors.confirmPassword && (
-            <InputErrorMessage>{formErrors.confirmPassword}</InputErrorMessage>
+            <InputErrorMessageExtended>
+              {formErrors.confirmPassword}
+            </InputErrorMessageExtended>
           )}
         </InputsContainer>
 
@@ -179,6 +185,10 @@ const Register: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
     </AuthenticationContainer>
   );
 };
+
+const InputErrorMessageExtended = styled(InputErrorMessage)`
+  margin-top: 1rem;
+`;
 
 const InputsContainer = styled.div`
   margin-bottom: 3rem;

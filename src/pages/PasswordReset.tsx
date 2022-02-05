@@ -87,7 +87,9 @@ const PasswordReset: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
               spellcheck={false}
               autoComplete='email'
             />
-            {error && <InputErrorMessage>{error}</InputErrorMessage>}
+            {error && (
+              <InputErrorMessageExtended>{error}</InputErrorMessageExtended>
+            )}
           </InputContainer>
 
           <CenterButtonContainer>
@@ -99,6 +101,10 @@ const PasswordReset: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
     </AuthenticationContainer>
   );
 };
+
+const InputErrorMessageExtended = styled(InputErrorMessage)`
+  margin-top: 1rem;
+`;
 
 const InputContainer = styled.div`
   margin-bottom: 3rem;

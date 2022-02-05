@@ -110,7 +110,9 @@ const Login: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
             autoComplete='current-password'
             displayEye
           />
-          {error && <InputErrorMessage>{error}</InputErrorMessage>}
+          {error && (
+            <InputErrorMessageExtended>{error}</InputErrorMessageExtended>
+          )}
         </InputsContainer>
 
         <CenterButtonContainer>
@@ -141,6 +143,10 @@ const Login: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
     </AuthenticationContainer>
   );
 };
+
+const InputErrorMessageExtended = styled(InputErrorMessage)`
+  margin-top: 1rem;
+`;
 
 const InputsContainer = styled.div`
   margin-bottom: 3rem;

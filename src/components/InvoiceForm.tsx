@@ -7,6 +7,7 @@ import FormInput from "./FormInput";
 import Button from "./Button";
 import { Calendar } from "./Calendar";
 import InvoiceId from "./InvoiceId";
+import InputErrorMessage from "./InputErrorMessage";
 
 import { ReactComponent as TrashIcon } from "../assets/svg/icon-trash.svg";
 import { ReactComponent as PlusIcon } from "../assets/svg/icon-plus.svg";
@@ -16,6 +17,7 @@ import { breakpoints, colors, priorities } from "../assets/style/variables";
 
 import generateInvoiceId from "../utils/generateInvoiceId";
 import parseDate from "../utils/parseDate";
+import isValidEmail from "../utils/isValidEmail";
 
 import { Invoice, PaymentTerms } from "../models/Invoice";
 
@@ -75,6 +77,28 @@ export const InvoiceForm: React.FC<Props> = ({
     items: invoiceFormData?.items || [],
     total: invoiceFormData?.total || 0,
   });
+
+  const [emptyFields, setEmptyFields] = useState({
+    senderAddress: {
+      street: false,
+      city: false,
+      postCode: false,
+      country: false,
+    },
+    clientName: false,
+    clientEmail: false,
+    clientAddress: {
+      street: false,
+      city: false,
+      postCode: false,
+      country: false,
+    },
+    description: false,
+  });
+
+  const [noServices, setNoServices] = useState(false);
+  const [fieldsEmpty, setFieldsEmpty] = useState(false);
+  const [showClientEmailError, setShowClientEmailError] = useState(false);
 
   const dateButtonLabel = useRef<HTMLDivElement | null>(null);
   const dateButton = useRef<HTMLButtonElement | null>(null);
@@ -238,6 +262,115 @@ export const InvoiceForm: React.FC<Props> = ({
     }));
   };
 
+  const validateForm = () => {
+    let formIsValid = true;
+    setFieldsEmpty(false);
+    setShowClientEmailError(false);
+    setNoServices(false);
+
+    const newEmptyFields = {
+      senderAddress: {
+        street: false,
+        city: false,
+        postCode: false,
+        country: false,
+      },
+      clientName: false,
+      clientEmail: false,
+      clientAddress: {
+        street: false,
+        city: false,
+        postCode: false,
+        country: false,
+      },
+      description: false,
+    };
+
+    if (!formData.senderAddress.street.length) {
+      newEmptyFields.senderAddress.street = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.senderAddress.city.length) {
+      newEmptyFields.senderAddress.city = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.senderAddress.postCode.length) {
+      newEmptyFields.senderAddress.postCode = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.senderAddress.country.length) {
+      newEmptyFields.senderAddress.country = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.clientName.length) {
+      newEmptyFields.clientName = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.clientEmail.length) {
+      newEmptyFields.clientEmail = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    } else if (!isValidEmail(formData.clientEmail)) {
+      formIsValid = false;
+      setShowClientEmailError(true);
+      newEmptyFields.clientEmail = false;
+    }
+
+    if (!formData.clientAddress.street.length) {
+      newEmptyFields.clientAddress.street = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.clientAddress.city.length) {
+      newEmptyFields.clientAddress.city = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.clientAddress.postCode.length) {
+      newEmptyFields.clientAddress.postCode = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.clientAddress.country.length) {
+      newEmptyFields.clientAddress.country = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.description.length) {
+      newEmptyFields.description = true;
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    if (!formData.items.length) {
+      formIsValid = false;
+      setNoServices(true);
+    }
+
+    const areAllItemsNamed = formData.items.every((item) => item.name !== "");
+    if (!areAllItemsNamed) {
+      formIsValid = false;
+      setFieldsEmpty(true);
+    }
+
+    setEmptyFields(newEmptyFields);
+    return formIsValid;
+  };
+
   const handleSubmit = (e: Event, operation: "draft" | "edit" | "create") => {
     e.preventDefault();
 
@@ -257,13 +390,20 @@ export const InvoiceForm: React.FC<Props> = ({
     }
 
     if (operation === "edit") {
+      const isFormValid = validateForm();
+      if (!isFormValid) return;
+
       editInvoice({
         ...formData,
         total,
+        status: "pending",
       });
     }
 
     if (operation === "create") {
+      const isFormValid = validateForm();
+      if (!isFormValid) return;
+
       newInvoice({
         ...formData,
         status: "pending",
@@ -295,6 +435,7 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <InputContainer>
               <FormInput
+                showError={emptyFields.senderAddress.street}
                 autoComplete='off'
                 value={formData.senderAddress.street}
                 handleInputChange={(e: ChangeEvent) => setSenderAddress(e)}
@@ -310,6 +451,7 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <Grid>
               <FormInput
+                showError={emptyFields.senderAddress.city}
                 autoComplete='off'
                 value={formData.senderAddress.city}
                 handleInputChange={(e: ChangeEvent) => setSenderAddress(e)}
@@ -323,6 +465,7 @@ export const InvoiceForm: React.FC<Props> = ({
               />
 
               <FormInput
+                showError={emptyFields.senderAddress.postCode}
                 autoComplete='off'
                 value={formData.senderAddress.postCode}
                 handleInputChange={(e: ChangeEvent) => setSenderAddress(e)}
@@ -337,6 +480,7 @@ export const InvoiceForm: React.FC<Props> = ({
 
               <CountryInputContainer>
                 <FormInput
+                  showError={emptyFields.senderAddress.country}
                   autoComplete='off'
                   value={formData.senderAddress.country}
                   handleInputChange={(e: ChangeEvent) => setSenderAddress(e)}
@@ -357,6 +501,7 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <InputContainer>
               <FormInput
+                showError={emptyFields.clientName}
                 autoComplete='off'
                 value={formData.clientName}
                 handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
@@ -372,6 +517,7 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <InputContainer>
               <FormInput
+                showError={emptyFields.clientEmail || showClientEmailError}
                 autoComplete='off'
                 value={formData.clientEmail}
                 handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
@@ -388,6 +534,7 @@ export const InvoiceForm: React.FC<Props> = ({
 
             <InputContainer>
               <FormInput
+                showError={emptyFields.clientAddress.street}
                 autoComplete='off'
                 value={formData.clientAddress.street}
                 handleInputChange={(e: ChangeEvent) => setClientAddress(e)}
@@ -404,6 +551,7 @@ export const InvoiceForm: React.FC<Props> = ({
             <InputContainer>
               <Grid>
                 <FormInput
+                  showError={emptyFields.clientAddress.city}
                   autoComplete='off'
                   value={formData.clientAddress.city}
                   handleInputChange={(e: ChangeEvent) => setClientAddress(e)}
@@ -417,6 +565,7 @@ export const InvoiceForm: React.FC<Props> = ({
                 />
 
                 <FormInput
+                  showError={emptyFields.clientAddress.postCode}
                   autoComplete='off'
                   value={formData.clientAddress.postCode}
                   handleInputChange={(e: ChangeEvent) => setClientAddress(e)}
@@ -431,6 +580,7 @@ export const InvoiceForm: React.FC<Props> = ({
 
                 <CountryInputContainer>
                   <FormInput
+                    showError={emptyFields.clientAddress.country}
                     autoComplete='off'
                     value={formData.clientAddress.country}
                     handleInputChange={(e: ChangeEvent) => setClientAddress(e)}
@@ -538,6 +688,7 @@ export const InvoiceForm: React.FC<Props> = ({
             </InputContainer>
 
             <FormInput
+              showError={emptyFields.description}
               autoComplete='off'
               value={formData.description}
               handleInputChange={(e: ChangeEvent) => handleInputChange(e)}
@@ -573,7 +724,7 @@ export const InvoiceForm: React.FC<Props> = ({
                             type='text'
                             name='name'
                             label='Nom'
-                            id='service-name'
+                            id={`service-name-${index}`}
                             required
                             spellcheck={false}
                             labelFontSize='1.2rem'
@@ -591,7 +742,7 @@ export const InvoiceForm: React.FC<Props> = ({
                             type='text'
                             name='name'
                             label='Nom'
-                            id='service-name'
+                            id={`service-name-${index}`}
                             required
                             spellcheck={false}
                             labelFontSize='1.2rem'
@@ -606,7 +757,7 @@ export const InvoiceForm: React.FC<Props> = ({
                           type='number'
                           name='quantity'
                           label='Qte.'
-                          id='service-quantity'
+                          id={`service-quantity-${index}`}
                           required
                           spellcheck={false}
                           labelFontSize='1.2rem'
@@ -621,7 +772,7 @@ export const InvoiceForm: React.FC<Props> = ({
                           type='number'
                           name='price'
                           label='Prix'
-                          id='service-price'
+                          id={`service-price-${index}`}
                           required
                           spellcheck={false}
                           labelFontSize='1.2rem'
@@ -660,6 +811,25 @@ export const InvoiceForm: React.FC<Props> = ({
             </ButtonContainer>
           </div>
         </Content>
+        <InputErrorMessagesContainer>
+          {fieldsEmpty && (
+            <InputErrorMessageExtended>
+              - Tous les champs doivent être renseignés
+            </InputErrorMessageExtended>
+          )}
+
+          {showClientEmailError && (
+            <InputErrorMessageExtended>
+              - Email du client invalide
+            </InputErrorMessageExtended>
+          )}
+
+          {noServices && (
+            <InputErrorMessageExtended>
+              - Au minimum 1 service doit être ajouté
+            </InputErrorMessageExtended>
+          )}
+        </InputErrorMessagesContainer>
 
         {!invoiceFormData ? (
           <NewInvoiceActionButtons>
@@ -673,11 +843,15 @@ export const InvoiceForm: React.FC<Props> = ({
               <Button
                 variant='dark'
                 onClick={(e: Event) => handleSubmit(e, "draft")}
+                type='button'
               >
                 Brouillon
               </Button>
 
-              <Button onClick={(e: Event) => handleSubmit(e, "create")}>
+              <Button
+                type='button'
+                onClick={(e: Event) => handleSubmit(e, "create")}
+              >
                 Enregistrer
               </Button>
             </NewInvoiceActionButtonsSecond>
@@ -687,7 +861,10 @@ export const InvoiceForm: React.FC<Props> = ({
             <Button onClick={closeDrawer} type='button' variant='light'>
               Annuler
             </Button>
-            <Button onClick={(e: Event) => handleSubmit(e, "edit")}>
+            <Button
+              type='button'
+              onClick={(e: Event) => handleSubmit(e, "edit")}
+            >
               Enregistrer
             </Button>
           </EditInvoiceActionButtons>
@@ -1002,6 +1179,15 @@ const Content = styled.div`
     overflow-y: auto;
   }
 `;
+
+const InputErrorMessagesContainer = styled.div`
+  display: flex;
+  flex-flow: column wrap;
+  gap: 1rem;
+  margin-top: 3.2rem;
+`;
+
+const InputErrorMessageExtended = styled(InputErrorMessage)``;
 
 const NewInvoiceActionButtons = styled.div`
   padding: 3.2rem 0;

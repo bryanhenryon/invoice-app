@@ -46,7 +46,7 @@ const FormInput: React.FC<Props> = ({
 
   return (
     <FormGroup>
-      <Label labelFontSize={labelFontSize} htmlFor={id}>
+      <Label showError={showError} labelFontSize={labelFontSize} htmlFor={id}>
         {label}
       </Label>
       <Input
@@ -84,6 +84,7 @@ const FormGroup = styled.div`
 
 interface LabelProps {
   labelFontSize: string | undefined;
+  showError: boolean | undefined;
 }
 
 const Label = styled.label<LabelProps>`
@@ -95,6 +96,12 @@ const Label = styled.label<LabelProps>`
   display: block;
   margin-bottom: 1rem;
   color: ${({ theme }) => theme.lightVioletSecondaryToWhite};
+
+  ${({ showError }) =>
+    showError &&
+    css`
+      color: ${colors.red};
+    `}
 `;
 
 interface InputProps {
