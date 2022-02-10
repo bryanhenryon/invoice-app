@@ -449,7 +449,7 @@ const App: React.FC = () => {
                   <Route
                     path='/factures'
                     element={
-                      isLoggedIn ? (
+                      isLoggedIn && invoices ? (
                         <Invoices
                           invoices={invoices}
                           isSmallViewport={isSmallViewport}

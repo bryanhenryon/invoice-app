@@ -6,13 +6,27 @@ import { colors, breakpoints } from "../assets/style/variables";
 import { ReactComponent as SearchIcon } from "../assets/svg/icon-search.svg";
 import { ReactComponent as CloseIcon } from "../assets/svg/icon-close.svg";
 
-const Searchbar: React.FC = () => {
+interface Props {
+  setSearchbarInputValue: (value: string) => void;
+  searchbarInputValue: string;
+}
+
+const Searchbar: React.FC<Props> = ({
+  searchbarInputValue,
+  setSearchbarInputValue,
+}) => {
   const [showDeleteIcon, setShowDeleteIcon] = useState(true);
-  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    inputValue !== "" ? setShowDeleteIcon(true) : setShowDeleteIcon(false);
-  }, [inputValue]);
+    searchbarInputValue !== ""
+      ? setShowDeleteIcon(true)
+      : setShowDeleteIcon(false);
+  }, [searchbarInputValue]);
+
+  const handleChange = (event: any) => {
+    const target = event.target as HTMLInputElement;
+    setSearchbarInputValue(target.value);
+  };
 
   return (
     <InputContainer>
@@ -20,12 +34,12 @@ const Searchbar: React.FC = () => {
         type='text'
         placeholder='Rechercher par client'
         spellCheck='false'
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        value={searchbarInputValue}
+        onChange={(event: any) => handleChange(event)}
       />
 
       {showDeleteIcon ? (
-        <ResetInputButton onClick={() => setInputValue("")}>
+        <ResetInputButton onClick={() => setSearchbarInputValue("")}>
           <CloseIconExtended />
         </ResetInputButton>
       ) : (

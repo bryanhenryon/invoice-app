@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import styled, { css } from "styled-components";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 
@@ -25,7 +25,7 @@ interface Props {
   isSmallViewport: boolean;
   isMediumViewport: boolean;
   showForm: () => void;
-  invoices: InvoiceInterface[] | null;
+  invoices: InvoiceInterface[];
 }
 
 const Invoices: React.FC<Props> = ({
@@ -36,26 +36,42 @@ const Invoices: React.FC<Props> = ({
 }) => {
   const { state } = useLocation();
 
+  const [searchbarInputValue, setSearchbarInputValue] = useState("");
+  const [filteredInvoices, setFilteredInvoices] = useState(invoices);
+
   // Reset the history state so the correct animation can trigger on refresh
   useEffect(() => {
     window.history.replaceState({}, "");
-  }, []);
+    setFilteredInvoices(invoices);
+  }, [invoices]);
 
   /** Checks if the last visited page is Invoice or not in order to trigger the correct animation on render */
   const isFromInvoicePage = state === "fromInvoice";
 
   const totalInvoicesText = () => {
-    switch (invoices?.length) {
+    switch (filteredInvoices?.length) {
       case 0:
         return "Aucune facture";
       case 1:
         return isSmallViewport ? "1 facture" : "Il y a 1 facture au total";
       default:
         return isSmallViewport
-          ? `${invoices?.length} factures`
-          : `Il y a ${invoices?.length} factures au total`;
+          ? `${filteredInvoices?.length} factures`
+          : `Il y a ${filteredInvoices?.length} factures au total`;
     }
   };
+
+  useEffect(() => {
+    const newInvoices = invoices?.filter((invoice) =>
+      invoice.clientName
+        .toLowerCase()
+        .includes(searchbarInputValue.toLowerCase().trim())
+    );
+
+    searchbarInputValue === ""
+      ? setFilteredInvoices(invoices)
+      : setFilteredInvoices(newInvoices);
+  }, [searchbarInputValue, invoices]);
 
   return !invoices ? (
     <CenteredSpinner>
@@ -94,11 +110,18 @@ const Invoices: React.FC<Props> = ({
         </Button>
       </Top>
 
-      {invoices?.length ? (
+      {!invoices?.length && !searchbarInputValue ? (
+        <NoInvoice isSmallViewport={isSmallViewport} />
+      ) : (
         <InvoicesList>
-          <Searchbar />
+          <Searchbar
+            setSearchbarInputValue={(value: string) =>
+              setSearchbarInputValue(value)
+            }
+            searchbarInputValue={searchbarInputValue}
+          />
 
-          {invoices?.map((invoice) =>
+          {filteredInvoices?.map((invoice) =>
             isMediumViewport ? (
               <InvoiceCard key={invoice.id} invoice={invoice} />
             ) : (
@@ -106,8 +129,6 @@ const Invoices: React.FC<Props> = ({
             )
           )}
         </InvoicesList>
-      ) : (
-        <NoInvoice isSmallViewport={isSmallViewport} />
       )}
     </InvoicesContainer>
   );
@@ -124,16 +145,11 @@ interface TopProps {
 const Top = styled.div<TopProps>`
   display: flex;
   align-items: center;
+  margin-bottom: 3.2rem;
 
-  ${({ invoices }) =>
-    invoices?.length &&
-    css`
-      margin-bottom: 3.2rem;
-
-      @media ${breakpoints.lg} {
-        margin-bottom: 6.5rem;
-      }
-    `}
+  @media ${breakpoints.lg} {
+    margin-bottom: 6.5rem;
+  }
 `;
 
 const Title = styled.h1`
