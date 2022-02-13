@@ -37,7 +37,7 @@ const PasswordReset: React.FC<Props> = ({ startLoadingBar, endLoadingBar }) => {
       startLoadingBar();
 
       await sendPasswordResetEmail(auth, email, {
-        url: "http://localhost:3000",
+        url: "https://invoice-manager-f7e48.web.app/",
       });
 
       setShowConfirmation(true);
