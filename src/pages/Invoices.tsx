@@ -18,6 +18,7 @@ import NoInvoice from "../components/NoInvoice";
 import SpinnerRoller from "../components/SpinnerRoller";
 
 import { Invoice as InvoiceInterface } from "../models/Invoice";
+import checkboxStatus from "../models/checkboxStatus";
 
 import "../firebase/config";
 
@@ -38,6 +39,9 @@ const Invoices: React.FC<Props> = ({
 
   const [searchbarInputValue, setSearchbarInputValue] = useState("");
   const [filteredInvoices, setFilteredInvoices] = useState(invoices);
+  const [filteredByStatusInvoices, setFilteredByStatusInvoices] = useState<
+    InvoiceInterface[] | null
+  >(null);
 
   // Reset the history state so the correct animation can trigger on refresh
   useEffect(() => {
@@ -61,17 +65,43 @@ const Invoices: React.FC<Props> = ({
     }
   };
 
+  const filterByStatus = (checkboxesStatus: checkboxStatus[]) => {
+    const isAnyFilterApplied = checkboxesStatus.some(
+      (checkbox) => checkbox.checked
+    );
+
+    if (isAnyFilterApplied) {
+      const newArr = invoices.filter((invoice) =>
+        checkboxesStatus.find(
+          (checkboxStatus) =>
+            checkboxStatus.checked && invoice.status === checkboxStatus.name
+        )
+      );
+      setFilteredByStatusInvoices(newArr);
+      return setFilteredInvoices(newArr);
+    }
+
+    setFilteredByStatusInvoices(invoices);
+    return setFilteredInvoices(invoices);
+  };
+
   useEffect(() => {
-    const newInvoices = invoices?.filter((invoice) =>
+    const inv = filteredByStatusInvoices?.length
+      ? filteredByStatusInvoices
+      : invoices;
+
+    const newInvoices = inv?.filter((invoice: InvoiceInterface) =>
       invoice.clientName
         .toLowerCase()
         .includes(searchbarInputValue.toLowerCase().trim())
     );
 
     searchbarInputValue === ""
-      ? setFilteredInvoices(invoices)
+      ? setFilteredInvoices(
+          filteredByStatusInvoices?.length ? filteredByStatusInvoices : invoices
+        )
       : setFilteredInvoices(newInvoices);
-  }, [searchbarInputValue, invoices]);
+  }, [searchbarInputValue, invoices, filteredByStatusInvoices]);
 
   return !invoices ? (
     <CenteredSpinner>
@@ -97,7 +127,12 @@ const Invoices: React.FC<Props> = ({
           <TotalInvoices>{totalInvoicesText()}</TotalInvoices>
         </TitleContainer>
 
-        <StatusFilter isSmallViewport={isSmallViewport} />
+        <StatusFilter
+          isSmallViewport={isSmallViewport}
+          filterByStatus={(checkboxesStatus) =>
+            filterByStatus(checkboxesStatus)
+          }
+        />
 
         <Button hasIcon hasBoxShadow onClick={() => showForm()}>
           <PlusIconContainer>

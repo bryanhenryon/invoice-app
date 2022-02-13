@@ -6,28 +6,34 @@ import { ReactComponent as ChevronDownIcon } from "../assets/svg/icon-chevron-do
 import { ReactComponent as CheckIcon } from "../assets/svg/icon-check.svg";
 import { colors, breakpoints, priorities } from "../assets/style/variables";
 
+import checkboxStatus from "../models/checkboxStatus";
+
 interface Props {
   isSmallViewport: boolean;
+  filterByStatus: (checkboxesStatus: checkboxStatus[]) => void;
 }
 
-const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
+const StatusFilter: React.FC<Props> = ({ isSmallViewport, filterByStatus }) => {
   const dropdown = useRef<HTMLDivElement>(null);
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const [checkboxesStatus, setCheckboxesStatus] = useState([
+  const [checkboxesStatus, setCheckboxesStatus] = useState<checkboxStatus[]>([
     {
       id: 1,
       text: "Payée",
+      name: "paid",
       checked: false,
     },
     {
       id: 2,
       text: "En attente",
+      name: "pending",
       checked: false,
     },
     {
       id: 3,
       text: "Brouillon",
+      name: "draft",
       checked: false,
     },
   ]);
@@ -60,6 +66,8 @@ const StatusFilter: React.FC<Props> = ({ isSmallViewport }) => {
 
     checkbox.checked = !checkbox.checked;
     setCheckboxesStatus([...checkboxesStatus]);
+
+    filterByStatus(checkboxesStatus);
   };
 
   return (
