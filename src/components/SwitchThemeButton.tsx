@@ -9,7 +9,7 @@ interface Props {
 }
 
 const SwitchThemeButton: React.FC<Props> = ({ theme, toggleTheme }) => (
-  <StyledSwitchThemeButton onClick={toggleTheme}>
+  <StyledSwitchThemeButton aria-label='Switcher de thème' onClick={toggleTheme}>
     {theme === "light" ? <StyledMoonIcon /> : <StyledSunIcon />}
   </StyledSwitchThemeButton>
 );

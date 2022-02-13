@@ -9,7 +9,7 @@ interface Props {
 }
 
 const LogoutButton: React.FC<Props> = ({ onClick }) => (
-  <Button onClick={onClick}>
+  <Button onClick={onClick} aria-label='Se déconnecter'>
     <LogoutIcon />
   </Button>
 );
